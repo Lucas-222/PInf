@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Cmd {
 
     public static void main(String[] args) throws IOException {
-        testRectangle();
+        System.out.println(faculty(5));
     }
 
     public static void oneA() {
@@ -28,25 +28,20 @@ public class Cmd {
             list.add(string.substring(i, i+3));
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(list.get(i));
+        for (String s : list) {
+            System.out.println(s);
         }
 
     }
 
     public static double maximum(double a, double b) {
-        if (a > b) {
-            return a;
-        } else if (b > a) {
-            return b;
-        }
-        return 0;
+        return Math.max(a, b);
     }
 
     public static int faculty(int number) {
-        int faculty = 0;
+        int faculty = 1;
         for (int i = 1; i <= number; i++) {
-            faculty += i;
+            faculty *= i;
         }
         return faculty;
     }
