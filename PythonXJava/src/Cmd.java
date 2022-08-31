@@ -6,7 +6,23 @@ import java.util.ArrayList;
 public class Cmd {
 
     public static void main(String[] args) throws IOException {
-        System.out.println(faculty(5));
+        System.out.println("(1)");
+        System.out.print("\ta): ");
+        oneA();
+        System.out.print("\tb): ");
+        oneB();
+        System.out.println("\tc): ");
+        oneC();
+        System.out.println("(2)");
+        System.out.print("\tMaximum [10, 5]: ");
+        System.out.print(maximum(10, 5));
+
+        System.out.print("\n\tFaculty [5]:     ");
+        System.out.print(faculty(5));
+
+        testRectangle();
+
+        System.err.println("\n\n\tEND");
     }
 
     public static void oneA() {
@@ -17,7 +33,7 @@ public class Cmd {
         System.out.print("Insert name: ");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String name  = reader.readLine();
-        System.out.println("Hello " + name);
+        System.out.println("\t    Hello " + name);
     }
 
     public static void oneC() {
@@ -29,7 +45,7 @@ public class Cmd {
         }
 
         for (String s : list) {
-            System.out.println(s);
+            System.out.println("\t    "+s);
         }
 
     }
@@ -48,9 +64,11 @@ public class Cmd {
 
     public static void testRectangle() {
         Rectangle rectangle = new Rectangle(5, 10);
-        System.out.println("Circumference: ");
+        System.out.println("\n(3)");
+        System.out.println("\tRectangle [5, 10]");
+        System.out.print("\tCircumference: ");
         System.out.print(rectangle.calcCircumference());
-        System.out.println("\nArea: ");
+        System.out.print("\n\tArea: ");
         System.out.print(rectangle.calcArea());
     }
 
