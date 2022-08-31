@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Cmd {
 
     public static void main(String[] args) throws IOException {
+        // 1
         System.out.println("(1)");
         System.out.print("\ta): ");
         oneA();
@@ -13,16 +14,14 @@ public class Cmd {
         oneB();
         System.out.println("\tc): ");
         oneC();
+        // 2
         System.out.println("(2)");
         System.out.print("\tMaximum [10, 5]: ");
         System.out.print(maximum(10, 5));
-
         System.out.print("\n\tFaculty [5]:     ");
         System.out.print(faculty(5));
-
+        // 3
         testRectangle();
-
-        System.err.println("\n\n\tEND");
     }
 
     public static void oneA() {
@@ -31,9 +30,8 @@ public class Cmd {
 
     public static void oneB() throws IOException {
         System.out.print("Insert name: ");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String name  = reader.readLine();
-        System.out.println("\t    Hello " + name);
+        String name  = new BufferedReader(new InputStreamReader(System.in)).readLine();
+        System.out.println("\t    Hello "+name);
     }
 
     public static void oneC() {
@@ -54,18 +52,18 @@ public class Cmd {
         return Math.max(a, b);
     }
 
-    public static int faculty(int number) {
-        int faculty = 1;
-        for (int i = 1; i <= number; i++) {
-            faculty *= i;
+    public static int faculty(int a) {
+        if (a == 1) {
+            return a;
+        } else {
+            return a * faculty(a-1);
         }
-        return faculty;
     }
 
     public static void testRectangle() {
         Rectangle rectangle = new Rectangle(5, 10);
         System.out.println("\n(3)");
-        System.out.println("\tRectangle [5, 10]");
+        System.out.println("\tRectangle [5, 10]:");
         System.out.print("\tCircumference: ");
         System.out.print(rectangle.calcCircumference());
         System.out.print("\n\tArea: ");
