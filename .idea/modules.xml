@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/PythonXJava/JavaPart/JavaPart.iml" filepath="$PROJECT_DIR$/PythonXJava/JavaPart/JavaPart.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/PInf.iml" filepath="$PROJECT_DIR$/.idea/PInf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PythonXJava/PythonPart/PythonPart.iml" filepath="$PROJECT_DIR$/PythonXJava/PythonPart/PythonPart.iml" />
       <module fileurl="file://$PROJECT_DIR$/PythonXJava/PythonXJava.iml" filepath="$PROJECT_DIR$/PythonXJava/PythonXJava.iml" />
     </modules>
   </component>
