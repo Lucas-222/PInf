@@ -1,14 +1,16 @@
 from Rectangle import Rectangle
 
+
 def matrix():
     list = []
     b = str("WHATISTHEMATRIX")
     counter = 0
-    
-    for i in range(int(len(b)/3)): 
-        list.append(b[counter:counter+3])
-        counter+=3
+
+    for i in range(int(len(b) / 3)):
+        list.append(b[counter:counter + 3])
+        counter += 3
     return list
+
 
 def maximum(a, b):
     if a > b:
@@ -20,13 +22,13 @@ def faculty(a):
     if a == 1:
         return a
     else:
-        return a * faculty(a-1)
+        return a * faculty(a - 1)
 
 
 print("Hello World\n")
 
-abfrage = input("Wie heißt du: ")
-print("\nHello "+abfrage)
+name = input("Insert name: ")
+print("\nHello " + name)
 
 print("\nMatrix")
 print(matrix())
