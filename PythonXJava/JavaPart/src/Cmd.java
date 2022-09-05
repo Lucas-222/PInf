@@ -63,7 +63,7 @@ public class Cmd {
     public static void testRectangle() {
         Rectangle rectangle = new Rectangle(5, 10);
         System.out.println("\n(3)");
-        System.out.println("\tjava.Rectangle [5, 10]:");
+        System.out.println("\tRectangle [5, 10]:");
         System.out.print("\tCircumference: ");
         System.out.print(rectangle.calcCircumference());
         System.out.print("\n\tArea: ");

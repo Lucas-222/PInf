@@ -1,15 +1,24 @@
 from Rectangle import Rectangle
 
 
+def helloworld():
+    print("Hello World")
+
+
+def name():
+    inputname = input("\nInsert name: ")
+    print("\nHello " + inputname)
+
+
 def matrix():
     list = []
-    b = str("WHATISTHEMATRIX")
-    counter = 0
+    string = "WHATISTHEMATRIX"
 
-    for i in range(int(len(b) / 3)):
-        list.append(b[counter:counter + 3])
-        counter += 3
-    return list
+    for i in range(0, len(string), 3):
+        list.append(string[i:i+3])
+
+    for i in range(len(list)):
+        print(list[i])
 
 
 def maximum(a, b):
@@ -25,13 +34,12 @@ def faculty(a):
         return a * faculty(a - 1)
 
 
-print("Hello World\n")
+helloworld()
 
-name = input("Insert name: ")
-print("\nHello " + name)
+name()
 
-print("\nMatrix")
-print(matrix())
+print("\nMatrix:")
+matrix()
 
 print("\nMaximum [1, 3]")
 print(maximum(1, 3))

@@ -1,22 +1,22 @@
 class Rectangle:
     def __init__(self, length, width):
-        self.length = length
-        self.width = width
+        self.__length = length
+        self.__width = width
 
     def setlength(self, length):
-        self.length = length
+        self.__length = length
 
     def getlength(self):
-        return self.length
+        return self.__length
 
     def setwidth(self, width):
-        self.width = width
+        self.__width = width
 
     def getwidth(self):
-        return self.width
+        return self.__width
 
     def calccircumference(self):
-        return self.length*2+self.width*2
+        return self.__length*2+self.__width*2
 
     def calcarea(self):
-        return self.length*self.width
+        return self.__length*self.__width
