@@ -21,22 +21,25 @@ def output(length):
 
 
 def loop(runs, length):
-    arr = [runs]
+    arr = []
     for i in range(runs):
         starttime = time()
         output(length)
         endtime = time()
-        arr[i-1] = endtime - starttime
+        arr.append(endtime - starttime)
 
     return arr
 
 
 def calculatearith():
     arithmid = 0
-    arithlist = loop(1, 10000000)
-    for number in arithlist:
-        arithmid += number
+    arithlist = loop(3, 10000000)
+
+    for i in range(len(arithlist)):
+        arithmid += arithlist[i]
+        print("Run [" + str(i + 1) + "]: " + str(arithlist[i]) + "s")
+
     return arithmid / len(arithlist)
 
 
-print(str(calculatearith()) + "s (Python)")
+print("Arithm: " + str(calculatearith()) + "s (Python)")

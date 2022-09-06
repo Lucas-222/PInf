@@ -1,20 +1,21 @@
 public class ExtraAufgabe {
 
     public static void main(String[] args) {
-        System.out.println(calculateArith()+"s (Java)");
+        System.out.println("Arithm: " + calculateArith()+"s (Java)");
     }
 
     public static double calculateArith() {
         double arithMid = 0;
-        long[] list = loop(1, 10000000);
-        for (long l : list) {
-            arithMid+=l;
+        double[] list = loop(3, 10000000);
+        for (int i = 0; i < list.length; i++) {
+            arithMid+=list[i];
+            System.out.println("Run [" + (i+1) + "]: " + (list[i]/1000) + "s");
         }
         return arithMid/list.length/1000;
     }
 
-    public static long[] loop(int runs, int length) {
-        long[] arr = new long[runs];
+    public static double[] loop(int runs, int length) {
+        double[] arr = new double[runs];
         for (int i = 0; i < runs; i++) {
             long startTime = time();
             output(length);
