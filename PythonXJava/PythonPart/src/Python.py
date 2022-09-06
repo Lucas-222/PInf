@@ -23,8 +23,8 @@ def matrix():
     for i in range(0, len(string), 3):
         list.append(string[i:i + 3])
 
-    for i in range(len(list)):
-        print(list[i])
+    for s in list:
+        print(s)
 
 
 print("\nMatrix:")
