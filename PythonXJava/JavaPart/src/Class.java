@@ -31,7 +31,7 @@ public class Class {
 
         // Output of the list
         for (String s : list) {
-            System.out.println("\t    "+s);
+            System.out.println(s);
         }
 
     }
@@ -48,13 +48,9 @@ public class Class {
         }
     }
 
-    public static void circumference() {
+    public static void rectangle() {
         Rectangle rectangle = new Rectangle(5, 10);
         System.out.println(rectangle.calcCircumference());
-    }
-
-    public static void area() {
-        Rectangle rectangle = new Rectangle(5, 10);
         System.out.println(rectangle.calcArea());
     }
 
