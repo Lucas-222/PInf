@@ -1,11 +1,6 @@
 from Rectangle import Rectangle
 
-
-def helloworld():
-    print("Hello World")
-
-
-helloworld()
+print("Hello World")
 
 
 def name():
@@ -17,6 +12,8 @@ name()
 
 
 def matrix():
+
+
     list = []
     string = "WHATISTHEMATRIX"
 
@@ -51,11 +48,6 @@ def faculty(a):
 print("\nFaculty [5]")
 print(faculty(5))
 
-
-# Rectangle
 rectangle = Rectangle(5, 10)
-print("\nRectangle [5, 10]")
-print("\nCircumference")
 print(rectangle.calccircumference())
-print("\nArea")
 print(rectangle.calcarea())
