@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Class {
 
     public static void main(String[] args) {
-        System.out.println(maximum(1, 10));
+        test();
     }
 
     public static void helloWorld() {
@@ -53,5 +53,26 @@ public class Class {
         System.out.println(rectangle.calcCircumference());
         System.out.println(rectangle.calcArea());
     }
+
+    public static void test() {
+        boolean b = true;
+        int number = 100;
+        ArrayList<Integer> numbers = new ArrayList<>();
+        while (b) {
+            numbers.add(number%16);
+            number/=16;
+
+            if (number == 0) {
+                b = false;
+            }
+        }
+
+        for (int i : numbers) {
+            System.out.println(i);
+        }
+
+
+    }
+
 
 }

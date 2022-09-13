@@ -12,8 +12,6 @@ name()
 
 
 def matrix():
-
-
     list = []
     string = "WHATISTHEMATRIX"
 

@@ -1,31 +1,36 @@
 public class ExtraAufgabe {
 
     public static void main(String[] args) {
-        System.out.println("Arithm: " + calculateArith()+"s (Java)");
+        evaluation();
     }
 
-    public static double calculateArith() {
-        double arithMid = 0;
-        double[] list = loop(3, 10000000);
-        for (int i = 0; i < list.length; i++) {
-            arithMid+=list[i];
-            System.out.println("Run [" + (i+1) + "]: " + (list[i]/1000) + "s");
+    public static void evaluation() {
+        double sum = 0;
+        double[] runtimes = calculateRuntimes(5, 1000000);
+        System.out.println();
+        for (int i = 0; i < runtimes.length; i++) {
+            sum+=runtimes[i]/1000;
+            System.out.println("Run [" + (i+1) + "]: " + (runtimes[i]/1000) + "s");
         }
-        return arithMid/list.length/1000;
+        bubblesort(runtimes);
+        System.out.println("\nMin: " + runtimes[0] + "s");
+        System.out.println("Max: " + runtimes[runtimes.length-1] + "s");
+        System.out.println("\nSum: " + sum + "s");
+        System.out.println("Arithm: " + sum/runtimes.length+"s (Java)");
     }
 
-    public static double[] loop(int runs, int length) {
-        double[] arr = new double[runs];
+    public static double[] calculateRuntimes(int runs, int length) {
+        double[] runtimes = new double[runs];
         for (int i = 0; i < runs; i++) {
             long startTime = time();
-            output(length);
+            speedtest(length);
             long endTime = time();
-            arr[i] = endTime - startTime;
+            runtimes[i] = endTime-startTime;
         }
-        return arr;
+        return runtimes;
     }
 
-    public static void output(int length) {
+    public static void speedtest(int length) {
         for(int i = 0; i < length; i++) {
             System.out.println(i);
         }
@@ -37,6 +42,19 @@ public class ExtraAufgabe {
         for (int i = 0; i < 25; i++) {
             counter += 100000000;
             System.out.println(counter);
+        }
+    }
+
+    public static void bubblesort(double[] toSort) {
+        double temp;
+        for(int i = 1; i < toSort.length; i++) {
+            for(int j = 0; j < toSort.length - i; j++) {
+                if(toSort[j] > toSort[j+1]) {
+                    temp = toSort[j];
+                    toSort[j] = toSort[j+1];
+                    toSort[j+1] = (int) temp;
+                }
+            }
         }
     }
 
