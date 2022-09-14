@@ -1,21 +1,25 @@
-public enum Operator implements Node {
+enum Operators {
     ADD,
     SUBSTRACT,
     MULTIPLY,
     DIVIDE,
     POWER;
+}
+
+public class Operator implements Node {
     private Node leftValue;
     private Node rightValue;
-    Operator() {}
+    private Operators operator;
 
-    Operator(Node leftValue, Node rightValue) {
+    public Operator(Node leftValue, Node rightValue, Operators operator) {
         this.leftValue = leftValue;
         this.rightValue = rightValue;
+        this.operator = operator;
     }
 
     @Override
     public double getValue() throws Exception {
-        switch (this) {
+        switch (this.operator) {
             case ADD -> {
                 return leftValue.getValue() + rightValue.getValue();
             }
