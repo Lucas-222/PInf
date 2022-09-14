@@ -7,13 +7,13 @@ enum Operators {
 }
 
 public class Operator implements Node {
-    private Node leftValue;
-    private Node rightValue;
+    private Node leftNode;
+    private Node rightNode;
     private Operators operator;
 
     public Operator(Node leftValue, Node rightValue, Operators operator) {
-        this.leftValue = leftValue;
-        this.rightValue = rightValue;
+        this.leftNode = leftValue;
+        this.rightNode = rightValue;
         this.operator = operator;
     }
 
@@ -21,19 +21,19 @@ public class Operator implements Node {
     public double getValue() throws Exception {
         switch (this.operator) {
             case ADD -> {
-                return leftValue.getValue() + rightValue.getValue();
+                return leftNode.getValue() + rightNode.getValue();
             }
             case SUBSTRACT -> {
-                return leftValue.getValue() - rightValue.getValue();
+                return leftNode.getValue() - rightNode.getValue();
             }
             case MULTIPLY -> {
-                return leftValue.getValue() * rightValue.getValue();
+                return leftNode.getValue() * rightNode.getValue();
             }
             case DIVIDE -> {
-                return leftValue.getValue() / rightValue.getValue();
+                return leftNode.getValue() / rightNode.getValue();
             }
             case POWER -> {
-                return Math.pow(leftValue.getValue(), rightValue.getValue());
+                return Math.pow(leftNode.getValue(), rightNode.getValue());
             }
             default -> throw new Exception();
         }
