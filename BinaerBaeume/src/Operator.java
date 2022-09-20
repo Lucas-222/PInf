@@ -4,11 +4,19 @@ enum Operators {
         double getValue(Node leftNode, Node rightNode) {
             return leftNode.getValue() + rightNode.getValue();
         }
+        @Override
+        public String toString() {
+            return "+";
+        }
     },
     SUBTRACT {
         @Override
         double getValue(Node leftNode, Node rightNode) {
             return leftNode.getValue() - rightNode.getValue();
+        }
+        @Override
+        public String toString() {
+            return "-";
         }
     },
     MULTIPLY {
@@ -16,11 +24,19 @@ enum Operators {
         double getValue(Node leftNode, Node rightNode) {
             return leftNode.getValue() * rightNode.getValue();
         }
+        @Override
+        public String toString() {
+            return "*";
+        }
     },
     DIVIDE {
         @Override
         double getValue(Node leftNode, Node rightNode) {
             return leftNode.getValue() / rightNode.getValue();
+        }
+        @Override
+        public String toString() {
+            return "/";
         }
     },
     POWER {
@@ -28,9 +44,14 @@ enum Operators {
         double getValue(Node leftNode, Node rightNode) {
             return Math.pow(leftNode.getValue(), rightNode.getValue());
         }
+        @Override
+        public String toString() {
+            return "^";
+        }
     };
 
     abstract double getValue(Node leftNode, Node rightNode);
+    public abstract String toString();
 }
 
 public class Operator implements Node {
@@ -59,5 +80,17 @@ public class Operator implements Node {
     @Override
     public double getValue() {
         return this.operator.getValue(this.leftNode, this.rightNode);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        builder.append(this.leftNode.toString());
+        builder.append(",");
+        builder.append(this.rightNode.toString());
+        builder.append(")");
+        builder.append(this.operator.toString());
+        return builder.toString();
     }
 }

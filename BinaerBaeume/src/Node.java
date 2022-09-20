@@ -1,3 +1,3 @@
-public abstract interface Node {
+public interface Node {
     public double getValue();
 }
