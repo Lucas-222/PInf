@@ -84,13 +84,11 @@ public class Operator implements Node {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("(");
-        builder.append(this.leftNode.toString());
-        builder.append(",");
-        builder.append(this.rightNode.toString());
-        builder.append(")");
-        builder.append(this.operator.toString());
-        return builder.toString();
+        return "(" +
+                this.leftNode.toString() +
+                "," +
+                this.rightNode.toString() +
+                ")" +
+                this.operator.toString();
     }
 }
