@@ -83,4 +83,39 @@ public class TestOperator {
         assertEquals("((25.0,10.0)*,((10.0,5.0)-,(40.0,10.0)+)/)*", nestedOperatorsResult);
     }
 
+    @Test
+    void TestToOperatorAddition() {
+        StringToNode stringToNode = new StringToNode("(10.0,5.0)+");
+        Operator operator = stringToNode.calculate();
+        assertEquals(15, operator.getValue());
+     }
+
+    @Test
+    void TestToOperatorSubstraction() {
+        StringToNode stringToNode = new StringToNode("(10.0,5.0)-");
+        Operator operator = stringToNode.calculate();
+        assertEquals(5, operator.getValue());
+    }
+
+    @Test
+    void TestToOperatorMultiply() {
+        StringToNode stringToNode = new StringToNode("(10.0,5.0)*");
+        Operator operator = stringToNode.calculate();
+        assertEquals(50, operator.getValue());
+    }
+
+    @Test
+    void TestToOperatorDivide() {
+        StringToNode stringToNode = new StringToNode("(10.0,5.0)/");
+        Operator operator = stringToNode.calculate();
+        assertEquals(2, operator.getValue());
+    }
+
+    @Test
+    void TestToOperatorPower() {
+        StringToNode stringToNode = new StringToNode("(3.0,2.0)^");
+        Operator operator = stringToNode.calculate();
+        assertEquals(9, operator.getValue());
+    }
+
 }
