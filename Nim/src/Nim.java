@@ -41,24 +41,26 @@ public class Nim {
         if (bool) {
             // Cheated run
             if (cheatedRun) {
+                int temp = amountLastPickedByComputer;
+                // Default
+                temp = ((int) (Math.random()*3))+1;
                 // When player failed
                 if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0) {
                     if (amount % 4 != 0) {
-                        amountLastPickedByComputer = amount % 4;
+                        temp = amount % 4;
                     } else {
-                        amountLastPickedByComputer = 4 - amountLastPickedByPlayer;
+                        temp = 4 - amountLastPickedByPlayer;
                     }
                 }
-                // Default
-                amountLastPickedByComputer = ((int) (Math.random()*3))+1;
-                // When Only 3 or less are left
-                if (amount <= 3) {
+                // When Only 4 or less are left
+                if (amount <= 4) {
                     if (amount -1 != 0) {
-                        amountLastPickedByComputer = amount - 1;
+                        temp = amount - 1;
                     } else {
-                        amountLastPickedByComputer = 1;
+                        temp = 1;
                     }
                 }
+                amountLastPickedByComputer = temp;
             }
             // Normal run
             if (!cheatedRun) {
