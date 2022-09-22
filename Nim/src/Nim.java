@@ -3,7 +3,8 @@ import java.io.InputStreamReader;
 
 public class Nim {
     private int amountOfCards = 21;
-    private int amountLastPicked = 0;
+    private int amountLastPickedByPlayer = 0;
+    private int amountLastPickedByComputer = 0;
     private boolean b = true;
     private boolean cheatedRun = false;
     public String currentTurn = "Player";
@@ -59,38 +60,53 @@ public class Nim {
 
     public void computerPick() {
         if (b) {
-            int amount;
+            // Cheated run
             if (cheatedRun) {
+                // Default
+                amountLastPickedByComputer = 1;
+                // First
                 if (amountOfCards == 21) {
-                    amount = 2;
-                } else {
-                    amount = 4 - amountLastPicked;
+                    amountLastPickedByComputer = 2;
                 }
-            } else {
-                amount = 4 - amountLastPicked;
+                // When player failed
+                if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0) {
+                    if (amountOfCards % 4 != 0) {
+                        amountLastPickedByComputer = amountOfCards % 4;
+                    } else {
+                        amountLastPickedByComputer = 4- amountLastPickedByPlayer;
+                    }
+                }
+                // When Only 3 or less are left
+                if (amountOfCards <= 3) {
+                    amountLastPickedByComputer = amountOfCards-1;
+                }
+            }
+            // Normal run
+            if (!cheatedRun) {
+              amountLastPickedByComputer = 4- amountLastPickedByPlayer;
             }
 
-            System.out.println("\nComputer picked: " + amount);
-            pick(amount);
+            System.out.println("\nComputer picked: " + amountLastPickedByComputer);
+            pick(amountLastPickedByComputer);
         }
     }
 
     public void playerPick() {
         if (b) {
             System.out.print("\namount: ");
-            amountLastPicked = readInt();
-            if (amountOfCards == 21 && amountLastPicked == 72) {
+            amountLastPickedByPlayer = readInt();
+            if (amountOfCards == 21 && amountLastPickedByPlayer == 72) {
                 cheatedRun = true;
                 return;
             }
-            if (amountLastPicked <= 3 && amountLastPicked > 0 && amountLastPicked <= amountOfCards) {
-                pick(amountLastPicked);
+            if (amountLastPickedByPlayer <= 3 && amountLastPickedByPlayer > 0 && amountLastPickedByPlayer <= amountOfCards) {
+                pick(amountLastPickedByPlayer);
 
             } else {
                 System.out.print("Not a valid number try again");
                 playerPick();
             }
-        };
+        }
     }
 
     public void pick(int amount) {
