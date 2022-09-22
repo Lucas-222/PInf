@@ -63,11 +63,8 @@ public class Nim {
             // Cheated run
             if (cheatedRun) {
                 // Default
-                amountLastPickedByComputer = 1;
-                // First
-                if (amountOfCards == 21) {
-                    amountLastPickedByComputer = 2;
-                }
+                amountLastPickedByComputer = (int) (Math.random() * 3) + 1;
+                System.out.println(amountLastPickedByComputer);
                 // When player failed
                 if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0) {
                     if (amountOfCards % 4 != 0) {
@@ -125,7 +122,7 @@ public class Nim {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
             String s = reader.readLine();
-            if (s.equals("l")) {
+            if (s.equals("xyzzy")) {
                 return 72;
             }
             return Integer.parseInt(s);
