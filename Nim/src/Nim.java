@@ -10,36 +10,15 @@ public class Nim {
     public String currentTurn = "Player";
 
     public Nim() {
-        if (normalLoop().equals("cheated")) {
-            cheatedLoop();
-        }
+       loop();
     }
 
-    public void cheatedLoop() {
-        currentTurn = "Computer";
-        while (b) {
-            // Player turn
-            if (currentTurn.equals("Player")) {
-                playerPick();
-                currentTurn = "Computer";
-                // Computer turn
-            } else {
-                computerPick();
-                currentTurn = "Player";
-            }
-            checkWin(currentTurn);
-        }
-    }
-
-    public String normalLoop() {
+    public String loop() {
         output();
         while (b) {
             // Player turn
             if (currentTurn.equals("Player")) {
                 playerPick();
-                if (cheatedRun) {
-                    return "cheated";
-                }
                 currentTurn = "Computer";
                 // Computer turn
             } else {
@@ -63,23 +42,27 @@ public class Nim {
             // Cheated run
             if (cheatedRun) {
                 // Default
-                amountLastPickedByComputer = (int) (Math.random() * 3) + 1;
+                amountLastPickedByComputer = ((int) (Math.random()*3))+1;
                 // When player failed
                 if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0) {
                     if (amountOfCards % 4 != 0) {
                         amountLastPickedByComputer = amountOfCards % 4;
                     } else {
-                        amountLastPickedByComputer = 4- amountLastPickedByPlayer;
+                        amountLastPickedByComputer = 4 - amountLastPickedByPlayer;
                     }
                 }
                 // When Only 3 or less are left
                 if (amountOfCards <= 3) {
-                    amountLastPickedByComputer = amountOfCards-1;
+                    if (amountOfCards-1 != 0) {
+                        amountLastPickedByComputer = amountOfCards - 1;
+                    } else {
+                        amountLastPickedByComputer = 1;
+                    }
                 }
             }
             // Normal run
             if (!cheatedRun) {
-              amountLastPickedByComputer = 4- amountLastPickedByPlayer;
+              amountLastPickedByComputer = 4 - amountLastPickedByPlayer;
             }
 
             System.out.println("\nComputer picked: " + amountLastPickedByComputer);
@@ -93,6 +76,7 @@ public class Nim {
             amountLastPickedByPlayer = readInt();
             if (amountOfCards == 21 && amountLastPickedByPlayer == 72) {
                 cheatedRun = true;
+                amountLastPickedByPlayer = 0;
                 return;
             }
             if (amountLastPickedByPlayer <= 3 && amountLastPickedByPlayer > 0 && amountLastPickedByPlayer <= amountOfCards) {
