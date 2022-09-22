@@ -7,6 +7,7 @@ public class Nim {
     private int amountLastPickedByComputer = 0;
     private boolean bool = true;
     private boolean cheatedRun = false;
+    private boolean playerfailed = false;
 
     public Nim() {
        loop();
@@ -39,27 +40,30 @@ public class Nim {
 
     public void computerPick() {
         if (bool) {
+            if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0 && !playerfailed) {
+                playerfailed = true;
+            }
             // Cheated run
             if (cheatedRun) {
-                int temp = amountLastPickedByComputer;
                 // Default
-                temp = ((int) (Math.random()*3))+1;
+                int temp = ((int) (Math.random()*3))+1;
                 // When player failed
-                if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0) {
-                    if (amount % 4 != 0) {
-                        temp = amount % 4;
+                if (playerfailed) {
+                    if (amount % 4 == 0) {
+                        temp = 3;
                     } else {
-                        temp = 4 - amountLastPickedByPlayer;
+                        temp = amount % 4 - 1;
                     }
                 }
                 // When Only 4 or less are left
                 if (amount <= 4) {
-                    if (amount -1 != 0) {
+                    if (amount - 1 != 0) {
                         temp = amount - 1;
                     } else {
                         temp = 1;
                     }
                 }
+
                 amountLastPickedByComputer = temp;
             }
             // Normal run
@@ -99,6 +103,9 @@ public class Nim {
     public void output() {
         for (int i = 0; i < amount; i++) {
             System.out.print("[*]");
+        }
+        if (amount != 0) {
+            System.out.print(" (" + amount + ")");
         }
     }
 
