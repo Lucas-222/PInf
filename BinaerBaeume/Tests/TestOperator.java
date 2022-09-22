@@ -84,38 +84,20 @@ public class TestOperator {
     }
 
     @Test
-    void TestToOperatorAddition() {
-        StringToNode stringToNode = new StringToNode("(10.0,5.0)+");
-        Operator operator = stringToNode.calculate();
-        assertEquals(15, operator.getValue());
-     }
-
-    @Test
-    void TestToOperatorSubstraction() {
-        StringToNode stringToNode = new StringToNode("(10.0,5.0)-");
-        Operator operator = stringToNode.calculate();
-        assertEquals(5, operator.getValue());
+    void TestStringParserEasy() {
+        String operatorParseString = "((10.0,5.0)/,(40.0,10.0)+)/";
+        Operator parsedOperator = (Operator) StringToNodeParser.getOperatorFromString(operatorParseString);
+        assertEquals(operatorParseString, parsedOperator.toString());
+        assertEquals(0.04, parsedOperator.getValue());
     }
 
     @Test
-    void TestToOperatorMultiply() {
-        StringToNode stringToNode = new StringToNode("(10.0,5.0)*");
-        Operator operator = stringToNode.calculate();
-        assertEquals(50, operator.getValue());
-    }
-
-    @Test
-    void TestToOperatorDivide() {
-        StringToNode stringToNode = new StringToNode("(10.0,5.0)/");
-        Operator operator = stringToNode.calculate();
-        assertEquals(2, operator.getValue());
-    }
-
-    @Test
-    void TestToOperatorPower() {
-        StringToNode stringToNode = new StringToNode("(3.0,2.0)^");
-        Operator operator = stringToNode.calculate();
-        assertEquals(9, operator.getValue());
+    void TestStringParserHard() {
+        // ((25.0,10.0)*,((10.0,5.0)-,(40.0,10.0)+)/)* ==> (25.0, 25.0)+ == 50.0
+        String operatorParseString = "(((25.0,10.0)*,((10.0,5.0)-,(40.0,10.0)+)/)*,25.0)+";
+        Operator parsedOperator = (Operator) StringToNodeParser.getOperatorFromString(operatorParseString);
+        assertEquals(operatorParseString, parsedOperator.toString());
+        assertEquals(50.0, parsedOperator.getValue());
     }
 
 }

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BinaerBaeume/BinaerBaeume.iml" filepath="$PROJECT_DIR$/BinaerBaeume/BinaerBaeume.iml" />
       <module fileurl="file://$PROJECT_DIR$/PythonXJava/JavaPart/JavaPart.iml" filepath="$PROJECT_DIR$/PythonXJava/JavaPart/JavaPart.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Nim/Nim.iml" filepath="$PROJECT_DIR$/Nim/Nim.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/PInf.iml" filepath="$PROJECT_DIR$/.idea/PInf.iml" />
       <module fileurl="file://$PROJECT_DIR$/PythonXJava/PythonPart/PythonPart.iml" filepath="$PROJECT_DIR$/PythonXJava/PythonPart/PythonPart.iml" />
       <module fileurl="file://$PROJECT_DIR$/PythonXJava/PythonXJava.iml" filepath="$PROJECT_DIR$/PythonXJava/PythonXJava.iml" />
