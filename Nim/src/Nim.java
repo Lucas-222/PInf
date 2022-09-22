@@ -64,7 +64,6 @@ public class Nim {
             if (cheatedRun) {
                 // Default
                 amountLastPickedByComputer = (int) (Math.random() * 3) + 1;
-                System.out.println(amountLastPickedByComputer);
                 // When player failed
                 if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0) {
                     if (amountOfCards % 4 != 0) {
