@@ -8,6 +8,7 @@ public class MontyHall {
 
     public MontyHall() {
         start();
+
     }
 
     public void start() {
