@@ -40,11 +40,11 @@ public class Nim {
 
     public void computerPick() {
         if (bool) {
-            if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0 && !playerfailed) {
-                playerfailed = true;
-            }
             // Cheated run
             if (cheatedRun) {
+                if (amountLastPickedByPlayer != 4 - amountLastPickedByComputer && amountLastPickedByPlayer != 0 && !playerfailed) {
+                    playerfailed = true;
+                }
                 // Default
                 int temp = ((int) (Math.random()*3))+1;
                 // When player failed
