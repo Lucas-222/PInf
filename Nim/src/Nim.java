@@ -34,7 +34,7 @@ public class Nim {
     public void checkWin() {
         if (amount <= 0) {
             running = false;
-            System.out.println("\n"+currentPlayer + " has won");
+            System.out.println("\n" + currentPlayer + " has won");
         }
     }
 
@@ -96,7 +96,7 @@ public class Nim {
     }
 
     public void pick(int amount) {
-        this.amount -=amount;
+        this.amount -= amount;
         checkWin();
         output();
     }
