@@ -101,39 +101,13 @@ public class TestOperator {
     }
 
     @Test
-    void NewParserTest() throws Exception {
-        //[1, 2, +, 3, 4, *, -, 5, 6, 7, ^, ^, 8, *, +, 9, -]
-        // -(9, +( *( 8,(^(^(7,6),5)-(*(4,3),+(1,2)
-        // (1,2)+ --> (3,4)* --> - --> ((1,2)+,(3,4)*)- -->
-        String parsingString ="1+2-3*4+5^7*8-9";
-        String parsingString2 = "1+2-3*4+5^6^7*8-9";
-        String parsingString3 = "(3.31 + 4)*(15.5547 - 6)";
+    void Testparse() {
+        TermParser termParser = new TermParser();
+        String arr = termParser.parse("100 / 2");
+        String expected = "100/2";
 
-        Node parsedNode = TermParser.parse(parsingString);
-        Node parsedNode2 = TermParser.parse(parsingString2);
-        Node parsedNode3 = TermParser.parse(parsingString3);
-
-        assertEquals("((((1.0,2.0)+,(3.0,4.0)*)-,((5.0,7.0)^,8.0)*)+,9.0)-", parsedNode.toString());
-        assertEquals("((((1.0,2.0)+,(3.0,4.0)*)-,((5.0,(6.0,7.0)^)^,8.0)*)+,9.0)-", parsedNode2.toString());
-        assertEquals("((3.31,4.0)+,(15.5547,6.0)-)*", parsedNode3.toString());
-
-        parsingString = TermParser.parseToString(parsingString);
-        parsingString2 = TermParser.parseToString(parsingString2);
-        parsingString3 = TermParser.parseToString(parsingString3);
-
-        assertEquals("((((1,2)+,(3,4)*)-,((5,7)^,8)*)+,9)-", parsingString);
-        assertEquals("((((1,2)+,(3,4)*)-,((5,(6,7)^)^,8)*)+,9)-", parsingString2);
-        assertEquals("((3.31,4)+,(15.5547,6)-)*", parsingString3);
+        assertEquals(arr, expected);
     }
 
-    @Test
-    void NewParserSecondTest() throws Exception {
-        String parsingString =".154 + 21 - 31.243 / 80,21";
-        Node parsedNode = TermParser.parse(parsingString);
-        parsingString = TermParser.parseToString(parsingString);
-        System.out.println(parsingString);
-        System.out.println(parsedNode.toString());
-        System.out.println(parsedNode.getValue());
-    }
 
 }
