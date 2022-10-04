@@ -1,47 +1,45 @@
 public class TermParser {
+   String input;
+   String[] arr;
 
-   public String parse(String input) {
-      boolean running = true;
+   public TermParser(String input) {
+      this.input = input;
+   }
+
+   public void parse() {
       char[] operators = new char[] {'+', '-', '*', '/', '^'};
+      String temp = input;
 
       // Leerzeichen entfernen
-      input = deleteWhiteSpaces(input);
+      temp = temp.replaceAll("\\s", "");
 
-      // Leerzeichen hinzufügen
-      for (int i = 0; running; i++) {
-         if (contains(operators, input.charAt(i))) {
-            input = input.replace(String.valueOf(input.charAt(i)), " "  + input.charAt(i) + " ");
-            running = false;
+      // Leerzeichen um Operator hinzufügen
+      for (int i = 0; i < input.length(); i++) {
+         if (contains(operators, temp.charAt(i))) {
+            temp = temp.replace(String.valueOf(temp.charAt(i)), " "  + temp.charAt(i) + " ");
          }
       }
 
       // Split
-      String[] arr = input.split(" ");
-
-      StringBuilder stringBuilder = new StringBuilder();
-
-      for (int i = 0; i < arr.length; i++) {
-         stringBuilder.append(arr[i]);
-      }
-      System.out.println(arr);
-
-      return stringBuilder.toString();
+      arr = temp.split(" ");
    }
 
-   public String deleteWhiteSpaces(String input) {
-      input = input.replace(" ", "");
-      input = input.replace("\n", "");
-      input = input.replace("\t", "");
-      return input;
-   }
-
-   public boolean contains(char[] arr, char input) {
-      for (int i = 0; i < arr.length; i++) {
-         if (input == arr[i]) {
+   public boolean contains(char[] arr, char c) {
+      for (char value : arr) {
+         if (c == value) {
             return true;
          }
       }
       return false;
    }
 
+   @Override
+   public String toString() {
+      StringBuilder stringBuilder = new StringBuilder();
+
+      for (String s : arr) {
+         stringBuilder.append(s);
+      }
+      return stringBuilder.toString();
+   }
 }

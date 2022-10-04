@@ -102,12 +102,9 @@ public class TestOperator {
 
     @Test
     void Testparse() {
-        TermParser termParser = new TermParser();
-        String arr = termParser.parse("100 / 2");
-        String expected = "100/2";
-
-        assertEquals(arr, expected);
+        TermParser termParser = new TermParser("100\n\t / 2");
+        termParser.parse();
+        assertEquals(termParser.toString(), "100/2");
     }
-
 
 }
