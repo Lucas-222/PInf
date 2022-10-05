@@ -1,66 +1,154 @@
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TermParser {
    String input;
    String[] arr;
-   HashMap<Character, Operators> operators = fillMap();
+   ArrayList<Character> operators = fillListWithOperators();
+   ArrayList<Character> characters = fillListWithCharacters();
+   ArrayList<Character> numbers = fillListWithNumbers();
 
    public TermParser(String input) {
       this.input = input;
    }
 
    public void parse() {
-      // Es wird ein temporärer Wert erzeugt
+      // Create temp variable for writing | input is only used for reading
       String temp = input;
 
-      // Leerzeichen entfernen
-      temp = temp.replaceAll("\\s", "");
+      // Remove whitespaces from the temp string
+      temp = temp.replaceAll("[\\s|\\u00A0]+", "");
 
-      // Leerzeichen um Operator hinzufügen
+      // Loop through the input
       for (int i = 0; i < input.length(); i++) {
-         // Wenn der aktuelle char ein Operator ist
-         if (operators.containsKey(input.charAt(i))) {
-            // Ersetzen des Operators mit dem Operator und zwei Leerzeichen herum
-            temp = temp.replace(String.valueOf(input.charAt(i)), " "  + input.charAt(i) + " ");
-            // Wenn nach dem Operator ein Vorzeichen kommt
-            if (input.charAt(i+1) == '-') {
+         // If current char is an operator or character
+         if (operators.contains(input.charAt(i)) || input.charAt(i) == '(' || input.charAt(i) == ')') {
+            // Extend operator with two whitespaces around it
+            temp = temp.replace(String.valueOf(input.charAt(i)), " " + input.charAt(i) + " ");
+            // If there is a minus after the operator or character
+            if (input.length() != i + 1 && input.charAt(i + 1) == '-') {
+               // Skip the next char and set it as a part of the number
                i++;
             }
          }
       }
 
-      // Punkt mit Komma ersetzen
-      temp = temp.replace(".", ",");
+      // replace komma with point
+      temp = temp.replace(",", ".");
 
-      // Split nach jedem Leerzeichen
+      // Split after every whitespace
       arr = temp.split(" ");
+
+      // Remove whitespaces
+      deleteWhitespacesFromArray();
    }
 
-   public HashMap<Character, Operators> fillMap() {
-      HashMap<Character, Operators> map = new HashMap<>();
-      map.put('+', Operators.ADD);
-      map.put('-', Operators.SUBTRACT);
-      map.put('*', Operators.MULTIPLY);
-      map.put('/', Operators.DIVIDE);
-      map.put('^', Operators.POWER);
-      return map;
+   public boolean checkForIllegalCharacters() {
+      // Loop through array
+      for (String s : arr) {
+         // For every String in array loop through every char
+         for (int i = 0; i < s.length(); i++) {
+            // Create temp variable
+            char temp = s.charAt(i);
+            // If char is not valid
+            if (!characters.contains(temp) && !operators.contains(temp) && !numbers.contains(temp)) {
+               return true;
+            }
+         }
+      }
+      // Check for two same characters in a row
+      if (checkForTwoCharactersInARow(characters)) {
+         return true;
+      }
+      // Check for two same operators in a row
+      return checkForTwoCharactersInARow(operators);
+   }
+
+   public boolean checkForTwoCharactersInARow(ArrayList<Character> list) {
+      // Loop through every String in arr
+      for (int i = 0; i < arr.length; i++) {
+         // Check if two operators are after one another | for example (++)
+         if (i+1 != arr.length && list.contains(arr[i].charAt(0)) && list.contains(arr[i+1].charAt(0))) {
+            // Exclude key siganture (-)
+            if (arr[i+1].length() == 1) {
+               return true;
+            }
+         } else {
+            // Loop through every char in every String
+            for (int j = 0; j < arr[i].length(); j++) {
+               // If two same chars are after one another in the same String
+               if (j+1 != arr[i].length() && list.contains(arr[i].charAt(j)) && list.contains(arr[i].charAt(j+1))) {
+                  return true;
+               }
+            }
+         }
+      }
+      // Everything is ok
+      return false;
+   }
+
+   public ArrayList<Character> fillListWithOperators() {
+      ArrayList<Character> list = new ArrayList<>();
+      list.add('+');
+      list.add('-');
+      list.add('*');
+      list.add('/');
+      list.add('^');
+      return list;
+   }
+
+   public ArrayList<Character> fillListWithCharacters() {
+      ArrayList<Character> list = new ArrayList<>();
+      list.add('(');
+      list.add(')');
+      list.add(',');
+      list.add('.');
+      return list;
+   }
+
+   public ArrayList<Character> fillListWithNumbers() {
+      ArrayList<Character> list = new ArrayList<>();
+      list.add('0');
+      list.add('1');
+      list.add('2');
+      list.add('3');
+      list.add('4');
+      list.add('5');
+      list.add('6');
+      list.add('7');
+      list.add('8');
+      list.add('9');
+      return list;
+   }
+
+   public void deleteWhitespacesFromArray() {
+      // Creation of new arrayList with values of the array
+      ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
+
+      // Remove Whitespaces
+      list.removeIf(s -> s.equals(""));
+
+      // Fill the array with values from the arraylist
+      arr = list.toArray(new String[0]);
    }
 
    @Override
    public String toString() {
-      // Array was created
-      if (arr != null) {
-         StringBuilder stringBuilder = new StringBuilder();
-         // Fill the Stringbuilder with the operators numbers and brackets
-         for (String s : arr) {
-            // Only use chars wich are not "" or " "
-            if (!s.equals("") && !s.equals(" ")) {
-               stringBuilder.append("[").append(s).append("]");
-            }
-         }
-         return stringBuilder.toString();
+      // If input contains illgal characters
+      if (checkForIllegalCharacters()) {
+         return "Illegal argument found";
       }
-      // Array was not created
-      return "The array is null";
+      // If array is null
+      if (arr == null) {
+         return "The array is null";
+      }
+
+      // Normal
+      StringBuilder stringBuilder = new StringBuilder();
+      // Fill the Stringbuilder with the operators numbers and brackets
+      for (String s : arr) {
+         stringBuilder.append("[").append(s).append("]");
+      }
+      return stringBuilder.toString();
    }
 }

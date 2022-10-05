@@ -100,24 +100,4 @@ public class TestOperator {
         assertEquals(50.0, parsedOperator.getValue());
     }
 
-    @Test
-    void Testparse() {
-        TermParser termParser = new TermParser("100\n\t / 2");
-        termParser.parse();
-        assertEquals("[100][/][2]", termParser.toString());
-    }
-
-    @Test
-    void TestParseComplicated() {
-        TermParser termParser = new TermParser("100*\t 3 + 2.\n34*2,3");
-        termParser.parse();
-        assertEquals("[100][*][3][+][2,34][*][2,3]", termParser.toString());
-    }
-
-    @Test
-    void TestParseVorzeichen() {
-        TermParser termParser = new TermParser("1 +- 1");
-        termParser.parse();
-        assertEquals("[1][+][-1]", termParser.toString());
-    }
 }
