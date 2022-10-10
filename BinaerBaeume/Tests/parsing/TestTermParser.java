@@ -1,5 +1,6 @@
+package parsing;
+
 import org.junit.jupiter.api.Test;
-import parsing.TermParser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

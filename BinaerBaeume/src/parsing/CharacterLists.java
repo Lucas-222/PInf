@@ -2,12 +2,12 @@ package parsing;
 
 import java.util.ArrayList;
 
-public class CharacterLsts {
+public class CharacterLists {
     public final ArrayList<Character> OPERATORS = fillListWithOperators();
     public final ArrayList<Character> CHARACTERS = fillListWithCharacters();
     public final ArrayList<Character> NUMBERS = fillListWithNumbers();
 
-    public CharacterLsts() {
+    public CharacterLists() {
 
     }
 

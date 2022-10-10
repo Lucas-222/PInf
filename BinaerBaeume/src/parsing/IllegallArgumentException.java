@@ -1,7 +1,5 @@
 package parsing;
 
-import java.util.ArrayList;
-
 public class IllegallArgumentException extends Exception {
 
     public IllegallArgumentException() {}

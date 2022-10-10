@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class TermParser {
    private String[] arr;
    private final String input;
-   private final CharacterLsts characterLsts = new CharacterLsts();
+   private final CharacterLists characterLists = new CharacterLists();
 
    public TermParser(String input) {
       this.input = input;
@@ -27,12 +27,12 @@ public class TermParser {
          // Loop through the input
          for (int i = 0; i < input.length(); i++) {
             // If current char is an operator or character
-            if (characterLsts.OPERATORS.contains(input.charAt(i)) || input.charAt(i) == '(' || input.charAt(i) == ')') {
+            if (characterLists.OPERATORS.contains(input.charAt(i)) || input.charAt(i) == '(' || input.charAt(i) == ')') {
                // Extend operator with two whitespaces around it
                temp = temp.replace(String.valueOf(input.charAt(i)), " " + input.charAt(i) + " ");
                // If there is a minus after the operator or character
                if (input.length() != i + 1 && input.charAt(i + 1) == '-') {
-                  // Skip the next char and set it as a part of the number
+                  // Skip the next char and set it as a part of the next number
                   i++;
                }
             }
@@ -53,13 +53,17 @@ public class TermParser {
          // Fill the array with values from the arraylist
          arr = list.toArray(new String[0]);
 
+         // If illegal argument is found
          if (checkForAnythingIllegal()) {
+            // Throw new illegall argument exception
             throw new IllegallArgumentException();
          }
 
       } catch (IllegallArgumentException e) {
+         // Set arr to error message
          arr = new String[]{e.getMessage()};
       }
+      // Return arr
       return arr;
    }
 
@@ -74,7 +78,7 @@ public class TermParser {
          // Loop through every char in every string in array
          for (int i = 0; i < s.length(); i++) {
             // If char is not valid
-            if (!characterLsts.CHARACTERS.contains(s.charAt(i)) && !characterLsts.OPERATORS.contains(s.charAt(i)) && !characterLsts.NUMBERS.contains(s.charAt(i))) {
+            if (!characterLists.CHARACTERS.contains(s.charAt(i)) && !characterLists.OPERATORS.contains(s.charAt(i)) && !characterLists.NUMBERS.contains(s.charAt(i))) {
                return true;
             }
          }
@@ -84,15 +88,15 @@ public class TermParser {
 
    public boolean checkForTwoCharactersInARow() {
       ArrayList<Character> list = new ArrayList<>();
-      list.addAll(characterLsts.OPERATORS);
-      list.addAll(characterLsts.CHARACTERS);
+      list.addAll(characterLists.OPERATORS);
+      list.addAll(characterLists.CHARACTERS);
 
       // Loop through every string in arr
       for (int i = 0; i < arr.length; i++) {
          // Check if two operators are after one another or an operator and a character are | for example (++) or (+.) | Brackets after an operator are allowed
          if (i + 1 != arr.length && list.contains(arr[i].charAt(0)) && list.contains(arr[i + 1].charAt(0)) && arr[i + 1].charAt(0) != '(' && arr[i + 1].charAt(0) != ')') {
             // Check for key siganture (-) and an illegal character in the next string ([+][.4])
-            if (arr[i + 1].length() == 1 || characterLsts.CHARACTERS.contains(arr[i + 1].charAt(0))) {
+            if (arr[i + 1].length() == 1 || characterLists.CHARACTERS.contains(arr[i + 1].charAt(0))) {
                return true;
             }
          } else {
