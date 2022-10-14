@@ -1,0 +1,38 @@
+public class PQ {
+    private final double p;
+    private final double q;
+    private double x1;
+    private double x2;
+
+    public PQ(double p, double q) {
+        this.p = p;
+        this.q = q;
+        calculate();
+    }
+
+    private void calculate() {
+        double pHalf = (p / 2);
+        double sqrt = Math.sqrt(Math.pow(pHalf, 2) - q);
+        x1 = -pHalf + sqrt;
+        x2 = -pHalf - sqrt;
+    }
+
+    public double getX1() {
+        if (Double.isNaN(x1)) {
+            System.out.println("x1 is NaN");
+        }
+        return x1;
+    }
+
+    public double getX2() {
+        if (Double.isNaN(x2)) {
+            System.out.println("x2 is NaN");
+        }
+        return x2;
+    }
+
+    @Override
+    public String toString() {
+        return "x1: " + getX1() + "\nx2: " + getX2();
+    }
+}

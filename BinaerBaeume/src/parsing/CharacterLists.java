@@ -45,5 +45,4 @@ public class CharacterLists {
         return list;
     }
 
-
 }

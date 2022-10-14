@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTermParser {
-    private final String error = "[Illegal argument found]";
+    private final String error = new IllegallArgumentException().getMessage();
 
     @Test
     void TestGetArr() {
         TermParser termParser = new TermParser("+");
-        termParser.parse();
-        assertEquals("+", termParser.getArr()[0]);
+        assertEquals("+", termParser.parse()[0]);
     }
 
     @Test

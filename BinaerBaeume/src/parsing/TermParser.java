@@ -12,10 +12,6 @@ public class TermParser {
       this.input = input;
    }
 
-   public String[] getArr() {
-      return arr;
-   }
-
    public String[] parse() {
       try {
          // Create temp variable for writing | input is only used for reading
@@ -55,7 +51,6 @@ public class TermParser {
 
          // If illegal argument is found
          if (checkForAnythingIllegal()) {
-            // Throw new illegall argument exception
             throw new IllegallArgumentException();
          }
 
@@ -129,7 +124,7 @@ public class TermParser {
       // Store the amount of openingbracks without closing brackets in a variable
       int amountOfOpeningBracketsWithoutClosingBrackets = 0;
       for (String s : arr) {
-         // If string is an opening bracket add 1 to amountOfOpeningBracketsWithoutClosingBrackets
+         // If string is an opening bracket, add 1 to amountOfOpeningBracketsWithoutClosingBrackets
          if (s.charAt(0) == '(') {
             amountOfOpeningBracketsWithoutClosingBrackets++;
          } else if (s.charAt(0) == ')') {
@@ -153,7 +148,7 @@ public class TermParser {
       }
       // Normal
       StringBuilder stringBuilder = new StringBuilder();
-      // Fill the Stringbuilder with the operators numbers and brackets
+      // Fill the Stringbuilder with the operators, numbers and brackets
       for (String s : arr) {
          stringBuilder.append("[").append(s).append("]");
       }
