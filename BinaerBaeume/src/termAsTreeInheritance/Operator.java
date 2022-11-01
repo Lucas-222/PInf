@@ -1,4 +1,4 @@
-package TermAsTreeInheritance;
+package termAsTreeInheritance;
 
 public abstract class Operator implements Node {
 

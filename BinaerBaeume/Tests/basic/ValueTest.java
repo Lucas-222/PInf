@@ -1,6 +1,6 @@
 package basic;
 
-import TermAsTreeInheritance.Value;
+import termAsTreeInheritance.Value;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

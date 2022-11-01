@@ -1,4 +1,4 @@
-package TermAsTreeInheritance;
+package termAsTreeInheritance;
 
 public class Multiply extends Operator {
 

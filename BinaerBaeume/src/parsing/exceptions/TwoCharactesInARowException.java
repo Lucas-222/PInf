@@ -1,7 +1,7 @@
 package parsing.exceptions;
 
 public class TwoCharactesInARowException extends Exception {
-    private char[] c;
+    private final char[] c;
 
     public TwoCharactesInARowException(char[] c) {
         this.c = c;

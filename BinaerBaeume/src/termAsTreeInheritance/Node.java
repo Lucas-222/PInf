@@ -1,4 +1,4 @@
-package TermAsTreeInheritance;
+package termAsTreeInheritance;
 
 public interface Node {
 

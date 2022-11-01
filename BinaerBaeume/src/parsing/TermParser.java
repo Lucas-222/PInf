@@ -1,10 +1,6 @@
 package parsing;
 
-import parsing.exceptions.IllegalCharacterAfterNumberException;
-import parsing.exceptions.IllegalCharacterException;
-import parsing.exceptions.TwoCharactesInARowException;
-import parsing.exceptions.WrongBracketsException;
-
+import parsing.exceptions.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -59,6 +55,7 @@ public class TermParser {
    }
 
    public void checkForAnythingIllegal() {
+      // Try for all possible exceptions
       try {
          checkForIllegalCharacters();
       } catch (IllegalCharacterException e) {
@@ -85,23 +82,26 @@ public class TermParser {
    }
 
    public void checkForIllegalCharacters() throws IllegalCharacterException {
+      ArrayList<Character> allCharacters = new ArrayList<>();
       for (String s : arr) {
          // Loop through every char in every string in array
          for (int i = 0; i < s.length(); i++) {
             // If char is not valid
             if (!characterLists.CHARACTERS.contains(s.charAt(i)) && !characterLists.OPERATORS.contains(s.charAt(i)) && !characterLists.NUMBERS.contains(s.charAt(i))) {
-               throw new IllegalCharacterException(s.charAt(i));
+               throw new IllegalCharacterException(allCharacters, s.charAt(i));
+            } else {
+               allCharacters.add(s.charAt(i));
             }
          }
       }
    }
 
    public void checkForTwoCharactersInARow() throws TwoCharactesInARowException {
+      // Create a list with operators and characters
       ArrayList<Character> list = new ArrayList<>();
       list.addAll(characterLists.OPERATORS);
       list.addAll(characterLists.CHARACTERS);
 
-      // Loop through every string in arr
       for (int i = 0; i < arr.length; i++) {
          // Check if two operators are after one another or an operator and a character are | for example (++) or (+.) | Brackets after an operator are allowed
          if (i + 1 != arr.length && list.contains(arr[i].charAt(0)) && list.contains(arr[i + 1].charAt(0)) && arr[i + 1].charAt(0) != '(' && arr[i + 1].charAt(0) != ')') {
@@ -122,7 +122,6 @@ public class TermParser {
    }
 
    public void checkForIllegalCharacterAfterNumber() throws IllegalCharacterAfterNumberException {
-      // Loop through ervery string in array
       for (String s : arr) {
          // If the last char of the string in array is (.) or (,)
          if (s.charAt(s.length() - 1) == '.' || s.charAt(s.length() - 1) == ',') {
@@ -139,6 +138,10 @@ public class TermParser {
          if (s.charAt(0) == '(') {
             amountOfOpeningBracketsWithoutClosingBrackets++;
          } else if (s.charAt(0) == ')') {
+            // If there is a closing bracket before an opening bracket throw an exception
+            if (amountOfOpeningBracketsWithoutClosingBrackets <= 0) {
+               throw new WrongBracketsException();
+            }
             // If string is a closing bracket, substract 1 from amountOfOpeningBracketsWithoutClosingBrackets
             amountOfOpeningBracketsWithoutClosingBrackets--;
          }
@@ -151,17 +154,14 @@ public class TermParser {
    @Override
    public String toString() {
       if (arr == null) return "The array is null";
-      StringBuilder stringBuilder = new StringBuilder();
 
-      if (arr.length == 1) {
-         for (String s : arr) {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (String s : arr) {
+         if (arr.length != 1) {
+            stringBuilder.append("[").append(s).append("]");
+         } else {
             stringBuilder.append(s);
          }
-         return stringBuilder.toString();
-      }
-
-      for (String s : arr) {
-         stringBuilder.append("[").append(s).append("]");
       }
       return stringBuilder.toString();
    }

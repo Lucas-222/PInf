@@ -1,9 +1,9 @@
 package basic;
 
-import TermAsTreeInheritance.Add;
-import TermAsTreeInheritance.Operator;
-import TermAsTreeInheritance.Power;
-import TermAsTreeInheritance.Value;
+import termAsTreeInheritance.Add;
+import termAsTreeInheritance.Operator;
+import termAsTreeInheritance.Power;
+import termAsTreeInheritance.Value;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

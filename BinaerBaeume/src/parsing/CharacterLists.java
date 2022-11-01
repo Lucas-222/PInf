@@ -3,15 +3,13 @@ package parsing;
 import java.util.ArrayList;
 
 public class CharacterLists {
-    public final ArrayList<Character> OPERATORS = fillListWithOperators();
-    public final ArrayList<Character> CHARACTERS = fillListWithCharacters();
-    public final ArrayList<Character> NUMBERS = fillListWithNumbers();
+    public final ArrayList<Character> OPERATORS = getOperators();
+    public final ArrayList<Character> CHARACTERS = getCharacters();
+    public final ArrayList<Character> NUMBERS = getNumbers();
 
-    public CharacterLists() {
+    public CharacterLists() {}
 
-    }
-
-    private ArrayList<Character> fillListWithOperators() {
+    private ArrayList<Character> getOperators() {
         ArrayList<Character> list = new ArrayList<>();
         list.add('+');
         list.add('-');
@@ -21,7 +19,7 @@ public class CharacterLists {
         return list;
     }
 
-    private ArrayList<Character> fillListWithCharacters() {
+    private ArrayList<Character> getCharacters() {
         ArrayList<Character> list = new ArrayList<>();
         list.add('(');
         list.add(')');
@@ -30,7 +28,7 @@ public class CharacterLists {
         return list;
     }
 
-    private ArrayList<Character> fillListWithNumbers() {
+    private ArrayList<Character> getNumbers() {
         ArrayList<Character> list = new ArrayList<>();
         list.add('0');
         list.add('1');

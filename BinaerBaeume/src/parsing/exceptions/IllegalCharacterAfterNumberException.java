@@ -1,7 +1,7 @@
 package parsing.exceptions;
 
 public class IllegalCharacterAfterNumberException extends Exception {
-    private char c;
+    private final char c;
 
     public IllegalCharacterAfterNumberException(char c) {
         this.c = c;
