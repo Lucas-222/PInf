@@ -11,8 +11,17 @@ public class PQ {
     }
 
     private void calculate() {
-        double pHalf = (p / 2);
-        double sqrt = Math.sqrt(Math.pow(pHalf, 2) - q);
+        double pHalf = p / 2;
+        double sqrt;
+
+        // If q is negative add q else substract q
+        if (q < 0) {
+            // q needs to be a positive number that's why q*-1
+            sqrt = Math.sqrt(Math.pow(pHalf, 2) + (q * -1));
+        } else {
+            sqrt = Math.sqrt(Math.pow(pHalf, 2) - q);
+        }
+
         x1 = -pHalf + sqrt;
         x2 = -pHalf - sqrt;
     }
@@ -33,6 +42,9 @@ public class PQ {
 
     @Override
     public String toString() {
-        return "x1: " + getX1() + "\nx2: " + getX2();
+        if (Double.isNaN(x1) || Double.isNaN(x2)) {
+            return "x1 and x2 are NaN";
+        }
+        return "x1: " + x1 + "\nx2: " + x2;
     }
 }

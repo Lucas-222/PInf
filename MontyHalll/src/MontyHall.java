@@ -111,4 +111,9 @@ public class MontyHall {
         }
     }
 
+    // Fixed javas biggest problem
+    public void print(String output) {
+        System.out.println(output);
+    }
+
 }

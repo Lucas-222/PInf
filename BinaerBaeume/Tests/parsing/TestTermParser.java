@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTermParser {
-    private final String error = new IllegallArgumentException().getMessage();
+    private final String error = "[" + new IllegallArgumentException().getMessage() + "]";
 
     @Test
     void TestGetArr() {
@@ -22,7 +22,7 @@ public class TestTermParser {
 
     @Test
     void TestComplicated() {
-        TermParser termParser = new TermParser("100* 3 + 2.\n34*2,3");
+        TermParser termParser = new TermParser("100* 3 + 2.34*2,3");
         termParser.parse();
         assertEquals("[100][*][3][+][2.34][*][2.3]", termParser.toString());
     }

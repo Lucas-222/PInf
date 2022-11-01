@@ -56,9 +56,8 @@ public class TermParser {
 
       } catch (IllegallArgumentException e) {
          // Set arr to error message
-         arr = new String[]{e.getMessage()};
+         arr = new String[] {e.getMessage()};
       }
-      // Return arr
       return arr;
    }
 
@@ -98,9 +97,7 @@ public class TermParser {
             // Loop through every char in every string
             for (int j = 0; j < arr[i].length(); j++) {
                // If two same chars are after one another in the same string
-               if (j + 1 != arr[i].length() && list.contains(arr[i].charAt(j)) && list.contains(arr[i].charAt(j + 1))) {
-                  return true;
-               }
+               if (j + 1 != arr[i].length() && list.contains(arr[i].charAt(j)) && list.contains(arr[i].charAt(j + 1))) return true;
             }
          }
       }
@@ -112,9 +109,7 @@ public class TermParser {
       // Loop through ervery string in array
       for (String s : arr) {
          // If the last char of the string in array is (.) or (,)
-         if (s.charAt(s.length() - 1) == '.' || s.charAt(s.length() - 1) == ',') {
-            return true;
-         }
+         if (s.charAt(s.length() - 1) == '.' || s.charAt(s.length() - 1) == ',') return true;
       }
       // Everything is ok
       return false;
@@ -128,12 +123,8 @@ public class TermParser {
          if (s.charAt(0) == '(') {
             amountOfOpeningBracketsWithoutClosingBrackets++;
          } else if (s.charAt(0) == ')') {
-            // If there was an opening bracket before the closing bracket remove 1 from amountOfOpeningBracketsWithoutClosingBrackets
-            if (amountOfOpeningBracketsWithoutClosingBrackets > 0) {
-               amountOfOpeningBracketsWithoutClosingBrackets--;
-            } else {
-               return true;
-            }
+            // If string is a closing bracket, substract 1 from amountOfOpeningBracketsWithoutClosingBrackets
+            amountOfOpeningBracketsWithoutClosingBrackets--;
          }
       }
       // If there are more opening brackets than closing brackets return true
@@ -142,11 +133,8 @@ public class TermParser {
 
    @Override
    public String toString() {
-      // If array is null
-      if (arr == null) {
-         return "The array is null";
-      }
-      // Normal
+      if (arr == null) return "The array is null";
+
       StringBuilder stringBuilder = new StringBuilder();
       // Fill the Stringbuilder with the operators, numbers and brackets
       for (String s : arr) {
