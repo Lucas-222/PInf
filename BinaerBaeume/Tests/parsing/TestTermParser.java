@@ -1,119 +1,131 @@
 package parsing;
 
 import org.junit.jupiter.api.Test;
+import parsing.exceptions.IllegalCharacterAfterNumberException;
+import parsing.exceptions.IllegalCharacterException;
+import parsing.exceptions.TwoCharactesInARowException;
+import parsing.exceptions.WrongBracketsException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTermParser {
-    private final String error = "[" + new IllegallArgumentException().getMessage() + "]";
 
     @Test
-    void TestGetArr() {
+    void testGetArr() {
         TermParser termParser = new TermParser("+");
         assertEquals("+", termParser.parse()[0]);
     }
 
     @Test
-    void TestEasy() {
+    void testEasy() {
         TermParser termParser = new TermParser("100\n\t / 2");
         termParser.parse();
         assertEquals("[100][/][2]", termParser.toString());
     }
 
     @Test
-    void TestComplicated() {
+    void testComplicated() {
         TermParser termParser = new TermParser("100* 3 + 2.34*2,3");
         termParser.parse();
         assertEquals("[100][*][3][+][2.34][*][2.3]", termParser.toString());
     }
 
     @Test
-    void TestVorzeichen() {
+    void testVorzeichen() {
         TermParser termParser = new TermParser("1 +- 1");
         termParser.parse();
         assertEquals("[1][+][-1]", termParser.toString());
     }
 
     @Test
-    void TestBrackets() {
+    void testBrackets() {
         TermParser termParser = new TermParser("(1+1.3  + 2)");
         termParser.parse();
         assertEquals("[(][1][+][1.3][+][2][)]", termParser.toString());
     }
 
     @Test
-    void TestMultipleBrackets() {
+    void testMultipleBrackets() {
         TermParser termParser = new TermParser("(1 + 1.3 + 2 + (3 + 4))");
         termParser.parse();
         assertEquals("[(][1][+][1.3][+][2][+][(][3][+][4][)][)]", termParser.toString());
     }
 
     @Test
-    void TestArrayIsNull() {
+    void testArrayIsNull() {
         TermParser termParser = new TermParser("1+1");
         assertEquals("The array is null", termParser.toString());
     }
 
     @Test
-    void TestParseIllegalArgumentException() {
+    void testParseIllegalArgumentException() {
         TermParser termParser = new TermParser("1 + 1L");
         termParser.parse();
+        String error = new IllegalCharacterException('L').getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestParseTwoOperatorsInARow() {
+    void testParseTwoOperatorsInARow() {
         TermParser termParser = new TermParser("1 ++ 1");
         termParser.parse();
+        String error = new TwoCharactesInARowException(new char[] {'+', '+'}).getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TetParseTwoCharactersInARow() {
+    void testParseTwoCharactersInARow() {
         TermParser termParser = new TermParser("1 + 1..3");
         termParser.parse();
+        String error = new TwoCharactesInARowException(new char[] {'.', '.'}).getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestParseTwoDifferentIllegallCharactersInARow() {
+    void testParseTwoDifferentIllegallCharactersInARow() {
         TermParser termParser = new TermParser("1 + 1.,2");
         termParser.parse();
+        String error = new TwoCharactesInARowException(new char[] {'.', '.'}).getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestIllegalOperatorAfterNumber() {
+    void testIllegalOperatorAfterNumber() {
         TermParser termParser = new TermParser("1 + 1.");
         termParser.parse();
+        String error = new IllegalCharacterAfterNumberException('.').getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestIllegalBracketClosingBracketBeforeOpeningBracket() {
+    void testIllegalBracketClosingBracketBeforeOpeningBracket() {
         TermParser termParser = new TermParser(")1 + 1");
         termParser.parse();
+        String error = new WrongBracketsException().getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestIllegalBracketNoClosingBracketAfterOpeningBracket() {
+    void testIllegalBracketNoClosingBracketAfterOpeningBracket() {
         TermParser termParser = new TermParser("(1 + 1");
         termParser.parse();
+        String error = new WrongBracketsException().getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestParseIllegallCharactersAndIllegalOPeratorInARow() {
+    void testParseIllegallCharactersAndIllegalOPeratorInARow() {
         TermParser termParser = new TermParser("1 +. 1.2");
         termParser.parse();
+        String error = new TwoCharactesInARowException(new char[] {'+', '.'}).getMessage();
         assertEquals(error, termParser.toString());
     }
 
     @Test
-    void TestCharaterAfterKeyOperator() {
+    void testCharaterAfterKeyOperator() {
         TermParser termParser = new TermParser("1 + -.5");
         termParser.parse();
+        String error = new TwoCharactesInARowException(new char[] {'+', '-'}).getMessage();
         assertEquals(error, termParser.toString());
     }
 
