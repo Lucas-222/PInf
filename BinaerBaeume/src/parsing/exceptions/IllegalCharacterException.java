@@ -1,24 +1,18 @@
 package parsing.exceptions;
 
-import java.util.ArrayList;
-
 public class IllegalCharacterException extends Exception {
-    ArrayList<Character> chars;
-    private final char c;
+    StringBuilder stringBuilder;
 
-    public IllegalCharacterException(ArrayList<Character> chars, char c) {
-        this.chars = chars;
-        this.c = c;
+    public IllegalCharacterException(StringBuilder stringBuilder) {
+        this.stringBuilder = stringBuilder;
     }
 
     @Override
     public String getMessage() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (char v : chars) {
-            stringBuilder.append(v);
-        }
-
-        return "after charcters: " + stringBuilder + " Illegal character (" + c + ") found";
+        // ErrorChar is the last char in stringbuilder
+        char errorChar = stringBuilder.charAt(stringBuilder.length()-1);
+        // ErrorChar gets deleted from stringbuilder, so it doesn't show twice
+        return "After characters: " + stringBuilder.deleteCharAt(stringBuilder.length()-1) + " illegal character (" + errorChar + ") found";
     }
 
 }

@@ -3,7 +3,6 @@ package parsing;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import parsing.exceptions.*;
-import java.util.ArrayList;
 
 public class TestTermParser {
 
@@ -56,11 +55,8 @@ public class TestTermParser {
 
     @Test
     void testIllegalArgument() {
-        ArrayList<Character> characters = new ArrayList<>();
-        characters.add('1');
-        characters.add('+');
-        characters.add('1');
-        String error = new IllegalCharacterException(characters, 'L').getMessage();
+        StringBuilder characters = new StringBuilder("1+1L");
+        String error = new IllegalCharacterException(characters).getMessage();
         TermParser termParser = new TermParser("1 + 1L");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -68,18 +64,26 @@ public class TestTermParser {
 
     @Test
     void testIllegallArgumentBetweenLegalArguments() {
-        ArrayList<Character> characters = new ArrayList<>();
-        characters.add('1');
-        characters.add('+');
-        String error = new IllegalCharacterException(characters, 'L').getMessage();
+        StringBuilder characters = new StringBuilder("1+L");
+        String error = new IllegalCharacterException(characters).getMessage();
         TermParser termParser = new TermParser("1 +L 1");
         termParser.parse();
         assertEquals(error, termParser.toString());
     }
 
     @Test
+    void testVisualisingIllegalCharacter() {
+        StringBuilder characters = new StringBuilder("1+1-10*1Ü");
+        String error = new IllegalCharacterException(characters).getMessage();
+        TermParser termParser = new TermParser("1+1-10*1Ü10+5");
+        termParser.parse();
+        System.out.println("-----Illegal character-----\n" + error + "\n");
+        assertEquals(error, termParser.toString());
+    }
+
+    @Test
     void testTwoOperatorsInARow() {
-        String error = new TwoCharactesInARowException(new char[] {'+', '+'}).getMessage();
+        String error = new TwoCharactesInARowException(new StringBuilder("1++")).getMessage();
         TermParser termParser = new TermParser("1 ++ 1");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -87,7 +91,7 @@ public class TestTermParser {
 
     @Test
     void testTwoCharactersInARow() {
-        String error = new TwoCharactesInARowException(new char[] {'.', '.'}).getMessage();
+        String error = new TwoCharactesInARowException(new StringBuilder("1+1..")).getMessage();
         TermParser termParser = new TermParser("1 + 1..3");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -95,23 +99,42 @@ public class TestTermParser {
 
     @Test
     void testTwoDifferentIllegallCharactersInARow() {
-        String error = new TwoCharactesInARowException(new char[] {'.', '.'}).getMessage();
+        String error = new TwoCharactesInARowException(new StringBuilder("1+1..")).getMessage();
         TermParser termParser = new TermParser("1 + 1.,2");
         termParser.parse();
         assertEquals(error, termParser.toString());
     }
 
     @Test
+    void testVisualisingTwoCharactersInARow() {
+        String error = new TwoCharactesInARowException(new StringBuilder("1+1..")).getMessage();
+        TermParser termParser = new TermParser("1 + 1.,2");
+        termParser.parse();
+        System.out.println("-----Two characters in a row-----\n" + error + "\n");
+        assertEquals(error, termParser.toString());
+    }
+
+    @Test
     void testIllegalOperatorAfterNumber() {
-        String error = new IllegalCharacterAfterNumberException('.').getMessage();
+        String error = new IllegalCharacterAfterNumberException(new StringBuilder("1+1.")).getMessage();
         TermParser termParser = new TermParser("1 + 1.");
         termParser.parse();
         assertEquals(error, termParser.toString());
     }
 
     @Test
+    void testVisualisingCharacterAfterNumber() {
+        String error = new IllegalCharacterAfterNumberException(new StringBuilder("1+1.")).getMessage();
+        TermParser termParser = new TermParser("1 + 1.");
+        termParser.parse();
+        System.out.println("-----Character after number-----\n" + error + "\n");
+        assertEquals(error, termParser.toString());
+    }
+
+
+    @Test
     void testClosingBracketBeforeOpeningBracket() {
-        String error = new WrongBracketsException().getMessage();
+        String error = new WrongBracketsException(new StringBuilder(")")).getMessage();
         TermParser termParser = new TermParser(")1 + 1");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -119,15 +142,33 @@ public class TestTermParser {
 
     @Test
     void testCorrectAmountOfBracketsButWrongPlaced() {
-        String error = new WrongBracketsException().getMessage();
+        String error = new WrongBracketsException(new StringBuilder(")")).getMessage();
         TermParser termParser = new TermParser(")1 + 1(");
         termParser.parse();
         assertEquals(error, termParser.toString());
     }
 
     @Test
+    void testVisualisingBracketsType2() {
+        String error = new WrongBracketsException(new StringBuilder(")")).getMessage();
+        TermParser termParser = new TermParser(")1 + 1(");
+        termParser.parse();
+        System.out.println("-----Wrong placement of brackets-----\n" + error + "\n");
+        assertEquals(error, termParser.toString());
+    }
+
+    @Test
+    void testVisualisingBracketsType1() {
+        String error = new WrongBracketsException(1).getMessage();
+        TermParser termParser = new TermParser("(1 + 1()");
+        termParser.parse();
+        System.out.println("-----Wrong amount of brackets-----\n" + error + "\n");
+        assertEquals(error, termParser.toString());
+    }
+
+    @Test
     void testNoClosingBracketAfterOpeningBracket() {
-        String error = new WrongBracketsException().getMessage();
+        String error = new WrongBracketsException(1).getMessage();
         TermParser termParser = new TermParser("(1 + 1");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -135,7 +176,7 @@ public class TestTermParser {
 
     @Test
     void testIllegalCharacterAndIllegalOperatorInARow() {
-        String error = new TwoCharactesInARowException(new char[] {'+', '.'}).getMessage();
+        String error = new TwoCharactesInARowException(new StringBuilder("1+.")).getMessage();
         TermParser termParser = new TermParser("1 +. 1.2");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -143,7 +184,7 @@ public class TestTermParser {
 
     @Test
     void testCharaterAfterKeyOperator() {
-        String error = new TwoCharactesInARowException(new char[] {'+', '-'}).getMessage();
+        String error = new TwoCharactesInARowException(new StringBuilder("1+-")).getMessage();
         TermParser termParser = new TermParser("1 + -.5");
         termParser.parse();
         assertEquals(error, termParser.toString());

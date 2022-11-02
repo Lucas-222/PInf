@@ -1,15 +1,16 @@
 package parsing.exceptions;
 
 public class IllegalCharacterAfterNumberException extends Exception {
-    private final char c;
+    StringBuilder stringBuilder;
 
-    public IllegalCharacterAfterNumberException(char c) {
-        this.c = c;
+    public IllegalCharacterAfterNumberException(StringBuilder stringBuilder) {
+        this.stringBuilder = stringBuilder;
     }
 
     @Override
     public String getMessage() {
-        return "Illegal character ("+ c +") after number found";
+        char errorChar = stringBuilder.charAt(stringBuilder.length()-1);
+        return "After characters " + stringBuilder.deleteCharAt(stringBuilder.length()-1) + " illegal character (" + errorChar + ") was found\nNote: (.) and (,) are not allowed as the last part of a number, try deleting it";
     }
 
 }
