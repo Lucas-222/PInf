@@ -41,6 +41,13 @@ public class TestTermParser {
     }
 
     @Test
+    void testMinus() {
+        TermParser termParser = new TermParser("1 - 1");
+        termParser.parse();
+        assertEquals("[1][-][1]", termParser.toString());
+    }
+
+    @Test
     void testBrackets() {
         TermParser termParser = new TermParser("(1+1.3  + 2)");
         termParser.parse();
@@ -62,8 +69,7 @@ public class TestTermParser {
 
     @Test
     void testIllegalArgument() {
-        StringBuilder characters = new StringBuilder("1+1L");
-        String error = new IllegalCharacterException(characters).getMessage();
+        String error = new IllegalCharacterException(new StringBuilder("1+1L")).getMessage();
         TermParser termParser = new TermParser("1 + 1L");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -71,8 +77,7 @@ public class TestTermParser {
 
     @Test
     void testIllegallArgumentBetweenLegalArguments() {
-        StringBuilder characters = new StringBuilder("1+L");
-        String error = new IllegalCharacterException(characters).getMessage();
+        String error = new IllegalCharacterException(new StringBuilder("1+L")).getMessage();
         TermParser termParser = new TermParser("1 +L 1");
         termParser.parse();
         assertEquals(error, termParser.toString());
@@ -80,8 +85,7 @@ public class TestTermParser {
 
     @Test
     void testVisualisingIllegalCharacter() {
-        StringBuilder characters = new StringBuilder("1+1-10*1Ü");
-        String error = new IllegalCharacterException(characters).getMessage();
+        String error = new IllegalCharacterException(new StringBuilder("1+1-10*1Ü")).getMessage();
         TermParser termParser = new TermParser("1+1-10*1Ü10+5");
         termParser.parse();
         System.out.println("-----Illegal character-----\n" + error + "\n");
