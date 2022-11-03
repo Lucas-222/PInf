@@ -34,6 +34,13 @@ public class TestTermParser {
     }
 
     @Test
+    void testVorzeichenAtTheStart() {
+        TermParser termParser = new TermParser("-1 + 1");
+        termParser.parse();
+        assertEquals("[-1][+][1]", termParser.toString());
+    }
+
+    @Test
     void testBrackets() {
         TermParser termParser = new TermParser("(1+1.3  + 2)");
         termParser.parse();

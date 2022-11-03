@@ -6,6 +6,7 @@ public class CharacterLists {
     public final ArrayList<Character> OPERATORS = getOperators();
     public final ArrayList<Character> CHARACTERS = getCharacters();
     public final ArrayList<Character> NUMBERS = getNumbers();
+    public final ArrayList<Character> OPERATORSANDCHARACTERS = getOperatorsAndCharacters();
 
     public CharacterLists() {}
 
@@ -40,6 +41,13 @@ public class CharacterLists {
         list.add('7');
         list.add('8');
         list.add('9');
+        return list;
+    }
+
+    private ArrayList<Character> getOperatorsAndCharacters() {
+        ArrayList<Character> list = new ArrayList<>();
+        list.addAll(OPERATORS);
+        list.addAll(CHARACTERS);
         return list;
     }
 
