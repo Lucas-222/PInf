@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class TermParser {
    private String[] arr;
    private String input;
-   private final CharacterLists characterLists = new CharacterLists();
    private int amountOfOpeningBracketsWithoutClosingBrackets;
    private StringBuilder allCharacters;
 
@@ -21,17 +20,16 @@ public class TermParser {
 
       // Create temp variable for writing | input is only used for reading
       String temp = input;
-
-      for (int i = 0; i < input.length(); i++) {
+       for (int i = 0; i < input.length(); i++) {
          // Check for minus and a number after
-         if (input.charAt(i) == '-' && characterLists.NUMBERS.contains(input.charAt(i + 1))) {
+         if (input.charAt(i) == '-' && CharacterLists.NUMBERS.contains(input.charAt(i + 1))) {
             // Check if there is an opertor in front of the minus or if it is the first char in input
-            if (input.charAt(0) == '-' || characterLists.OPERATORS.contains(input.charAt(i-1))) {
+            if (input.charAt(0) == '-' || CharacterLists.OPERATORS.contains(input.charAt(i-1))) {
                i++;
             }
          }
          // If current char is an operator or a bracket
-         if (characterLists.OPERATORS.contains(input.charAt(i)) || input.charAt(i) == '(' || input.charAt(i) == ')') {
+         if (CharacterLists.OPERATORS.contains(input.charAt(i)) || input.charAt(i) == '(' || input.charAt(i) == ')') {
             // Extend operator with two whitespaces around it
             temp = temp.replace(String.valueOf(input.charAt(i)), " " + input.charAt(i) + " ");
          }
@@ -83,7 +81,7 @@ public class TermParser {
       for (int i = 0; i < s.length(); i++) {
          allCharacters.append(s.charAt(i));
          // If char is not a character, not an operator and not a number
-         if (!characterLists.CHARACTERS.contains(s.charAt(i)) && !characterLists.OPERATORS.contains(s.charAt(i)) && !characterLists.NUMBERS.contains(s.charAt(i))) {
+         if (!CharacterLists.CHARACTERS.contains(s.charAt(i)) && !CharacterLists.OPERATORS.contains(s.charAt(i)) && !CharacterLists.NUMBERS.contains(s.charAt(i))) {
             throw new IllegalCharacterException(allCharacters);
          }
       }
@@ -114,10 +112,10 @@ public class TermParser {
 
       for (int i = 0; i < arr.length; i++) {
          // Check if two operators are after one another or an operator and a character are | for example (++) or (+.) | Brackets after an operator are allowed
-         if (arr[i].length() == 1 && i + 1 != arr.length && characterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(0)) && characterLists.OPERATORSANDCHARACTERS.contains(arr[i + 1].charAt(0)) && arr[i + 1].charAt(0) != '(' && arr[i + 1].charAt(0) != ')') {
+         if (arr[i].length() == 1 && i + 1 != arr.length && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(0)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i + 1].charAt(0)) && arr[i + 1].charAt(0) != '(' && arr[i + 1].charAt(0) != ')') {
             allCharacters.append(arr[i]);
             // Check for (-) and an illegal character in the next string ([+][.4])
-            if (arr[i + 1].length() == 1 || characterLists.CHARACTERS.contains(arr[i + 1].charAt(0))) {
+            if (arr[i + 1].length() == 1 || CharacterLists.CHARACTERS.contains(arr[i + 1].charAt(0))) {
                allCharacters.append(arr[i + 1].charAt(0));
                throw new TwoCharactesInARowException(allCharacters);
             }
@@ -126,7 +124,7 @@ public class TermParser {
             for (int j = 0; j < arr[i].length(); j++) {
                allCharacters.append(arr[i].charAt(j));
                // If two same chars are after one another in the same string
-               if (j + 1 != arr[i].length() && characterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j)) && characterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j + 1))) {
+               if (j + 1 != arr[i].length() && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j + 1))) {
                   allCharacters.append(arr[i].charAt(j + 1));
                   throw new TwoCharactesInARowException(allCharacters);
                }
