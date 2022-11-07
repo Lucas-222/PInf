@@ -184,7 +184,6 @@ public class TermParser {
       }
    }
 
-
    @Override
    public String toString() {
       if (arr == null) return "The array is null";
