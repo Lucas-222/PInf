@@ -201,4 +201,16 @@ public class TestTermParser {
         assertEquals(error, termParser.toString());
     }
 
+    @Test
+    void testSort() {
+        TermParser termParser = new TermParser("3 * (1 + 2)");
+        assertEquals("[3, 1, 2, +, *]", termParser.sort());
+    }
+
+    @Test
+    void testSortVorzeichen() {
+        TermParser termParser = new TermParser("-3 * (-1 + 2)");
+        assertEquals("[-3, -1, 2, +, *]", termParser.sort());
+        System.out.println("-----Postfix notation of [-3 * (-1 + 2)]-----\n" + termParser.sort() + "\n");
+    }
 }

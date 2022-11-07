@@ -1,14 +1,13 @@
 package parsing;
 
 import parsing.exceptions.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class TermParser {
-   private String[] arr;
-   private String input;
    private int amountOfOpeningBracketsWithoutClosingBrackets;
    private StringBuilder allCharacters;
+   private String[] arr;
+   private String input;
 
    public TermParser(String input) {
       this.input = input;
@@ -44,7 +43,7 @@ public class TermParser {
       // Creation of new arrayList with values of the array
       ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
 
-      // Remove Whitespaces
+      // Remove empty strings
       list.removeIf(s -> s.equals(""));
 
       // Fill the array with values from the arraylist
@@ -54,6 +53,58 @@ public class TermParser {
       illegalInput();
 
       return arr;
+   }
+
+   public String sort() {
+      // Create a LIFO stack
+      Stack<String> stack = new Stack<>();
+      // Create an output list
+      List<String> output = new LinkedList<>();
+      // Parse the input
+      parse();
+
+      // Loop through every string in arr
+      for (String token : arr) {
+         // Check for number
+         for (int j = 0; j < token.length(); j++) {
+            // If token is a number
+            if (CharacterLists.NUMBERS.contains(token.charAt(j))) {
+               output.add(token);
+            }
+         }
+
+         // If token is an operator
+         if (token.length() == 1 && CharacterLists.OPERATORS.contains(token.charAt(0))) {
+            // While stack is not empty and operators contains stack peek
+            while (!stack.empty() && CharacterLists.OPERATORS.contains(stack.peek().charAt(0))) {
+               output.add(stack.pop());
+            }
+            stack.add(token);
+         }
+
+         // If token is a opnening bracket
+         if (token.equals("(")) {
+            stack.push(token);
+         }
+
+         // If token is a closing bracket
+         if (token.equals(")")) {
+            // While stack peek is not an opening bracket
+            while (!stack.peek().equals("(")) {
+               output.add(stack.pop());
+            }
+            // Remove the opening bracket
+            stack.pop();
+         }
+      }
+
+      // Fill the output with the rest of stack
+      while (!stack.empty()) {
+         output.add(stack.pop());
+      }
+
+      // Return list as string
+      return output.toString();
    }
 
    public void illegalInput() {
