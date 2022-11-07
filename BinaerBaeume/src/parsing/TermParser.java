@@ -55,7 +55,7 @@ public class TermParser {
       return arr;
    }
 
-   public String sort() {
+   public String postfix() {
       // Create a LIFO stack
       Stack<String> stack = new Stack<>();
       // Create an output list
