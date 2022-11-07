@@ -210,7 +210,7 @@ public class TestTermParser {
     @Test
     void testSortComplicated() {
         TermParser termParser = new TermParser("3 * (1 + 2) + 6.8 * 10 - 5");
-        assertEquals("[3, 1, 2, +, *]", termParser.postfix());
+        assertEquals("[3, 1, 2, +, *, 6.8, +, 10, *, 5, -]", termParser.postfix());
     }
 
     @Test

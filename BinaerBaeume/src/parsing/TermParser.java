@@ -70,6 +70,8 @@ public class TermParser {
             // If token is a number
             if (CharacterLists.NUMBERS.contains(token.charAt(j))) {
                output.add(token);
+               // Set j to token length, so it only gets added once
+               j = token.length();
             }
          }
 
