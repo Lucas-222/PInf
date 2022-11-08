@@ -119,7 +119,7 @@ public class TermParser {
             // Illegal character after number
             illegalCharacterAfterNumber(s);
             // Illegal Bracket
-            illeagalBrackets(s);
+            illegalBrackets(s);
          }
          if (amountOfOpeningBracketsWithoutClosingBrackets != 0) {
             throw new WrongBracketsException(1);
@@ -146,7 +146,7 @@ public class TermParser {
       }
    }
 
-   public void illeagalBrackets(String s) throws WrongBracketsException {
+   public void illegalBrackets(String s) throws WrongBracketsException {
       // If string is an opening bracket, add 1 to amountOfOpeningBracketsWithoutClosingBrackets
       if (s.equals("(")) {
          amountOfOpeningBracketsWithoutClosingBrackets++;
