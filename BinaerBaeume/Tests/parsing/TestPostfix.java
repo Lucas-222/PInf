@@ -3,6 +3,7 @@ package parsing;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestPostfix {
 
@@ -74,6 +75,11 @@ public class TestPostfix {
         TermParser termParser = new TermParser("2 ^ 2 ^ 2");
         String[] expectedStringArr = new String[] {"[2, 2, 2, ^, ^]", "16.0"};
         assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(termParser.postfix()));
+    }
+
+    @Test
+    void testNull() {
+        assertNull(new TermParser("1+1").getOperator("", null, null));
     }
 
     @Test

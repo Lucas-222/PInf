@@ -10,6 +10,7 @@ public class TermParser {
    private StringBuilder allCharacters;
    private String[] arr;
    private String input;
+   private List<String> nodes;
 
    public TermParser(String input) {
       this.input = input;
@@ -60,28 +61,23 @@ public class TermParser {
    public String[] postfix() {
       // Create a LIFO stack
       Stack<String> stack = new Stack<>();
-      // Create an output list
-      List<String> output = new LinkedList<>();
+      // Create a nodes list
+      nodes = new LinkedList<>();
       // Parse the input
       parse();
 
       // Loop through every string in arr
       for (String token : arr) {
          // Check for number
-         for (int j = 0; j < token.length(); j++) {
-            // If token is a number
-            if (CharacterLists.NUMBERS.contains(token.charAt(j))) {
-               output.add(token);
-               // Set j to token length, so it only gets added once
-               j = token.length();
-            }
+         if (isNumber(token)) {
+            nodes.add(token);
          }
 
          // If token is an operator
          if (token.length() == 1 && CharacterLists.OPERATORS.contains(token.charAt(0))) {
             // While stack is not empty and operators contains stack peek
             while (!stack.empty() && checkIsLinksAssoziativ(token.charAt(0)) && getPraezedenz(token.charAt(0)) <= getPraezedenz(stack.peek().charAt(0))) {
-               output.add(stack.pop());
+               nodes.add(stack.pop());
             }
             stack.push(token);
          }
@@ -95,22 +91,20 @@ public class TermParser {
          if (token.equals(")")) {
             // While stack peek is not an opening bracket
             while (!stack.peek().equals("(")) {
-               output.add(stack.pop());
+               nodes.add(stack.pop());
             }
             // Remove the opening bracket
             stack.pop();
          }
       }
 
-      // Fill the output with the rest of stack
+      // Fill the nodes with the rest of stack
       while (!stack.empty()) {
-         output.add(stack.pop());
+         nodes.add(stack.pop());
       }
 
       // Return the reversed polish notation and the solution
-      String[] returnString = new String[] {output.toString(), String.valueOf(stringToOperator(checkForMultiplication(output)))};
-      System.out.println(Arrays.toString(returnString));
-      return returnString;
+      return new String[] {nodes.toString(), String.valueOf(stringToOperator())};
    }
 
    private static boolean checkIsLinksAssoziativ(char character) {
@@ -130,10 +124,11 @@ public class TermParser {
       return -1;
    }
 
-   public double stringToOperator(List<String> output) {
-      if (output.size() <= 2) {
+   public double stringToOperator() {
+      checkForMultiplication();
+      if (nodes.size() <= 2) {
          StringBuilder stringBuilder = new StringBuilder();
-         for (String s : output) {
+         for (String s : nodes) {
             stringBuilder.append(s);
          }
          return Double.parseDouble(stringBuilder.toString());
@@ -143,7 +138,7 @@ public class TermParser {
       Node rightvalue = null;
 
       // Loop through every String in reversed polish notation
-      for (String s : output) {
+      for (String s : nodes) {
          // If string is a number
          if (isNumber(s)) {
             if (leftvalue == null) {
@@ -156,15 +151,7 @@ public class TermParser {
          }
          // If string is an operator
          if (s.length() == 1 && CharacterLists.OPERATORS.contains(s.charAt(0))) {
-            // Get the right operator
-            switch (s) {
-               case "+" -> operator = new Add(leftvalue, rightvalue);
-               case "-" -> operator = new Subtract(leftvalue, rightvalue);
-               case "*" -> operator = new Multiply(leftvalue, rightvalue);
-               case "/" -> operator = new Divide(leftvalue, rightvalue);
-               case "^" -> operator = new Power(leftvalue, rightvalue);
-            }
-            // leftvalue gets updated to operator
+            operator = getOperator(s, leftvalue, rightvalue);
             leftvalue = operator;
             rightvalue = null;
          }
@@ -174,27 +161,33 @@ public class TermParser {
       return operator.getValue();
    }
 
-   public List<String> checkForMultiplication(List<String> output) {
-      for (int i = 0; i < output.size(); i++) {
-         if (isNumber(output.get(i)) && isNumber(output.get(i+1)) && output.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(output.get(i+2).charAt(0))) {
-            Operator tempOp = null;
-            Node tempLeftvalue = new Value(Double.parseDouble(output.get(i)));
-            Node tempRightvalue = new Value(Double.parseDouble(output.get(i+1)));
-            switch (output.get(i + 2)) {
-               case "+" -> tempOp = new Add(tempLeftvalue, tempRightvalue);
-               case "-" -> tempOp = new Subtract(tempLeftvalue, tempRightvalue);
-               case "*" -> tempOp = new Multiply(tempLeftvalue, tempRightvalue);
-               case "/" -> tempOp = new Divide(tempLeftvalue, tempRightvalue);
-               case "^" -> tempOp = new Power(tempLeftvalue, tempRightvalue);
-            }
-            assert tempOp != null;
-            output.set(i, String.valueOf(tempOp.getValue()));
-            output.remove(i+1);
-            output.remove(i + 1);
+   public void checkForMultiplication() {
+      for (int i = 0; i < nodes.size(); i++) {
+         // If there is a multiplication
+         if (isNumber(nodes.get(i)) && isNumber(nodes.get(i+1)) && nodes.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(nodes.get(i+2).charAt(0))) {
+            // Create nodes
+            Node leftvalue = new Value(Double.parseDouble(nodes.get(i)));
+            Node rightvalue = new Value(Double.parseDouble(nodes.get(i+1)));
+            Operator operator = getOperator(nodes.get(i + 2), leftvalue, rightvalue);
+            // Replace both numbers and the operator with the solution
+            nodes.set(i, String.valueOf(operator.getValue()));
+            nodes.remove(i+1);
+            nodes.remove(i+1);
+            // Start over with the array
             i = 0;
          }
       }
-      return output;
+   }
+
+   public Operator getOperator(String s, Node leftvalue, Node rightvalue) {
+      return switch (s) {
+         case "+" -> new Add(leftvalue, rightvalue);
+         case "-" -> new Subtract(leftvalue, rightvalue);
+         case "*" -> new Multiply(leftvalue, rightvalue);
+         case "/" -> new Divide(leftvalue, rightvalue);
+         case "^" -> new Power(leftvalue, rightvalue);
+         default -> null;
+      };
    }
 
    public boolean isNumber(String s) {
