@@ -1,6 +1,8 @@
 package parsing;
 
 import parsing.exceptions.*;
+import termAsTreeInheritance.*;
+
 import java.util.*;
 
 public class TermParser {
@@ -55,7 +57,7 @@ public class TermParser {
       return arr;
    }
 
-   public String postfix() {
+   public String[] postfix() {
       // Create a LIFO stack
       Stack<String> stack = new Stack<>();
       // Create an output list
@@ -105,8 +107,51 @@ public class TermParser {
          output.add(stack.pop());
       }
 
-      // Return list as string
-      return output.toString();
+      // Return the reversed polish notation and the solution
+      return new String[] {output.toString(), String.valueOf(stringToOperator(output))};
+   }
+
+   // TODO: Lösung für Klammern
+   public double stringToOperator(List<String> output) {
+      Operator operator = null;
+      Node leftvalue = null;
+      Node rightvalue = null;
+
+      // Loop through every String in reversed polish notation
+      for (String node : output) {
+         // If string is a number
+         for (int j = 0; j < node.length(); j++) {
+            if (CharacterLists.NUMBERS.contains(node.charAt(j))) {
+               if (leftvalue == null) {
+                  // Initialize leftvalue
+                  leftvalue = new Value(Double.parseDouble(node));
+               } else if (rightvalue == null) {
+                  // Update right value
+                  rightvalue = new Value(Double.parseDouble(node));
+               }
+               // Set j to length of string
+               j = node.length();
+            }
+         }
+
+         // If string is an operator
+         if (CharacterLists.OPERATORS.contains(node.charAt(0))) {
+            // Get the right operator
+            switch (node) {
+               case "+" -> operator = new Add(leftvalue, rightvalue);
+               case "-" -> operator = new Subtract(leftvalue, rightvalue);
+               case "*" -> operator = new Multiply(leftvalue, rightvalue);
+               case "/" -> operator = new Divide(leftvalue, rightvalue);
+               case "^" -> operator = new Power(leftvalue, rightvalue);
+            }
+            // leftvalue gets updated to operator
+            leftvalue = operator;
+            rightvalue = null;
+         }
+      }
+
+      assert operator != null;
+      return operator.getValue();
    }
 
    public void illegalInput() {
