@@ -80,10 +80,10 @@ public class TermParser {
          // If token is an operator
          if (token.length() == 1 && CharacterLists.OPERATORS.contains(token.charAt(0))) {
             // While stack is not empty and operators contains stack peek
-            while (!stack.empty() && CharacterLists.OPERATORS.contains(stack.peek().charAt(0))) {
+            while (!stack.empty() && checkIsLinksAssoziativ(token.charAt(0)) && getPraezedenz(token.charAt(0)) <= getPraezedenz(stack.peek().charAt(0))) {
                output.add(stack.pop());
             }
-            stack.add(token);
+            stack.push(token);
          }
 
          // If token is a opnening bracket
@@ -108,36 +108,56 @@ public class TermParser {
       }
 
       // Return the reversed polish notation and the solution
-      return new String[] {output.toString(), String.valueOf(stringToOperator(output))};
+      String[] returnString = new String[] {output.toString(), String.valueOf(stringToOperator(checkForMultiplication(output)))};
+      System.out.println(Arrays.toString(returnString));
+      return returnString;
    }
 
-   // TODO: Lösung für Klammern
+   private static boolean checkIsLinksAssoziativ(char character) {
+      return character == '+' || character == '-' || character == '/' || character == '*';
+   }
+
+   private static int getPraezedenz(char character) {
+      if (character == '+' || character == '-') {
+         return 1;
+      }
+      if (character == '*' || character == '/') {
+         return 2;
+      }
+      if (character == '^') {
+         return 3;
+      }
+      return -1;
+   }
+
    public double stringToOperator(List<String> output) {
+      if (output.size() <= 2) {
+         StringBuilder stringBuilder = new StringBuilder();
+         for (String s : output) {
+            stringBuilder.append(s);
+         }
+         return Double.parseDouble(stringBuilder.toString());
+      }
       Operator operator = null;
       Node leftvalue = null;
       Node rightvalue = null;
 
       // Loop through every String in reversed polish notation
-      for (String node : output) {
+      for (String s : output) {
          // If string is a number
-         for (int j = 0; j < node.length(); j++) {
-            if (CharacterLists.NUMBERS.contains(node.charAt(j))) {
-               if (leftvalue == null) {
-                  // Initialize leftvalue
-                  leftvalue = new Value(Double.parseDouble(node));
-               } else if (rightvalue == null) {
-                  // Update right value
-                  rightvalue = new Value(Double.parseDouble(node));
-               }
-               // Set j to length of string
-               j = node.length();
+         if (isNumber(s)) {
+            if (leftvalue == null) {
+               // Initialize leftvalue
+               leftvalue = new Value(Double.parseDouble(s));
+            } else if (rightvalue == null) {
+               // Update right value
+               rightvalue = new Value(Double.parseDouble(s));
             }
          }
-
          // If string is an operator
-         if (CharacterLists.OPERATORS.contains(node.charAt(0))) {
+         if (s.length() == 1 && CharacterLists.OPERATORS.contains(s.charAt(0))) {
             // Get the right operator
-            switch (node) {
+            switch (s) {
                case "+" -> operator = new Add(leftvalue, rightvalue);
                case "-" -> operator = new Subtract(leftvalue, rightvalue);
                case "*" -> operator = new Multiply(leftvalue, rightvalue);
@@ -152,6 +172,38 @@ public class TermParser {
 
       assert operator != null;
       return operator.getValue();
+   }
+
+   public List<String> checkForMultiplication(List<String> output) {
+      for (int i = 0; i < output.size(); i++) {
+         if (isNumber(output.get(i)) && isNumber(output.get(i+1)) && output.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(output.get(i+2).charAt(0))) {
+            Operator tempOp = null;
+            Node tempLeftvalue = new Value(Double.parseDouble(output.get(i)));
+            Node tempRightvalue = new Value(Double.parseDouble(output.get(i+1)));
+            switch (output.get(i + 2)) {
+               case "+" -> tempOp = new Add(tempLeftvalue, tempRightvalue);
+               case "-" -> tempOp = new Subtract(tempLeftvalue, tempRightvalue);
+               case "*" -> tempOp = new Multiply(tempLeftvalue, tempRightvalue);
+               case "/" -> tempOp = new Divide(tempLeftvalue, tempRightvalue);
+               case "^" -> tempOp = new Power(tempLeftvalue, tempRightvalue);
+            }
+            assert tempOp != null;
+            output.set(i, String.valueOf(tempOp.getValue()));
+            output.remove(i+1);
+            output.remove(i + 1);
+            i = 0;
+         }
+      }
+      return output;
+   }
+
+   public boolean isNumber(String s) {
+      for (int i = 0; i < s.length(); i++) {
+         if (CharacterLists.NUMBERS.contains(s.charAt(i))) {
+            return true;
+         }
+      }
+      return false;
    }
 
    public void illegalInput() {
