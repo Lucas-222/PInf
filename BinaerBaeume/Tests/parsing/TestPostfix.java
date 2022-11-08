@@ -1,0 +1,33 @@
+package parsing;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class TestPostfix {
+
+    @Test
+    void testSort() {
+        TermParser termParser = new TermParser("3 * 1 + 2");
+        assertEquals("[3, 1, *, 2, +]", termParser.postfix());
+    }
+
+    @Test
+    void testSortBrackets() {
+        TermParser termParser = new TermParser("3 * (1 + 2)");
+        assertEquals("[3, 1, 2, +, *]", termParser.postfix());
+    }
+
+    @Test
+    void testSortComplicated() {
+        TermParser termParser = new TermParser("3 * (1 + 2) + 6.8 * 10 - 5");
+        assertEquals("[3, 1, 2, +, *, 6.8, +, 10, *, 5, -]", termParser.postfix());
+    }
+
+    @Test
+    void testSortVorzeichen() {
+        TermParser termParser = new TermParser("-3 * (-1 + 2)");
+        assertEquals("[-3, -1, 2, +, *]", termParser.postfix());
+        System.out.println("-----Postfix notation of [-3 * (-1 + 2)]-----\n" + termParser.postfix() + "\n");
+    }
+
+}
