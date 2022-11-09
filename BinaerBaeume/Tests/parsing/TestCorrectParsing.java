@@ -7,63 +7,63 @@ public class TestCorrectParsing {
 
     @Test
     void testGetArr() {
-        TermParser termParser = new TermParser("+");
-        assertEquals("+", termParser.parse()[0]);
+        InfixToPostfix infixToPostfix = new InfixToPostfix("+");
+        assertEquals("+", infixToPostfix.parse()[0]);
     }
 
     @Test
     void testEasy() {
-        TermParser termParser = new TermParser("100\n\t / 2");
-        termParser.parse();
-        assertEquals("[100][/][2]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("100\n\t / 2");
+        infixToPostfix.parse();
+        assertEquals("[100][/][2]", infixToPostfix.toString());
     }
 
     @Test
     void testComplicated() {
-        TermParser termParser = new TermParser("100* 3 + 2.34*2,3");
-        termParser.parse();
-        assertEquals("[100][*][3][+][2.34][*][2.3]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("100* 3 + 2.34*2,3");
+        infixToPostfix.parse();
+        assertEquals("[100][*][3][+][2.34][*][2.3]", infixToPostfix.toString());
     }
 
     @Test
     void testVorzeichen() {
-        TermParser termParser = new TermParser("1 +- 1");
-        termParser.parse();
-        assertEquals("[1][+][-1]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("1 +- 1");
+        infixToPostfix.parse();
+        assertEquals("[1][+][-1]", infixToPostfix.toString());
     }
 
     @Test
     void testVorzeichenAtTheStart() {
-        TermParser termParser = new TermParser("-1 + 1");
-        termParser.parse();
-        assertEquals("[-1][+][1]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("-1 + 1");
+        infixToPostfix.parse();
+        assertEquals("[-1][+][1]", infixToPostfix.toString());
     }
 
     @Test
     void testMinus() {
-        TermParser termParser = new TermParser("1 - 1");
-        termParser.parse();
-        assertEquals("[1][-][1]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("1 - 1");
+        infixToPostfix.parse();
+        assertEquals("[1][-][1]", infixToPostfix.toString());
     }
 
     @Test
     void testBrackets() {
-        TermParser termParser = new TermParser("(1+1.3  + 2)");
-        termParser.parse();
-        assertEquals("[(][1][+][1.3][+][2][)]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("(1+1.3  + 2)");
+        infixToPostfix.parse();
+        assertEquals("[(][1][+][1.3][+][2][)]", infixToPostfix.toString());
     }
 
     @Test
     void testMultipleBrackets() {
-        TermParser termParser = new TermParser("(1 + 1.3 + 2 + (3 + 4))");
-        termParser.parse();
-        assertEquals("[(][1][+][1.3][+][2][+][(][3][+][4][)][)]", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("(1 + 1.3 + 2 + (3 + 4))");
+        infixToPostfix.parse();
+        assertEquals("[(][1][+][1.3][+][2][+][(][3][+][4][)][)]", infixToPostfix.toString());
     }
 
     @Test
     void testArrayIsNull() {
-        TermParser termParser = new TermParser("1+1");
-        assertEquals("The array is null", termParser.toString());
+        InfixToPostfix infixToPostfix = new InfixToPostfix("1+1");
+        assertEquals("The array is null", infixToPostfix.toString());
     }
 
 }
