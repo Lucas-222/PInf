@@ -23,6 +23,7 @@ public class PostfixToNode {
 
         // Loop through every String in reversed polish notation
         for (String s : nodesAsString) {
+            System.out.println(nodesAsString);
             // If string is a number
             if (CharacterLists.isNumber(s)) {
                 // If leftvalue is null, initialize it | After it was initialized it gets updated automaticly with the new operator
@@ -50,8 +51,9 @@ public class PostfixToNode {
     public void calculateEquationsWithLeftAssociativity() {
         // Chek if there is a part in the equation wich needs to get calculated first
         for (int i = 0; i < nodesAsString.size(); i++) {
+            System.out.println(nodesAsString);
             // If there are two numbers before an operator, wich stands for a multiplication or a bracket (1, 2, *)
-            if (CharacterLists.isNumber(nodesAsString.get(i)) && CharacterLists.isNumber(nodesAsString.get(i+1)) && nodesAsString.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsString.get(i+2).charAt(0))) {
+            if (i+2 < nodesAsString.size() && CharacterLists.isNumber(nodesAsString.get(i)) && CharacterLists.isNumber(nodesAsString.get(i+1)) && nodesAsString.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsString.get(i+2).charAt(0))) {
                 // Create nodes and remove the second number and the operator
                 Node leftvalue = new Value(Double.parseDouble(nodesAsString.get(i)));
                 Node rightvalue = new Value(Double.parseDouble(nodesAsString.remove(i+1)));

@@ -92,6 +92,13 @@ public class TestPostfix {
     }
 
     @Test
+    void testVorzeichenPower() {
+        InfixToPostfix infixToPostfix = new InfixToPostfix("1 - -3 ^ 2");
+        String[] expectedStringArr = new String[] {"[1, -3, 2, ^, -]", "-8.0"};
+        assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
+    }
+
+    @Test
     void testSortMixed() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("3 * 1 + 2 / 2 ^ 3 - 5");
         String[] expectedStringArr = new String[] {"[3, 1, *, 2, 2, 3, ^, /, +, 5, -]", "-1.75"};

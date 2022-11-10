@@ -24,7 +24,7 @@ public class TestTwoCharactersInARow {
 
     @Test
     void testCharaterAfterKeyOperator() {
-        String error = new TwoCharactesInARowException(new StringBuilder("1+-")).getMessage();
+        String error = new TwoCharactesInARowException(new StringBuilder("1+-.")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 + -.5");
         infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());

@@ -18,21 +18,30 @@ public class InfixToPostfix {
       input = input.replaceAll("[\\s|\\u00A0]+", "");
 
       // Create temp variable for writing | input is only used for reading
-      String temp = input;
-       for (int i = 0; i < input.length(); i++) {
-         // Check for minus and a number after
-         if (input.charAt(i) == '-' && CharacterLists.NUMBERS.contains(input.charAt(i + 1))) {
-            // Check if there is an opertor in front of the minus or if it is the first char in input
-            if (input.charAt(0) == '-' || CharacterLists.OPERATORS.contains(input.charAt(i-1))) {
+      String[] array = input.split("");
+
+      for (int i  = 0; i < array.length; i++) {
+         if (CharacterLists.OPERATORS.contains(array[i].charAt(0)) || array[i].charAt(0) == '(' || array[i].charAt(0) == ')') {
+            if (i == 0 && array[0].charAt(0) == '-') {
                i++;
             }
-         }
-         // If current char is an operator or a bracket
-         if (CharacterLists.OPERATORS.contains(input.charAt(i)) || input.charAt(i) == '(' || input.charAt(i) == ')') {
-            // Extend operator with two whitespaces around it
-            temp = temp.replace(String.valueOf(input.charAt(i)), " " + input.charAt(i) + " ");
+            if (i+1 <= array.length && i-1 >= 0 && array[i].charAt(0) == '-' && CharacterLists.isNumber(array[i+1])) {
+               if (CharacterLists.OPERATORS.contains(array[i-1].charAt(0)) || CharacterLists.CHARACTERS.contains(array[i-1].charAt(0)) || array[i-1].charAt(0) == ' ') {
+                  i++;
+               } else {
+                  array[i] = " " + array[i] + " ";
+               }
+            } else {
+               array[i] = " " + array[i] + " ";
+            }
          }
       }
+
+      StringBuilder stringBuilder = new StringBuilder();
+      for (String s : array) {
+         stringBuilder.append(s);
+      }
+      String temp = stringBuilder.toString();
 
       // replace comma with a point
       temp = temp.replace(",", ".");
@@ -52,6 +61,8 @@ public class InfixToPostfix {
       // Check for illegal input
       illegalInput();
 
+      System.out.println(Arrays.toString(arr));
+
       return arr;
    }
 
@@ -61,6 +72,7 @@ public class InfixToPostfix {
       // Create a nodes list
       List<String> nodesAsString = new LinkedList<>();
       // Parse the input
+      System.out.println(input);
       parse();
 
       // Loop through every string in arr
@@ -73,7 +85,7 @@ public class InfixToPostfix {
          // If token is an operator
          if (token.length() == 1 && CharacterLists.OPERATORS.contains(token.charAt(0))) {
             // While stack is not empty AND operators contains stack peek AND token is left associative AND the precedency of token is smaller or equal to the precedency of stack peek
-            while (!stack.empty() && checkIsLeftAssociative(token.charAt(0)) && getPrecedenty(token.charAt(0)) <= getPrecedenty(stack.peek().charAt(0))) {
+            while (!stack.empty() && checkIsLeftAssociative(token) && getPrecedenty(token) <= getPrecedenty(stack.peek())) {
                nodesAsString.add(stack.pop());
             }
             stack.push(token);
@@ -100,21 +112,27 @@ public class InfixToPostfix {
          nodesAsString.add(stack.pop());
       }
 
+      System.out.println(Arrays.toString(arr));
       // Return a string array with the reversed polish notation and the solution
       return new String[] {nodesAsString.toString(), String.valueOf(new PostfixToNode(nodesAsString).calcNode().getValue())};
    }
 
-   private static boolean checkIsLeftAssociative(char character) {
-      return character == '+' || character == '-' || character == '/' || character == '*';
+   private static boolean checkIsLeftAssociative(String s) {
+      if (s.length() == 1) {
+         return s.charAt(0) == '+' || s.charAt(0) == '-' || s.charAt(0) == '/' || s.charAt(0) == '*';
+      }
+      return false;
    }
 
-   private static int getPrecedenty(char character) {
-      if (character == '+' || character == '-') {
-         return 1;
-      } else if (character == '*' || character == '/') {
-         return 2;
-      } else if (character == '^') {
-         return 3;
+   private static int getPrecedenty(String s) {
+      if (s.length() == 1) {
+         if (s.charAt(0) == '+' || s.charAt(0) == '-') {
+            return 1;
+         } else if (s.charAt(0) == '*' || s.charAt(0) == '/') {
+            return 2;
+         } else if (s.charAt(0) == '^') {
+            return 3;
+         }
       }
       return -1;
    }
@@ -174,20 +192,16 @@ public class InfixToPostfix {
       allCharacters = new StringBuilder();
 
       for (int i = 0; i < arr.length; i++) {
-         // Check if two operators are after one another or an operator and a character are | for example (++) or (+.) | Brackets after an operator are allowed
-         if (arr[i].length() == 1 && i + 1 != arr.length && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(0)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i + 1].charAt(0)) && arr[i + 1].charAt(0) != '(' && arr[i + 1].charAt(0) != ')') {
+         if (arr[i].length() == 1 && i+1 != arr.length) {
             allCharacters.append(arr[i]);
-            // Check for (-) and an illegal character in the next string ([+][.4])
-            if (arr[i + 1].length() == 1 || CharacterLists.CHARACTERS.contains(arr[i + 1].charAt(0))) {
+            if (arr[i+1].charAt(0) != '-' && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(0)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i+1].charAt(0))) {
                allCharacters.append(arr[i + 1].charAt(0));
                throw new TwoCharactesInARowException(allCharacters);
             }
          } else {
-            // Loop through every char in every string
             for (int j = 0; j < arr[i].length(); j++) {
                allCharacters.append(arr[i].charAt(j));
-               // If two same chars are after one another in the same string
-               if (j + 1 != arr[i].length() && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j + 1))) {
+               if (j+1 != arr[i].length() && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j+1))) {
                   allCharacters.append(arr[i].charAt(j + 1));
                   throw new TwoCharactesInARowException(allCharacters);
                }
