@@ -17,53 +17,52 @@ public class InfixToPostfix {
       // Remove whitespaces from the input string
       input = input.replaceAll("[\\s|\\u00A0]+", "");
 
-      // Create temp variable for writing | input is only used for reading
-      String[] array = input.split("");
+      // replace comma with a point
+      input = input.replace(",", ".");
 
-      for (int i  = 0; i < array.length; i++) {
-         if (CharacterLists.OPERATORS.contains(array[i].charAt(0)) || array[i].charAt(0) == '(' || array[i].charAt(0) == ')') {
-            if (i == 0 && array[0].charAt(0) == '-') {
-               i++;
-            }
-            if (i+1 <= array.length && i-1 >= 0 && array[i].charAt(0) == '-' && CharacterLists.isNumber(array[i+1])) {
-               if (CharacterLists.OPERATORS.contains(array[i-1].charAt(0)) || CharacterLists.CHARACTERS.contains(array[i-1].charAt(0)) || array[i-1].charAt(0) == ' ') {
+      // Split input after every ""
+      arr = input.split("");
+
+      for (int i  = 0; i < arr.length; i++) {
+         // If the first character in input is a minus
+         if (i == 0 && arr[0].charAt(0) == '-') {
+            i++;
+         } else if (CharacterLists.OPERATORS.contains(arr[i].charAt(0)) || arr[i].charAt(0) == '(' || arr[i].charAt(0) == ')') {
+            if (i+1 <= arr.length && i-1 >= 0 && arr[i].charAt(0) == '-' && CharacterLists.isNumber(arr[i+1])) {
+               // If there is an operator, a bracket or a whitespace before a minus
+               if (CharacterLists.OPERATORS.contains(arr[i-1].charAt(0)) || CharacterLists.CHARACTERS.contains(arr[i-1].charAt(0)) || arr[i-1].charAt(0) == ' ') {
                   i++;
                } else {
-                  array[i] = " " + array[i] + " ";
+                  // Extend the operator with whitespaces around it | (+) --> ( + )
+                  arr[i] = " " + arr[i] + " ";
                }
             } else {
-               array[i] = " " + array[i] + " ";
+               // Extend the operator with whitespaces around it | (+) --> ( + )
+               arr[i] = " " + arr[i] + " ";
             }
          }
       }
 
-      StringBuilder stringBuilder = new StringBuilder();
-      for (String s : array) {
-         stringBuilder.append(s);
-      }
-      String temp = stringBuilder.toString();
-
-      // replace comma with a point
-      temp = temp.replace(",", ".");
-
       // Split after every whitespace
-      arr = temp.split(" ");
+      StringBuilder string = new StringBuilder(" ");
+      for (String s : arr) {
+         string.append(s);
+      }
+      arr = string.toString().split(" ");
 
       // Creation of new arrayList with values of the array
-      ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
+      ArrayList<String> list = new ArrayList<>(Arrays.asList(this.arr));
 
       // Remove empty strings
       list.removeIf(s -> s.equals(""));
 
       // Fill the array with values from the arraylist
-      arr = list.toArray(new String[0]);
+      this.arr = list.toArray(new String[0]);
 
       // Check for illegal input
       illegalInput();
 
-      System.out.println(Arrays.toString(arr));
-
-      return arr;
+      return this.arr;
    }
 
    public String[] postfix() {
