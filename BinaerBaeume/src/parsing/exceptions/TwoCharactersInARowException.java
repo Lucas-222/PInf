@@ -1,9 +1,9 @@
 package parsing.exceptions;
 
-public class TwoCharactesInARowException extends Exception {
+public class TwoCharactersInARowException extends Exception {
     StringBuilder stringBuilder;
 
-    public TwoCharactesInARowException(StringBuilder stringbuilder) {
+    public TwoCharactersInARowException(StringBuilder stringbuilder) {
         this.stringBuilder = stringbuilder;
     }
 

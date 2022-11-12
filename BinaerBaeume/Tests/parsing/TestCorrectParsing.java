@@ -2,6 +2,7 @@ package parsing;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestCorrectParsing {
 
@@ -64,6 +65,16 @@ public class TestCorrectParsing {
     void testArrayIsNull() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("1+1");
         assertEquals("The array is null", infixToPostfix.toString());
+    }
+
+    @Test
+    void testIsNumberInt() {
+        assertTrue(CharacterLists.isNumber("120"));
+    }
+
+    @Test
+    void testIsNumberDouble() {
+        assertTrue(CharacterLists.isNumber("120.0"));
     }
 
 }

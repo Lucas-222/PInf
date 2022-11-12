@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPostfix {
 
@@ -108,9 +107,10 @@ public class TestPostfix {
     @Test
     void testSortMixedBig() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("3 * (1 + 200) / 2 ^ 3 - 5 * 10 * 6 - 90 + 2,35 * (40000 + 3) * (4 * (5 + 6))");
-        String[] expectedStringArr = new String[] {"[3, 1, 200, +, *, 2, 3, ^, /, 5, 10, *, 6, *, -, 90, -, 2.35, 40000, 3, +, *, 4, 5, 6, +, *, *, +], 4135995.575"};
-        assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
-        System.out.println("-----Postfix notation and solution of [3 * (1 + 200) / 2 ^ 3 - 5 * 10 * 6 - 90 + 2,35 * (40000 + 3) * (4 * (5 + 6))]-----\n" + Arrays.toString(infixToPostfix.postfix()) + "\n");
+        String expectedString = "[[3, 1, 200, +, *, 2, 3, ^, /, 5, 10, *, 6, *, -, 90, -, 2.35, 40000, 3, +, *, 4, 5, 6, +, *, *, +], 4135995.575]";
+        String actualString = Arrays.toString(infixToPostfix.postfix());
+        assertEquals(expectedString, actualString);
+        System.out.println("-----Postfix notation and solution of [3 * (1 + 200) / 2 ^ 3 - 5 * 10 * 6 - 90 + 2,35 * (40000 + 3) * (4 * (5 + 6))]-----\n" + actualString + "\n");
     }
 
     @Test
@@ -125,6 +125,11 @@ public class TestPostfix {
         InfixToPostfix infixToPostfix = new InfixToPostfix("3 * (1 * (2 * (3 * (4 + 2))))");
         String[] expectedStringArr = new String[] {"[3, 1, 2, 3, 4, 2, +, *, *, *, *], 108.0"};
         assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
+    }
+
+    @Test
+    void testFalseLeftAssociativity() {
+        assertFalse(new InfixToPostfix("1+1").isLeftAssociative("^^"));
     }
 
 }
