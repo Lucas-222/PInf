@@ -4,29 +4,44 @@ import termAsTreeInheritance.*;
 import java.util.List;
 
 public class PostfixToNode {
-    List<String> nodesAsString;
+    private final List<String> nodesAsStringList;
+    private String variableReplacement;
 
-    public PostfixToNode(List<String> nodesAsString) {
-        this.nodesAsString = nodesAsString;
+    public PostfixToNode(List<String> nodesAsStringList) {
+        this.nodesAsStringList = nodesAsStringList;
+    }
+
+    public PostfixToNode(List<String> nodesAsStringList, String variableReplacement) {
+        this.nodesAsStringList = nodesAsStringList;
+        this.variableReplacement = variableReplacement;
     }
 
     public Node calcNode() {
+        replaceVariable();
         // Loop through every string in nodesAsString
-        for (int i = 0; i < nodesAsString.size(); i++) {
-            System.out.println(nodesAsString);
+        for (int i = 0; i < nodesAsStringList.size(); i++) {
+            System.out.println(nodesAsStringList);
             // If there are two numbers before an operator | (1, 2, *)
-            if (i+2 <= nodesAsString.size() && CharacterLists.isNumber(nodesAsString.get(i)) && CharacterLists.isNumber(nodesAsString.get(i+1)) && nodesAsString.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsString.get(i+2).charAt(0))) {
+            if (i+2 <= nodesAsStringList.size() && CharacterLists.isNumber(nodesAsStringList.get(i)) && CharacterLists.isNumber(nodesAsStringList.get(i+1)) && nodesAsStringList.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsStringList.get(i+2).charAt(0))) {
                 // Create nodes and remove the second number and the operator
-                Node leftvalue = new Value(Double.parseDouble(nodesAsString.get(i)));
-                Node rightvalue = new Value(Double.parseDouble(nodesAsString.remove(i+1)));
-                Operator operator = getOperator(nodesAsString.remove(i+1), leftvalue, rightvalue);
+                Node leftvalue = new Value(Double.parseDouble(nodesAsStringList.get(i)));
+                Node rightvalue = new Value(Double.parseDouble(nodesAsStringList.remove(i+1)));
+                Operator operator = getOperator(nodesAsStringList.remove(i+1), leftvalue, rightvalue);
                 // Replace the first number with the solution | (1, 2, *) --> (2)
-                nodesAsString.set(i, String.valueOf(operator.getValue()));
+                nodesAsStringList.set(i, String.valueOf(operator.getValue()));
                 // Start over with the array
                 i = -1;
             }
         }
-        return new Value(Double.parseDouble(nodesAsString.get(0)));
+        return new Value(Double.parseDouble(nodesAsStringList.get(0)));
+    }
+
+    public void replaceVariable() {
+        for (int i = 0; i < nodesAsStringList.size(); i++) {
+            if (CharacterLists.VARIABLES.contains(nodesAsStringList.get(i).charAt(0))) {
+                nodesAsStringList.set(i, variableReplacement);
+            }
+        }
     }
 
     public Operator getOperator(String s, Node leftvalue, Node rightvalue) {

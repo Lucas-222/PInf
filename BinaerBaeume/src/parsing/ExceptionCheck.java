@@ -6,9 +6,11 @@ public class ExceptionCheck {
     private int amountOfOpeningBracketsWithoutClosingBrackets;
     private StringBuilder allCharacters;
     private String[] inputAsArray;
+    private String variableReplacement;
 
-    public ExceptionCheck(String[] inputAsArray) {
+    public ExceptionCheck(String[] inputAsArray, String variableReplacement) {
         this.inputAsArray = inputAsArray;
+        this.variableReplacement = variableReplacement;
     }
 
     public String[] check() {
@@ -22,12 +24,14 @@ public class ExceptionCheck {
                 illegalCharacterAfterNumber(s);
                 // Illegal Bracket
                 illegalBrackets(s);
+                // Illegal variable
+                illegalVariable(s);
             }
             if (amountOfOpeningBracketsWithoutClosingBrackets != 0) {
                 throw new WrongBracketsException(1);
             }
             checkForTwoCharactersInARow();
-        } catch (IllegalCharacterException | IllegalCharacterAfterNumberException | WrongBracketsException | TwoCharactersInARowException e) {
+        } catch (IllegalCharacterException | IllegalCharacterAfterNumberException | WrongBracketsException | TwoCharactersInARowException | IllegalVariableException e) {
             inputAsArray = new String[] {e.getMessage()};
         }
         return inputAsArray;
@@ -37,10 +41,33 @@ public class ExceptionCheck {
         for (int i = 0; i < s.length(); i++) {
             allCharacters.append(s.charAt(i));
             // If char is not a character, not an operator and not a number
-            if (!CharacterLists.CHARACTERS.contains(s.charAt(i)) && !CharacterLists.OPERATORS.contains(s.charAt(i)) && !CharacterLists.NUMBERS.contains(s.charAt(i))) {
+            if (!CharacterLists.CHARACTERS.contains(s.charAt(i)) && !CharacterLists.OPERATORS.contains(s.charAt(i)) && !CharacterLists.NUMBERS.contains(s.charAt(i)) && !CharacterLists.VARIABLES.contains(s.charAt(i))) {
                 throw new IllegalCharacterException(allCharacters);
             }
         }
+    }
+
+    public void illegalVariable(String s) throws IllegalVariableException {
+        if (s.length() != 1) {
+            for (int i = 0; i < s.length(); i++) {
+                // If the string contains any number -> return true
+                if (CharacterLists.VARIABLES.contains(s.charAt(i))) {
+                    throw new IllegalVariableException(allCharacters, 1);
+                }
+            }
+        }
+        if (containsVariable() && variableReplacement == null) {
+            throw new IllegalVariableException(allCharacters, 2);
+        }
+    }
+
+    public boolean containsVariable() {
+        for (String s : inputAsArray) {
+            if (CharacterLists.VARIABLES.contains(s.charAt(0))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void illegalCharacterAfterNumber(String s) throws IllegalCharacterAfterNumberException {

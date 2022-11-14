@@ -5,9 +5,15 @@ import java.util.*;
 public class InfixToPostfix {
    private String[] inputAsArray;
    private String input;
+   private String variableReplacement = null;
 
    public InfixToPostfix(String input) {
       this.input = input;
+   }
+
+   public InfixToPostfix(String input, String variableReplacement) {
+      this.input = input;
+      this.variableReplacement = variableReplacement;
    }
 
    public String[] parse() {
@@ -17,7 +23,7 @@ public class InfixToPostfix {
       // replace comma with a point
       input = input.replace(",", ".");
 
-      // Split input after every ""
+      // Convert input to array
       inputAsArray = input.split("");
 
       // Soround operators and brackets with whitespaces
@@ -40,12 +46,14 @@ public class InfixToPostfix {
       inputAsArray = list.toArray(new String[0]);
 
       // Check for illegal input
-      inputAsArray = new ExceptionCheck(inputAsArray).check();
+      inputAsArray = new ExceptionCheck(inputAsArray, variableReplacement).check();
+
 
       return inputAsArray;
    }
 
    public void soroundOperatorsAndBracketsWithWhitespaces() {
+      // All illegal statments that can occur, are getting checked later
       for (int i = 0; i < inputAsArray.length; i++) {
          char currentChar = inputAsArray[i].charAt(0);
 
@@ -83,20 +91,23 @@ public class InfixToPostfix {
       // Create a LIFO stack
       Stack<String> stack = new Stack<>();
       // Create a nodes list
-      List<String> nodesAsString = new LinkedList<>();
+      List<String> nodesAsStringList = new LinkedList<>();
       // Parse the input
       parse();
 
+      // If there was an exception thrown
+      if (inputAsArray.length == 1) return inputAsArray;
+
       // Loop through every string in arr
       for (String token : inputAsArray) {
-         // Check for number
-         if (CharacterLists.isNumber(token)) nodesAsString.add(token);
+         // If token is a number
+         if (CharacterLists.isNumber(token) || CharacterLists.VARIABLES.contains(token.charAt(0))) nodesAsStringList.add(token);
 
          // If token is an operator
          if (token.length() == 1 && CharacterLists.OPERATORS.contains(token.charAt(0))) {
             // While stack is not empty AND operators contains stack peek AND token is left associative AND the precedency of token is smaller or equal to the precedency of stack peek
             while (!stack.empty() && isLeftAssociative(token) && getPrecedenty(token) <= getPrecedenty(stack.peek())) {
-               nodesAsString.add(stack.pop());
+               nodesAsStringList.add(stack.pop());
             }
             stack.push(token);
          }
@@ -108,20 +119,28 @@ public class InfixToPostfix {
          if (token.equals(")")) {
             // While stack peek is not an opening bracket
             while (!stack.peek().equals("(")) {
-               nodesAsString.add(stack.pop());
+               nodesAsStringList.add(stack.pop());
             }
             // Remove the opening bracket
             stack.pop();
          }
       }
 
-      // Fill nodesAsString with the rest of stack
+      // Fill nodesAsStringList with the rest of stack
       while (!stack.empty()) {
-         nodesAsString.add(stack.pop());
+         nodesAsStringList.add(stack.pop());
+      }
+
+      PostfixToNode postfix;
+      // If there is a variable
+      if (variableReplacement != null) {
+         postfix = new PostfixToNode(nodesAsStringList, variableReplacement);
+      } else {
+         postfix = new PostfixToNode(nodesAsStringList);
       }
 
       // Return a string array with the reversed polish notation and the solution
-      return new String[] {nodesAsString.toString(), String.valueOf(new PostfixToNode(nodesAsString).calcNode().getValue())};
+      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode().getValue())};
    }
 
    public boolean isLeftAssociative(String s) {
