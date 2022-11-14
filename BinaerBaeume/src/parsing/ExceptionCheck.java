@@ -5,17 +5,17 @@ import parsing.exceptions.*;
 public class ExceptionCheck {
     private int amountOfOpeningBracketsWithoutClosingBrackets;
     private StringBuilder allCharacters;
-    private String[] arr;
+    private String[] inputAsArray;
 
-    public ExceptionCheck(String[] arr) {
-        this.arr = arr;
+    public ExceptionCheck(String[] inputAsArray) {
+        this.inputAsArray = inputAsArray;
     }
 
     public String[] check() {
         amountOfOpeningBracketsWithoutClosingBrackets = 0;
         allCharacters = new StringBuilder();
         try {
-            for (String s : arr) {
+            for (String s : inputAsArray) {
                 // Illegal character
                 illegalCharacter(s);
                 // Illegal character after number
@@ -28,9 +28,9 @@ public class ExceptionCheck {
             }
             checkForTwoCharactersInARow();
         } catch (IllegalCharacterException | IllegalCharacterAfterNumberException | WrongBracketsException | TwoCharactersInARowException e) {
-            arr = new String[] {e.getMessage()};
+            inputAsArray = new String[] {e.getMessage()};
         }
-        return arr;
+        return inputAsArray;
     }
 
     public void illegalCharacter(String s) throws IllegalCharacterException {
@@ -67,22 +67,22 @@ public class ExceptionCheck {
         allCharacters = new StringBuilder();
 
         // Loop through every string in arr
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < inputAsArray.length; i++) {
             // If the length of string is 1
-            if (arr[i].length() == 1 && i+1 != arr.length) {
-                allCharacters.append(arr[i]);
+            if (inputAsArray[i].length() == 1 && i+1 != inputAsArray.length) {
+                allCharacters.append(inputAsArray[i]);
                 // If two illegal strings are in a row (exclude -) | (+, *)
-                if (arr[i+1].charAt(0) != '-' && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(0)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i+1].charAt(0))) {
-                    allCharacters.append(arr[i + 1].charAt(0));
+                if (inputAsArray[i+1].charAt(0) != '-' && CharacterLists.OPERATORSANDCHARACTERS.contains(inputAsArray[i].charAt(0)) && CharacterLists.OPERATORSANDCHARACTERS.contains(inputAsArray[i+1].charAt(0))) {
+                    allCharacters.append(inputAsArray[i + 1].charAt(0));
                     throw new TwoCharactersInARowException(allCharacters);
                 }
             } else {
                 // Loop through every char in string
-                for (int j = 0; j < arr[i].length(); j++) {
-                    allCharacters.append(arr[i].charAt(j));
+                for (int j = 0; j < inputAsArray[i].length(); j++) {
+                    allCharacters.append(inputAsArray[i].charAt(j));
                     // If two illegal characters are in a row | (..)
-                    if (j+1 != arr[i].length() && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j)) && CharacterLists.OPERATORSANDCHARACTERS.contains(arr[i].charAt(j+1))) {
-                        allCharacters.append(arr[i].charAt(j + 1));
+                    if (j+1 != inputAsArray[i].length() && CharacterLists.OPERATORSANDCHARACTERS.contains(inputAsArray[i].charAt(j)) && CharacterLists.OPERATORSANDCHARACTERS.contains(inputAsArray[i].charAt(j+1))) {
+                        allCharacters.append(inputAsArray[i].charAt(j + 1));
                         throw new TwoCharactersInARowException(allCharacters);
                     }
                 }

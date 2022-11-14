@@ -3,7 +3,7 @@ package parsing;
 import java.util.*;
 
 public class InfixToPostfix {
-   private String[] arr;
+   private String[] inputAsArray;
    private String input;
 
    public InfixToPostfix(String input) {
@@ -18,45 +18,64 @@ public class InfixToPostfix {
       input = input.replace(",", ".");
 
       // Split input after every ""
-      arr = input.split("");
+      inputAsArray = input.split("");
 
       // Soround operators and brackets with whitespaces
       soroundOperatorsAndBracketsWithWhitespaces();
 
-      // Split after every whitespace
+      // Convert inputAsArray to stringbuilder
       StringBuilder string = new StringBuilder(" ");
-      for (String s : arr) string.append(s);
-      arr = string.toString().split(" ");
+      for (String s : inputAsArray) string.append(s);
+
+      // Split after every whitespace
+      inputAsArray = string.toString().split(" ");
 
       // Creation of new arrayList with values of the array
-      ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
+      ArrayList<String> list = new ArrayList<>(Arrays.asList(inputAsArray));
 
       // Remove empty strings
       list.removeIf(s -> s.equals(""));
 
       // Fill the array with values from the arraylist
-      arr = list.toArray(new String[0]);
+      inputAsArray = list.toArray(new String[0]);
 
       // Check for illegal input
-      arr = new ExceptionCheck(arr).check();
+      inputAsArray = new ExceptionCheck(inputAsArray).check();
 
-      return arr;
+      return inputAsArray;
    }
 
    public void soroundOperatorsAndBracketsWithWhitespaces() {
-      for (int i  = 0; i < arr.length; i++) {
-         char currentChar = arr[i].charAt(0);
-         // If i, is not the first character in input, and currentchar is an operator or a bracket
-         if (i != 0 && CharacterLists.OPERATORS.contains(currentChar) || currentChar == '(' || currentChar == ')') {
-            if (i+1 <= arr.length && i-1 >= 0 && currentChar == '-' && CharacterLists.isNumber(arr[i+1])) {
-               char lastchar = arr[i-1].charAt(0);
-               // If there is an operator, a bracket or a whitespace before a minus
-               if (CharacterLists.OPERATORS.contains(lastchar) || CharacterLists.CHARACTERS.contains(lastchar) || lastchar == ' ') {
-                  i++;
-                  // Extend the operator with whitespaces around it | (+) --> ( + )
-               } else arr[i] = " " + arr[i] + " ";
-            } else arr[i] = " " + arr[i] + " ";
-         } else if (currentChar == '-') i++;
+      for (int i = 0; i < inputAsArray.length; i++) {
+         char currentChar = inputAsArray[i].charAt(0);
+
+         // If the first char in input is a minus
+         if (i == 0 && currentChar == '-') {
+            i++;
+            continue;
+         }
+
+         // If currentchar is a number
+         if (!CharacterLists.OPERATORS.contains(currentChar) && currentChar != '(' && currentChar != ')') {
+            continue;
+         }
+
+         // If currentchar is not a minus and next char is not a number
+         if (i+1 > inputAsArray.length || i-1 < 0 || currentChar != '-' || !CharacterLists.isNumber(inputAsArray[i+1])) {
+            inputAsArray[i] = " " + inputAsArray[i] + " ";
+            continue;
+         }
+
+         char lastchar = inputAsArray[i-1].charAt(0);
+
+         // If there is an operator a bracket or a whitespace in front of the minus
+         if (!CharacterLists.OPERATORS.contains(lastchar) && !CharacterLists.CHARACTERS.contains(lastchar) && lastchar != ' ') {
+            inputAsArray[i] = " " + inputAsArray[i] + " ";
+            continue;
+         }
+
+         i++;
+
       }
    }
    
@@ -69,7 +88,7 @@ public class InfixToPostfix {
       parse();
 
       // Loop through every string in arr
-      for (String token : arr) {
+      for (String token : inputAsArray) {
          // Check for number
          if (CharacterLists.isNumber(token)) nodesAsString.add(token);
 
@@ -127,15 +146,15 @@ public class InfixToPostfix {
 
    @Override
    public String toString() {
-      if (arr == null) return "The array is null";
+      // If inputAsArray is null
+      if (inputAsArray == null) return "The array is null";
+
+      // If there was an exception thrown
+      if (inputAsArray.length == 1) return inputAsArray[0];
 
       StringBuilder stringBuilder = new StringBuilder();
-      for (String s : arr) {
-         if (arr.length != 1) {
-            stringBuilder.append("[").append(s).append("]");
-         } else {
-            stringBuilder.append(s);
-         }
+      for (String s : inputAsArray) {
+         stringBuilder.append("[").append(s).append("]");
       }
       return stringBuilder.toString();
    }

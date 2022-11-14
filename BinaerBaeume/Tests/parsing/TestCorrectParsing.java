@@ -48,6 +48,13 @@ public class TestCorrectParsing {
     }
 
     @Test
+    void testMinusBig() {
+        InfixToPostfix infixToPostfix = new InfixToPostfix("-1 - -1 - 1 - 1");
+        infixToPostfix.parse();
+        assertEquals("[-1][-][-1][-][1][-][1]", infixToPostfix.toString());
+    }
+
+    @Test
     void testBrackets() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("(1+1.3  + 2)");
         infixToPostfix.parse();
