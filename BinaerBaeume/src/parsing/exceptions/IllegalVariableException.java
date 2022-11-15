@@ -14,7 +14,7 @@ public class IllegalVariableException extends Exception {
     public String getMessage() {
         if (errorType == 1) {
             char errorChar = stringBuilder.charAt(stringBuilder.length() - 1);
-            return "After characters" + stringBuilder.deleteCharAt(stringBuilder.length() - 1) + "illegal variable (" + errorChar + ") was found.";
+            return "After characters: " + stringBuilder.deleteCharAt(stringBuilder.length() - 1) + " illegal variable (" + errorChar + ") was found.";
         } else {
             return "No replacement variable found";
         }

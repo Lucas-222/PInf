@@ -2,7 +2,6 @@ package parsing;
 
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,11 +78,6 @@ public class TestPostfix {
     }
 
     @Test
-    void testNull() {
-        assertNull(new PostfixToNode(new LinkedList<>()).getOperator("", null, null));
-    }
-
-    @Test
     void testVorzeichen() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("-3 * (-1 + 2)");
         String[] expectedStringArr = new String[] {"[-3, -1, 2, +, *]", "-3.0"};
@@ -125,11 +119,6 @@ public class TestPostfix {
         InfixToPostfix infixToPostfix = new InfixToPostfix("3 * (1 * (2 * (3 * (4 + 2))))");
         String[] expectedStringArr = new String[] {"[3, 1, 2, 3, 4, 2, +, *, *, *, *], 108.0"};
         assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
-    }
-
-    @Test
-    void testFalseLeftAssociativity() {
-        assertFalse(new InfixToPostfix("1+1").isLeftAssociative("^^"));
     }
 
 }

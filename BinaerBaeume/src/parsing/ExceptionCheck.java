@@ -6,7 +6,7 @@ public class ExceptionCheck {
     private int amountOfOpeningBracketsWithoutClosingBrackets;
     private StringBuilder allCharacters;
     private String[] inputAsArray;
-    private String variableReplacement;
+    private final String variableReplacement;
 
     public ExceptionCheck(String[] inputAsArray, String variableReplacement) {
         this.inputAsArray = inputAsArray;
@@ -18,14 +18,14 @@ public class ExceptionCheck {
         allCharacters = new StringBuilder();
         try {
             for (String s : inputAsArray) {
+                // Illegal variable
+                illegalVariable(s);
                 // Illegal character
                 illegalCharacter(s);
                 // Illegal character after number
                 illegalCharacterAfterNumber(s);
                 // Illegal Bracket
                 illegalBrackets(s);
-                // Illegal variable
-                illegalVariable(s);
             }
             if (amountOfOpeningBracketsWithoutClosingBrackets != 0) {
                 throw new WrongBracketsException(1);
@@ -37,7 +37,7 @@ public class ExceptionCheck {
         return inputAsArray;
     }
 
-    public void illegalCharacter(String s) throws IllegalCharacterException {
+    private void illegalCharacter(String s) throws IllegalCharacterException {
         for (int i = 0; i < s.length(); i++) {
             allCharacters.append(s.charAt(i));
             // If char is not a character, not an operator and not a number
@@ -59,6 +59,7 @@ public class ExceptionCheck {
         if (containsVariable() && variableReplacement == null) {
             throw new IllegalVariableException(allCharacters, 2);
         }
+
     }
 
     public boolean containsVariable() {
@@ -72,6 +73,9 @@ public class ExceptionCheck {
 
     public void illegalCharacterAfterNumber(String s) throws IllegalCharacterAfterNumberException {
         if (s.charAt(s.length() - 1) == '.') {
+            throw new IllegalCharacterAfterNumberException(allCharacters);
+        }
+        if (CharacterLists.OPERATORS.contains(inputAsArray[inputAsArray.length-1].charAt(inputAsArray[inputAsArray.length-1].length()-1))) {
             throw new IllegalCharacterAfterNumberException(allCharacters);
         }
     }

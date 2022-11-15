@@ -10,7 +10,6 @@ public class TestTwoCharactersInARow {
     void testTwoOperatorsInARow() {
         String error = new TwoCharactersInARowException(new StringBuilder("1++")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 ++ 1");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -18,7 +17,6 @@ public class TestTwoCharactersInARow {
     void testTwoCharactersInARow() {
         String error = new TwoCharactersInARowException(new StringBuilder("1+1..")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 + 1..3");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -26,7 +24,6 @@ public class TestTwoCharactersInARow {
     void testCharaterAfterKeyOperator() {
         String error = new TwoCharactersInARowException(new StringBuilder("1+-.")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 + -.5");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -34,7 +31,6 @@ public class TestTwoCharactersInARow {
     void testTwoCharactersInARowAtTheStart() {
         String error = new TwoCharactersInARowException(new StringBuilder("..")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("..1 + 1..3");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -42,7 +38,6 @@ public class TestTwoCharactersInARow {
     void testIllegalCharacterAndIllegalOperatorInARow() {
         String error = new TwoCharactersInARowException(new StringBuilder("1+.")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 +. 1.2");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -50,7 +45,6 @@ public class TestTwoCharactersInARow {
     void testTwoDifferentIllegallCharactersInARow() {
         String error = new TwoCharactersInARowException(new StringBuilder("1+1..")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 + 1.,2");
-        infixToPostfix.parse();
         System.out.println("-----Two characters in a row-----\n" + error + "\n");
         assertEquals(error, infixToPostfix.toString());
     }

@@ -36,7 +36,7 @@ public class PostfixToNode {
         return new Value(Double.parseDouble(nodesAsStringList.get(0)));
     }
 
-    public void replaceVariable() {
+    private void replaceVariable() {
         for (int i = 0; i < nodesAsStringList.size(); i++) {
             if (CharacterLists.VARIABLES.contains(nodesAsStringList.get(i).charAt(0))) {
                 nodesAsStringList.set(i, variableReplacement);
@@ -44,7 +44,7 @@ public class PostfixToNode {
         }
     }
 
-    public Operator getOperator(String s, Node leftvalue, Node rightvalue) {
+    private Operator getOperator(String s, Node leftvalue, Node rightvalue) {
         // Return the right operator from string, with the values from leftvalue and rightvalue
         return switch (s) {
             case "+" -> new Add(leftvalue, rightvalue);

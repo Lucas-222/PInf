@@ -10,7 +10,6 @@ public class TestWrongBrackets {
     void testClosingBracketBeforeOpeningBracket() {
         String error = new WrongBracketsException(new StringBuilder(")")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix(")1 + 1");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -18,7 +17,6 @@ public class TestWrongBrackets {
     void testCorrectAmountOfBracketsButWrongPlaced() {
         String error = new WrongBracketsException(new StringBuilder(")")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix(")1 + 1(");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -26,7 +24,6 @@ public class TestWrongBrackets {
     void testBracketsInMiddle() {
         String error = new WrongBracketsException(new StringBuilder("1+)")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 +) 1(");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 
@@ -34,7 +31,6 @@ public class TestWrongBrackets {
     void testBracketsType2() {
         String error = new WrongBracketsException(new StringBuilder(")")).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix(")1 + 1(");
-        infixToPostfix.parse();
         System.out.println("-----Wrong placement of brackets-----\n" + error + "\n");
         assertEquals(error, infixToPostfix.toString());
     }
@@ -43,7 +39,6 @@ public class TestWrongBrackets {
     void testBracketsType1() {
         String error = new WrongBracketsException(1).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("(1 + 1()");
-        infixToPostfix.parse();
         System.out.println("-----Wrong amount of brackets-----\n" + error + "\n");
         assertEquals(error, infixToPostfix.toString());
     }
@@ -52,7 +47,6 @@ public class TestWrongBrackets {
     void testNoClosingBracketAfterOpeningBracket() {
         String error = new WrongBracketsException(1).getMessage();
         InfixToPostfix infixToPostfix = new InfixToPostfix("(1 + 1");
-        infixToPostfix.parse();
         assertEquals(error, infixToPostfix.toString());
     }
 

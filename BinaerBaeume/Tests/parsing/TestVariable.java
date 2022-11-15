@@ -9,14 +9,12 @@ public class TestVariable {
     @Test
     void testSimpleParsing() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 * x", "1");
-        infixToPostfix.parse();
         assertEquals("[1][*][x]", infixToPostfix.toString());
     }
 
     @Test
     void testBigParsing() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("1 * x + 3 * 5", "1");
-        infixToPostfix.parse();
         assertEquals("[1][*][x][+][3][*][5]", infixToPostfix.toString());
     }
 

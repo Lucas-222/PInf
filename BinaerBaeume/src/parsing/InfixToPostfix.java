@@ -5,7 +5,7 @@ import java.util.*;
 public class InfixToPostfix {
    private String[] inputAsArray;
    private String input;
-   private String variableReplacement = null;
+   private String variableReplacement;
 
    public InfixToPostfix(String input) {
       this.input = input;
@@ -16,7 +16,42 @@ public class InfixToPostfix {
       this.variableReplacement = variableReplacement;
    }
 
-   public String[] parse() {
+   public String[] postfix() {
+      // Parse the input
+      parse();
+
+      // If there is a variable
+      if (variableReplacement != null) {
+         // Create a temp array with values from inputAsArr
+         String[] temp = inputAsArray;
+         // Replace the variable in input
+         input = input.replace("x", variableReplacement);
+         // Parse again to catch exceptions
+         parse();
+         // If there was an exception thrown
+         if (inputAsArray.length == 1) return inputAsArray;
+         // Set inputAsArr to temp, so the varable shows and not the value
+         inputAsArray = temp;
+      }
+
+      // If there was an exception thrown
+      if (inputAsArray.length == 1) return inputAsArray;
+
+      List<String> nodesAsStringList = shuntingYard();
+
+      PostfixToNode postfix;
+      // If there is a variable
+      if (variableReplacement != null) {
+         postfix = new PostfixToNode(nodesAsStringList, variableReplacement);
+      } else {
+         postfix = new PostfixToNode(nodesAsStringList);
+      }
+
+      // Return a string array with the reversed polish notation and the solution
+      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode().getValue())};
+   }
+
+   private void parse() {
       // Remove whitespaces from the input string
       input = input.replaceAll("[\\s|\\u00A0]+", "");
 
@@ -47,12 +82,9 @@ public class InfixToPostfix {
 
       // Check for illegal input
       inputAsArray = new ExceptionCheck(inputAsArray, variableReplacement).check();
-
-
-      return inputAsArray;
    }
 
-   public void soroundOperatorsAndBracketsWithWhitespaces() {
+   private void soroundOperatorsAndBracketsWithWhitespaces() {
       // All illegal statments that can occur, are getting checked later
       for (int i = 0; i < inputAsArray.length; i++) {
          char currentChar = inputAsArray[i].charAt(0);
@@ -86,17 +118,12 @@ public class InfixToPostfix {
 
       }
    }
-   
-   public String[] postfix() {
+
+   private List<String> shuntingYard() {
       // Create a LIFO stack
       Stack<String> stack = new Stack<>();
       // Create a nodes list
       List<String> nodesAsStringList = new LinkedList<>();
-      // Parse the input
-      parse();
-
-      // If there was an exception thrown
-      if (inputAsArray.length == 1) return inputAsArray;
 
       // Loop through every string in arr
       for (String token : inputAsArray) {
@@ -131,26 +158,14 @@ public class InfixToPostfix {
          nodesAsStringList.add(stack.pop());
       }
 
-      PostfixToNode postfix;
-      // If there is a variable
-      if (variableReplacement != null) {
-         postfix = new PostfixToNode(nodesAsStringList, variableReplacement);
-      } else {
-         postfix = new PostfixToNode(nodesAsStringList);
-      }
-
-      // Return a string array with the reversed polish notation and the solution
-      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode().getValue())};
+      return nodesAsStringList;
    }
 
-   public boolean isLeftAssociative(String s) {
-      if (s.length() == 1) {
-         return s.charAt(0) == '+' || s.charAt(0) == '-' || s.charAt(0) == '/' || s.charAt(0) == '*';
-      }
-      return false;
+   private boolean isLeftAssociative(String s) {
+      return s.charAt(0) == '+' || s.charAt(0) == '-' || s.charAt(0) == '/' || s.charAt(0) == '*';
    }
 
-   public int getPrecedenty(String s) {
+   private int getPrecedenty(String s) {
       if (s.length() == 1) {
          if (s.charAt(0) == '+' || s.charAt(0) == '-') {
             return 1;
@@ -165,6 +180,7 @@ public class InfixToPostfix {
 
    @Override
    public String toString() {
+      parse();
       // If inputAsArray is null
       if (inputAsArray == null) return "The array is null";
 
