@@ -20,7 +20,6 @@ public class PostfixToNode {
         replaceVariable();
         // Loop through every string in nodesAsString
         for (int i = 0; i < nodesAsStringList.size(); i++) {
-            System.out.println(nodesAsStringList);
             // If there are two numbers before an operator | (1, 2, *)
             if (i+2 <= nodesAsStringList.size() && CharacterLists.isNumber(nodesAsStringList.get(i)) && CharacterLists.isNumber(nodesAsStringList.get(i+1)) && nodesAsStringList.get(i+2).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsStringList.get(i+2).charAt(0))) {
                 // Create nodes and remove the second number and the operator
@@ -51,8 +50,7 @@ public class PostfixToNode {
             case "-" -> new Subtract(leftvalue, rightvalue);
             case "*" -> new Multiply(leftvalue, rightvalue);
             case "/" -> new Divide(leftvalue, rightvalue);
-            case "^" -> new Power(leftvalue, rightvalue);
-            default -> null;
+            default -> new Power(leftvalue, rightvalue);
         };
     }
 

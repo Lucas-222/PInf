@@ -14,4 +14,11 @@ public class TestIllegalCharacterAfterNumber {
         assertEquals(error, infixToPostfix.toString());
     }
 
+    @Test
+    void testOperatorAfterNumber() {
+        String error = new IllegalCharacterAfterNumberException(new StringBuilder("1+1+")).getMessage();
+        InfixToPostfix infixToPostfix = new InfixToPostfix("1 + 1 +");
+        assertEquals(error, infixToPostfix.toString());
+    }
+
 }

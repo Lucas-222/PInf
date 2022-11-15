@@ -25,7 +25,7 @@ public class InfixToPostfix {
          // Create a temp array with values from inputAsArr
          String[] temp = inputAsArray;
          // Replace the variable in input
-         input = input.replace("x", variableReplacement);
+         input = input.replace(String.valueOf(CharacterLists.VARIABLES.get(0)), variableReplacement);
          // Parse again to catch exceptions
          parse();
          // If there was an exception thrown

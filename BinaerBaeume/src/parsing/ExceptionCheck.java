@@ -18,15 +18,20 @@ public class ExceptionCheck {
         allCharacters = new StringBuilder();
         try {
             for (String s : inputAsArray) {
-                // Illegal variable
-                illegalVariable(s);
                 // Illegal character
                 illegalCharacter(s);
                 // Illegal character after number
                 illegalCharacterAfterNumber(s);
                 // Illegal Bracket
                 illegalBrackets(s);
+                // Illegal variable
+                illegalVariable(s);
             }
+            // If the last character in input is an operator
+            if (CharacterLists.OPERATORS.contains(inputAsArray[inputAsArray.length-1].charAt(inputAsArray[inputAsArray.length-1].length()-1))) {
+                throw new IllegalCharacterAfterNumberException(allCharacters);
+            }
+            // If the amount of opening brackets and closing brackets is not equal
             if (amountOfOpeningBracketsWithoutClosingBrackets != 0) {
                 throw new WrongBracketsException(1);
             }
@@ -73,9 +78,6 @@ public class ExceptionCheck {
 
     public void illegalCharacterAfterNumber(String s) throws IllegalCharacterAfterNumberException {
         if (s.charAt(s.length() - 1) == '.') {
-            throw new IllegalCharacterAfterNumberException(allCharacters);
-        }
-        if (CharacterLists.OPERATORS.contains(inputAsArray[inputAsArray.length-1].charAt(inputAsArray[inputAsArray.length-1].length()-1))) {
             throw new IllegalCharacterAfterNumberException(allCharacters);
         }
     }
