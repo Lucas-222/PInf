@@ -72,8 +72,8 @@ public class TestPostfix {
 
     @Test
     void testPowerBig() {
-        InfixToPostfix infixToPostfix = new InfixToPostfix("2 ^ 2 ^ 2");
-        String[] expectedStringArr = new String[] {"[2, 2, 2, ^, ^]", "16.0"};
+        InfixToPostfix infixToPostfix = new InfixToPostfix("2 ^ 2 ^ 2 ^ 2");
+        String[] expectedStringArr = new String[] {"[2, 2, 2, 2, ^, ^, ^, ^]", "65536.0"};
         assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
     }
 
@@ -94,7 +94,7 @@ public class TestPostfix {
     @Test
     void testSortMixed() {
         InfixToPostfix infixToPostfix = new InfixToPostfix("3 * 1 + 2 / 2 ^ 3 - 5");
-        String[] expectedStringArr = new String[] {"[3, 1, *, 2, 2, 3, ^, /, +, 5, -]", "-1.75"};
+        String[] expectedStringArr = new String[] {"[3, 1, *, 2, 2, 3, ^, /, +, 5, -], -1.75"};
         assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
     }
 
@@ -120,9 +120,5 @@ public class TestPostfix {
         String[] expectedStringArr = new String[] {"[3, 1, 2, 3, 4, 2, +, *, *, *, *], 108.0"};
         assertEquals(Arrays.toString(expectedStringArr), Arrays.toString(infixToPostfix.postfix()));
     }
-
-
-
-
 
 }

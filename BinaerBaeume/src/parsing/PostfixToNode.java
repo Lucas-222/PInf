@@ -16,6 +16,67 @@ public class PostfixToNode {
         this.variableReplacement = variableReplacement;
     }
 
+    public Node calcNode2() {
+        Node tempRightValue = null;
+        Node operator = null;
+        Node leftvalue = null;
+        Node rightvalue = null;
+
+        for (int i = 0; i < nodesAsStringList.size(); i++) {
+            if (leftvalue == null) {
+                leftvalue = new Value(Double.parseDouble(nodesAsStringList.get(i)));
+            }
+
+            if (nodesAsStringList.get(i).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsStringList.get(i).charAt(0))) {
+                if (i+3 <= nodesAsStringList.size() && isMultiplication(nodesAsStringList.get(i+2)) && !isMultiplication(nodesAsStringList.get(i))) {
+                    if (i+5 <= nodesAsStringList.size() && nodesAsStringList.get(i + 4).equals("^")) {
+                        tempRightValue = getRightValue(nodesAsStringList.get(i+4), nodesAsStringList.get(i+3), nodesAsStringList.get(i+5));
+                        nodesAsStringList.remove(i+3);
+                        nodesAsStringList.remove(i+3);
+                        nodesAsStringList.remove(i+3);
+                    }
+                    if (tempRightValue == null) {
+                        rightvalue = getRightValue(nodesAsStringList.get(i + 2), nodesAsStringList.get(i + 1), nodesAsStringList.get(i + 3));
+                        nodesAsStringList.remove(i+1);
+                    } else {
+                        rightvalue = getRightValue(nodesAsStringList.get(i + 2), nodesAsStringList.get(i + 1), tempRightValue);
+                        tempRightValue = null;
+                    }
+                    nodesAsStringList.remove(i+1);
+                    nodesAsStringList.remove(i+1);
+                    i--;
+                } else {
+                    if (rightvalue == null) {
+                        rightvalue = new Value(Double.parseDouble(nodesAsStringList.get(i + 1)));
+                    }
+                    operator = getOperator(nodesAsStringList.get(i), leftvalue, rightvalue);
+                    System.out.println("i: " + nodesAsStringList.get(i));
+                    System.out.println("left: " + leftvalue);
+                    System.out.println("right: " + rightvalue);
+                    System.out.println("operator: " + operator);
+                    System.out.println("value: " + operator.getValue() + "\n");
+                    leftvalue = operator;
+                    rightvalue = null;
+                }
+            }
+        }
+
+        assert operator != null;
+        return operator;
+    }
+
+    public boolean isMultiplication(String s) {
+        return s.equals("*") || s.equals("/") || s.equals("^");
+    }
+
+    public Node getRightValue(String operator, String leftvalue, String rightvalue) {
+        return getOperator(operator, new Value(Double.parseDouble(leftvalue)), new Value(Double.parseDouble(rightvalue)));
+    }
+
+    public Node getRightValue(String operator, String leftvalue, Node rightvalue) {
+        return getOperator(operator, new Value(Double.parseDouble(leftvalue)), rightvalue);
+    }
+
     public Node calcNode() {
         replaceVariable();
         // Loop through every string in nodesAsString

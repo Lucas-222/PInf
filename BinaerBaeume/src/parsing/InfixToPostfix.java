@@ -37,18 +37,23 @@ public class InfixToPostfix {
       // If there was an exception thrown
       if (inputAsArray.length == 1) return inputAsArray;
 
+      List<String> list = new ArrayList<>();
+      for (String s : inputAsArray) {
+         list.add(s);
+      }
+
       List<String> nodesAsStringList = shuntingYard();
 
       PostfixToNode postfix;
       // If there is a variable
       if (variableReplacement != null) {
-         postfix = new PostfixToNode(nodesAsStringList, variableReplacement);
+         postfix = new PostfixToNode(list, variableReplacement);
       } else {
-         postfix = new PostfixToNode(nodesAsStringList);
+         postfix = new PostfixToNode(list);
       }
 
       // Return a string array with the reversed polish notation and the solution
-      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode().getValue())};
+      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode2().getValue())};
    }
 
    private void parse() {
