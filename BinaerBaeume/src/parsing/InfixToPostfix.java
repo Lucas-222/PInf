@@ -38,9 +38,7 @@ public class InfixToPostfix {
       if (inputAsArray.length == 1) return inputAsArray;
 
       List<String> list = new ArrayList<>();
-      for (String s : inputAsArray) {
-         list.add(s);
-      }
+      Collections.addAll(list, inputAsArray);
 
       List<String> nodesAsStringList = shuntingYard();
 
@@ -53,7 +51,7 @@ public class InfixToPostfix {
       }
 
       // Return a string array with the reversed polish notation and the solution
-      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode2().getValue())};
+      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode2(0).getValue())};
    }
 
    private void parse() {

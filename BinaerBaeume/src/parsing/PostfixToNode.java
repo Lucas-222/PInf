@@ -16,35 +16,60 @@ public class PostfixToNode {
         this.variableReplacement = variableReplacement;
     }
 
-    public Node calcNode2() {
+    public Node calcNode2(int start) {
         Node tempRightValue = null;
         Node operator = null;
         Node leftvalue = null;
         Node rightvalue = null;
 
-        for (int i = 0; i < nodesAsStringList.size(); i++) {
+        for (int i = start; i < nodesAsStringList.size(); i++) {
+            if (nodesAsStringList.get(i).equals(")")) {
+                for (int j = start; j < i+1; j++) {
+                    System.out.println("removed: " + nodesAsStringList.remove(start));
+                }
+                return operator;
+            }
+
             if (leftvalue == null) {
                 leftvalue = new Value(Double.parseDouble(nodesAsStringList.get(i)));
             }
 
             if (nodesAsStringList.get(i).length() == 1 && CharacterLists.OPERATORS.contains(nodesAsStringList.get(i).charAt(0))) {
-                if (i+3 <= nodesAsStringList.size() && isMultiplication(nodesAsStringList.get(i+2)) && !isMultiplication(nodesAsStringList.get(i))) {
-                    if (i+5 <= nodesAsStringList.size() && nodesAsStringList.get(i + 4).equals("^")) {
-                        tempRightValue = getRightValue(nodesAsStringList.get(i+4), nodesAsStringList.get(i+3), nodesAsStringList.get(i+5));
-                        nodesAsStringList.remove(i+3);
-                        nodesAsStringList.remove(i+3);
-                        nodesAsStringList.remove(i+3);
-                    }
-                    if (tempRightValue == null) {
-                        rightvalue = getRightValue(nodesAsStringList.get(i + 2), nodesAsStringList.get(i + 1), nodesAsStringList.get(i + 3));
-                        nodesAsStringList.remove(i+1);
+                if (i+1 != nodesAsStringList.size() && nodesAsStringList.get(i+1).equals("(")) {
+                    nodesAsStringList.remove(i+1);
+                    rightvalue = calcNode2(i+1);
+                }
+
+                if (i+3 <= nodesAsStringList.size()) {
+                    if (test(i) || isPower(nodesAsStringList.get(i+2))) {
+                        if (i + 5 <= nodesAsStringList.size() && nodesAsStringList.get(i + 4).equals("^")) {
+                            tempRightValue = getRightValue(nodesAsStringList.get(i + 4), nodesAsStringList.get(i + 3), nodesAsStringList.get(i + 5));
+                            System.out.println("Wenn das hier kommt problem: " + nodesAsStringList.remove(i + 3));
+                            nodesAsStringList.remove(i + 3);
+                            nodesAsStringList.remove(i + 3);
+                        }
+
+                        if (tempRightValue == null && !nodesAsStringList.get(i+2).equals("(") && !nodesAsStringList.get(i+3).equals("(")) {
+                            rightvalue = getRightValue(nodesAsStringList.get(i + 2), nodesAsStringList.get(i + 1), nodesAsStringList.get(i + 3));
+                        } else {
+                            rightvalue = getRightValue(nodesAsStringList.get(i + 2), nodesAsStringList.get(i + 1), tempRightValue);
+                            tempRightValue = null;
+                        }
+                        System.out.println("Woanders removed: " + nodesAsStringList.remove(i + 1));
+                        System.out.println("Woanders removed: " + nodesAsStringList.remove(i + 1));
                     } else {
-                        rightvalue = getRightValue(nodesAsStringList.get(i + 2), nodesAsStringList.get(i + 1), tempRightValue);
-                        tempRightValue = null;
+                        if (rightvalue == null) {
+                            rightvalue = new Value(Double.parseDouble(nodesAsStringList.get(i + 1)));
+                        }
+                        operator = getOperator(nodesAsStringList.get(i), leftvalue, rightvalue);
+                        System.out.println("i: " + nodesAsStringList.get(i));
+                        System.out.println("left: " + leftvalue);
+                        System.out.println("right: " + rightvalue);
+                        System.out.println("operator: " + operator);
+                        System.out.println("value: " + operator.getValue() + "\n");
+                        leftvalue = operator;
+                        rightvalue = null;
                     }
-                    nodesAsStringList.remove(i+1);
-                    nodesAsStringList.remove(i+1);
-                    i--;
                 } else {
                     if (rightvalue == null) {
                         rightvalue = new Value(Double.parseDouble(nodesAsStringList.get(i + 1)));
@@ -65,8 +90,16 @@ public class PostfixToNode {
         return operator;
     }
 
+    public boolean test(int i) {
+        return isMultiplication(nodesAsStringList.get(i+2)) && !isMultiplication(nodesAsStringList.get(i));
+    }
+
     public boolean isMultiplication(String s) {
         return s.equals("*") || s.equals("/") || s.equals("^");
+    }
+
+    public boolean isPower(String s) {
+        return s.equals("^");
     }
 
     public Node getRightValue(String operator, String leftvalue, String rightvalue) {
