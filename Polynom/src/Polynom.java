@@ -3,9 +3,9 @@ import exceptions.InputToLongException;
 public class Polynom {
     public final String[] SYMMETRIES = new String[] {"Axisymmetric", "Pointsymmetric", "No symmetry"};
     private final double[] coefficients;
-    private int degree = -1;
+    private int degree;
     private String exception;
-    private String symmetrie;
+    private String symmetry;
 
     public Polynom(double[] coefficients) {
         this.coefficients = coefficients;
@@ -18,7 +18,7 @@ public class Polynom {
     }
 
     public String getSymmetry() {
-        return symmetrie;
+        return symmetry;
     }
 
     private void initialiseDegree() {
@@ -28,9 +28,11 @@ public class Polynom {
             exception = e.getMessage();
         }
 
+        boolean initialised = false;
         for (int i = coefficients.length-1; i >= 0; i--) {
-            if (degree == -1 && coefficients[i] != 0) {
+            if (!initialised && coefficients[i] != 0) {
                 degree = i;
+                initialised = true;
             }
         }
     }
@@ -52,29 +54,23 @@ public class Polynom {
 
         for (int i = 0; i < coefficients.length; i++) {
             if (coefficients[i] != 0) {
-                if (i % 2 == 0) {
-                    evenNumbers++;
-                } else {
-                    oddNumbers++;
-                }
+                if (i % 2 == 0) evenNumbers++; else oddNumbers++;
                 totalNumbers++;
             }
         }
 
         if (totalNumbers == evenNumbers) {
-            symmetrie = SYMMETRIES[0];
+            symmetry = SYMMETRIES[0];
         } else if (totalNumbers == oddNumbers) {
-            symmetrie = SYMMETRIES[1];
+            symmetry = SYMMETRIES[1];
         } else {
-            symmetrie = SYMMETRIES[2];
+            symmetry = SYMMETRIES[2];
         }
 
     }
 
     private void checkException() throws InputToLongException {
-        if (coefficients.length != 5) {
-            throw new InputToLongException();
-        }
+        if (coefficients.length != 5) throw new InputToLongException();
     }
 
     @Override
@@ -83,7 +79,7 @@ public class Polynom {
 
         double[] temp = coefficients;
         int firstValueindex = -1;
-        for (int i = coefficients.length-1; i >= 0.; i--) if (coefficients[i] != 0) firstValueindex = i;
+        for (int i = coefficients.length-1; i >= 0; i--) if (coefficients[i] != 0) firstValueindex = i;
 
         StringBuilder builder = new StringBuilder("f(x) = ");
         for (int i = temp.length-1; i >= 0; i--) {
