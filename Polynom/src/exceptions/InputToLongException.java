@@ -8,7 +8,7 @@ public class InputToLongException extends Exception {
 
     @Override
     public String getMessage() {
-        return "The array is to long";
+        return "The input is to long";
     }
 
 }
