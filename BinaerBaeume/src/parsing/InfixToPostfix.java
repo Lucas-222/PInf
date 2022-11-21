@@ -45,13 +45,13 @@ public class InfixToPostfix {
       PostfixToNode postfix;
       // If there is a variable
       if (variableReplacement != null) {
-         postfix = new PostfixToNode(list, variableReplacement);
+         postfix = new PostfixToNode(nodesAsStringList, variableReplacement);
       } else {
-         postfix = new PostfixToNode(list);
+         postfix = new PostfixToNode(nodesAsStringList);
       }
 
       // Return a string array with the reversed polish notation and the solution
-      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode2(0).getValue())};
+      return new String[] {nodesAsStringList.toString(), String.valueOf(postfix.calcNode().getValue())};
    }
 
    private void parse() {
@@ -89,6 +89,7 @@ public class InfixToPostfix {
 
    private void soroundOperatorsAndBracketsWithWhitespaces() {
       // All illegal statments that can occur, are getting checked later
+      System.out.println("Anfang: " + Arrays.toString(inputAsArray));
       for (int i = 0; i < inputAsArray.length; i++) {
          char currentChar = inputAsArray[i].charAt(0);
 
@@ -103,23 +104,48 @@ public class InfixToPostfix {
             continue;
          }
 
-         // If currentchar is not a minus and next char is not a number
-         if (i+1 > inputAsArray.length || i-1 < 0 || currentChar != '-' || !CharacterLists.isNumber(inputAsArray[i+1])) {
+         // If currentchar is not a minus
+         if (i+1 > inputAsArray.length || i-1 < 0 || currentChar != '-') {
             inputAsArray[i] = " " + inputAsArray[i] + " ";
             continue;
          }
 
-         char lastchar = inputAsArray[i-1].charAt(0);
+         if (CharacterLists.isNumber(inputAsArray[i-1])) {
+            inputAsArray[i] = " " + inputAsArray[i] + " ";
+            continue;
+         }
 
-         // If there is an operator a bracket or a whitespace in front of the minus
-         if (!CharacterLists.OPERATORS.contains(lastchar) && !CharacterLists.CHARACTERS.contains(lastchar) && lastchar != ' ') {
+         if (containsOpeningBracket(inputAsArray[i-1])) {
+            i++;
+            continue;
+         }
+
+         if (containsClosingBracket(inputAsArray[i-1])) {
             inputAsArray[i] = " " + inputAsArray[i] + " ";
             continue;
          }
 
          i++;
-
       }
+      System.out.println("inputAsArray: " + Arrays.toString(inputAsArray));
+   }
+
+   private boolean containsOpeningBracket(String s) {
+      for (int i = 0; i < s.length(); i++) {
+         if (s.charAt(i) == '(') {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   private boolean containsClosingBracket(String s) {
+      for (int i = 0; i < s.length(); i++) {
+         if (s.charAt(i) == ')') {
+            return true;
+         }
+      }
+      return false;
    }
 
    private List<String> shuntingYard() {
