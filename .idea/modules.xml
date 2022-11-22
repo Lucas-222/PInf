@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/PInf.iml" filepath="$PROJECT_DIR$/.idea/PInf.iml" />
       <module fileurl="file://$PROJECT_DIR$/PQ/PQ.iml" filepath="$PROJECT_DIR$/PQ/PQ.iml" />
       <module fileurl="file://$PROJECT_DIR$/Polynom/Polynom.iml" filepath="$PROJECT_DIR$/Polynom/Polynom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PolynomPython/PolynomPython.iml" filepath="$PROJECT_DIR$/PolynomPython/PolynomPython.iml" />
       <module fileurl="file://$PROJECT_DIR$/PythonXJava/PythonPart/PythonPart.iml" filepath="$PROJECT_DIR$/PythonXJava/PythonPart/PythonPart.iml" />
       <module fileurl="file://$PROJECT_DIR$/PythonXJava/PythonXJava.iml" filepath="$PROJECT_DIR$/PythonXJava/PythonXJava.iml" />
     </modules>

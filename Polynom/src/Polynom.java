@@ -1,11 +1,11 @@
-import exceptions.InputToLongException;
+import exceptions.WrongInputSizeException;
 
 public class Polynom {
-    public final String[] SYMMETRIES = new String[] {"Axisymmetric", "Pointsymmetric", "No symmetry"};
+    public final String[] SYMMETRIES = new String[] {"axisymmetric", "pointsymmetric", "not symmetric"};
     private final double[] coefficients;
-    private int degree;
     private String exception;
     private String symmetry;
+    private int degree;
 
     public Polynom(double[] coefficients) {
         this.coefficients = coefficients;
@@ -21,11 +21,16 @@ public class Polynom {
         return symmetry;
     }
 
+    private void checkException() throws WrongInputSizeException {
+        if (coefficients.length != 5) throw new WrongInputSizeException(coefficients.length);
+    }
+
     private void initialiseDegree() {
         try {
             checkException();
-        } catch (InputToLongException e) {
+        } catch (WrongInputSizeException e) {
             exception = e.getMessage();
+            System.err.println(exception);
         }
 
         boolean initialised = false;
@@ -37,16 +42,6 @@ public class Polynom {
         }
     }
 
-    public double functionValue(double x) {
-        double functionValue = 0;
-
-        for (int i = 0; i < coefficients.length; i++) {
-            functionValue += coefficients[i] * Math.pow(x, i);
-        }
-
-        return functionValue;
-    }
-
     public void initialiseSymmetry() {
         int totalNumbers = 0;
         int evenNumbers = 0;
@@ -54,7 +49,8 @@ public class Polynom {
 
         for (int i = 0; i < coefficients.length; i++) {
             if (coefficients[i] != 0) {
-                if (i % 2 == 0) evenNumbers++; else oddNumbers++;
+                if (i % 2 == 0) evenNumbers++;
+                else oddNumbers++;
                 totalNumbers++;
             }
         }
@@ -69,8 +65,16 @@ public class Polynom {
 
     }
 
-    private void checkException() throws InputToLongException {
-        if (coefficients.length != 5) throw new InputToLongException();
+    public double functionValue(double x) {
+        if (exception == null) {
+            double functionValue = 0.0;
+
+            for (int i = 0; i < coefficients.length; i++) {
+                functionValue += coefficients[i] * Math.pow(x, i);
+            }
+
+            return functionValue;
+        } return -1;
     }
 
     @Override
@@ -99,7 +103,10 @@ public class Polynom {
                 }
             }
         }
+
         System.out.println(builder);
+        System.out.println("The symmetry is: " + symmetry);
+        System.out.println("The degree is: " + degree + "\n");
         return builder.toString();
     }
 
