@@ -4,10 +4,15 @@ public class PQ {
     private double x1;
     private double x2;
 
+    public PQ(double x, double p, double q) {
+        this.p = p / x;
+        this.q = q / x;
+        calculate();
+    }
+
     public PQ(double p, double q) {
         this.p = p;
         this.q = q;
-        calculate();
     }
 
     private void calculate() {
