@@ -65,6 +65,21 @@ public class Polynom {
 
     }
 
+    public double[] derivationCoefficients() {
+        double[] derivation = new double[5];
+
+        for (int i = 0; i < coefficients.length; i++) {
+            if (i == 0) derivation[i] = 0;
+            else derivation[i-1] = i * coefficients[i];
+        }
+
+        return derivation;
+    }
+
+    public Polynom derivationPolynom() {
+        return new Polynom(derivationCoefficients());
+    }
+
     public double functionValue(double x) {
         if (exception == null) {
             double functionValue = 0.0;
@@ -104,9 +119,6 @@ public class Polynom {
             }
         }
 
-        System.out.println(builder);
-        System.out.println("The symmetry is: " + symmetry);
-        System.out.println("The degree is: " + degree + "\n");
         return builder.toString();
     }
 
