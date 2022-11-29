@@ -32,16 +32,12 @@ public class PQ {
     }
 
     public double getX1() {
-        if (Double.isNaN(x1)) {
-            System.out.println("x1 is NaN");
-        }
+        if (Double.isNaN(x1)) System.out.println("x1 is NaN");
         return x1;
     }
 
     public double getX2() {
-        if (Double.isNaN(x2)) {
-            System.out.println("x2 is NaN");
-        }
+        if (Double.isNaN(x2)) System.out.println("x2 is NaN");
         return x2;
     }
 

@@ -33,10 +33,4 @@ public class TestFunctionValue {
         assertEquals(148, polynom.functionValue(2));
     }
 
-    @Test
-    void testMinus() {
-        Polynom polynom = new Polynom(new double[] {4, 5, -2, 0, 0, 8});
-        assertEquals(6, polynom.functionValue(2));
-    }
-
 }

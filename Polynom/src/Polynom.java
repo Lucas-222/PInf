@@ -29,8 +29,7 @@ public class Polynom {
         try {
             checkException();
         } catch (WrongInputSizeException e) {
-            exception = e.getMessage();
-            System.err.println(exception);
+            System.err.println(exception = e.getMessage());
         }
 
         boolean initialised = false;
@@ -65,6 +64,11 @@ public class Polynom {
 
     }
 
+    private int getFirstValueIndex() {
+        for (int i = 0; i < coefficients.length; i++) if (coefficients[i] != 0) return i;
+        return 0;
+    }
+
     public double[] derivationCoefficients() {
         double[] derivation = new double[5];
 
@@ -97,9 +101,6 @@ public class Polynom {
         if (exception != null) return exception;
 
         double[] temp = coefficients;
-        int firstValueindex = -1;
-        for (int i = coefficients.length-1; i >= 0; i--) if (coefficients[i] != 0) firstValueindex = i;
-
         StringBuilder builder = new StringBuilder("f(x) = ");
         for (int i = temp.length-1; i >= 0; i--) {
             if (temp[i] != 0) {
@@ -107,7 +108,7 @@ public class Polynom {
                 if (i != 0) {
                     builder.append("x");
                     if (i != 1) builder.append("^").append(i);
-                    if (i > firstValueindex){
+                    if (i > getFirstValueIndex()){
                         if (i - 1 != 0 && temp[i - 1] < 0) {
                             builder.append(" - ");
                             temp[i - 1] *= -1;
