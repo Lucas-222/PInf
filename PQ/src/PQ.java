@@ -13,6 +13,7 @@ public class PQ {
     public PQ(double p, double q) {
         this.p = p;
         this.q = q;
+        calculate();
     }
 
     private void calculate() {
