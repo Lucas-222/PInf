@@ -83,6 +83,7 @@ public class Polynom {
                 }
 
                 builder.append(Math.abs(coefficients[i]));
+
                 // If exponent is 0 --> (3) not (3x^0)
                 if (i == 0) continue;
                 builder.append("x");
