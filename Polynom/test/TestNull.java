@@ -10,7 +10,7 @@ public class TestNull {
         String expected = "[-1.0]";
         String actual = polynom.getNull().toString();
         assertEquals(expected, actual);
-        assertEquals(0, polynom.functionValue(polynom.getNull().get(0)));
+        assertEquals(0.0, polynom.functionValue(polynom.getNull().get(0)));
     }
 
     @Test
@@ -19,8 +19,8 @@ public class TestNull {
         String expected = "[1.0, -7.0]";
         String actual = polynom.getNull().toString();
         assertEquals(expected, actual);
-        assertEquals(0, polynom.functionValue(polynom.getNull().get(0)));
-        assertEquals(0, polynom.functionValue(polynom.getNull().get(1)));
+        assertEquals(0.0, polynom.functionValue(polynom.getNull().get(0)));
+        assertEquals(0.0, polynom.functionValue(polynom.getNull().get(1)));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class TestNull {
         String expected = "[1.0]";
         String actual = polynom.getNull().toString();
         assertEquals(expected, actual);
-        assertEquals(0, polynom.functionValue(polynom.getNull().get(0)));
+        assertEquals(0.0, polynom.functionValue(polynom.getNull().get(0)));
     }
 
     @Test

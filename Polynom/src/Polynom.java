@@ -38,7 +38,7 @@ public class Polynom {
             }
         }
         // If every exponent where the value is not 0, is even
-        return true;
+        return getDegree() != 0;
     }
 
     public boolean isPointsymmetric() {
@@ -49,7 +49,7 @@ public class Polynom {
             }
         }
         // If every exponent where the value is not 0, is odd
-        return true;
+        return getDegree() != 0;
     }
 
     public double functionValue(double x) {
@@ -64,7 +64,7 @@ public class Polynom {
     }
 
     public double[] derivationCoefficients() {
-        // Example: (6x^4) - (12x^3) + (3x^2) + (4x) + (8) --> (0) + (24x^3) - (36x^2) + (6x) + (4)
+        // Example: (6x^4 - 12x^3 + 3x^2 + 4x + 8) --> (0 + 24x^3 - 36x^2 + 6x + 4)
         double[] derivation = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
         for (int i = 0; i < coefficients.length-1; i++) {
@@ -149,24 +149,28 @@ public class Polynom {
         StringBuilder builder = new StringBuilder("f" + ("'".repeat(derivationCounter)) + "(x) = ");
 
         for (int i = coefficients.length-1; i >= 0; i--) {
-            if (coefficients[i] != 0) {
-                // Get the right operator in front of the value
-                if (i < getDegree()) {
-                    builder.append(" ").append(getOperator(i)).append(" ");
-                } else {
-                    builder.append(getOperator(i));
-                }
+            if (coefficients[i] == 0) continue;
 
-                builder.append(getNumber(i));
-
-                // If exponent is 0 --> (3) not (3x^0)
-                if (i == 0) continue;
-                builder.append("x");
-                // If exponent is 1 --> (3x) not (3x^1)
-                if (i == 1) continue;
-                // Default --> (3x^2)
-                builder.append("^").append(i);
+            // Get the right operator in front of the value
+            if (i < getDegree()) {
+                builder.append(" ").append(getOperator(i)).append(" ");
+            } else {
+                builder.append(getOperator(i));
             }
+
+            builder.append(getNumber(i));
+
+            // If exponent is 0 --> (3) not (3x^0)
+            if (i == 0) continue;
+
+            builder.append("x");
+
+            // If exponent is 1 --> (3x) not (3x^1)
+            if (i == 1) continue;
+
+            // Default --> (3x^2)
+            builder.append("^").append(i);
+
         }
         return builder.toString();
     }

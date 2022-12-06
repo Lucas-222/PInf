@@ -83,8 +83,15 @@ public class TestPolynom {
     }
 
     @Test
-    void testKeinSymmetrie() throws WrongInputSizeException {
+    void testNoSymmetrie() throws WrongInputSizeException {
         Polynom polynom = new Polynom(new double[] { 1.0, 4.0, 2.0, 0.0, 0.0 });
+        assertFalse(polynom.isPointsymmetric());
+        assertFalse(polynom.isAxissymmetric());
+    }
+
+    @Test
+    void testNullSymmetrie() throws WrongInputSizeException {
+        Polynom polynom = new Polynom(new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 });
         assertFalse(polynom.isPointsymmetric());
         assertFalse(polynom.isAxissymmetric());
     }
