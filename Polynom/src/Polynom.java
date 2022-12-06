@@ -7,16 +7,21 @@ public class Polynom {
     private int derivationCounter = 0;
 
     public Polynom(double[] coefficients) throws WrongInputSizeException {
-        if (coefficients.length != 5) throw new WrongInputSizeException(coefficients.length);
+        // Test if input is the wrong size
+        if (coefficients.length != 5) {
+            throw new WrongInputSizeException(coefficients.length);
+        }
         this.coefficients = coefficients;
     }
 
     private Polynom(double[] coefficients, int derivationCounter) {
+        // Private contructor, that's why no exception check needs to be performed
         this.coefficients = coefficients;
         this.derivationCounter = derivationCounter;
     }
 
     public int getDegree() {
+        // Loop through the array and return the first value which isn't 0
         for (int i = coefficients.length-1; i >= 0; i--) {
             if (coefficients[i] != 0) {
                 return i;
@@ -27,23 +32,28 @@ public class Polynom {
 
     public boolean isAxissymmetric() {
         for (int i = 0; i < coefficients.length; i++) {
+            // If the exponent is odd, return false
             if (coefficients[i] != 0 && i % 2 != 0) {
                 return false;
             }
         }
+        // If every exponent where the value is not 0, is even
         return true;
     }
 
     public boolean isPointsymmetric() {
         for (int i = 0; i < coefficients.length; i++) {
+            // If the exponent is even, return false
             if (coefficients[i] != 0 && i % 2 == 0) {
                 return false;
             }
         }
+        // If every exponent where the value is not 0, is odd
         return true;
     }
 
     public double functionValue(double x) {
+        // Get the sum of all coefficients multiplied by x to the power of the exponent
         double functionValue = 0.0;
 
         for (int i = 0; i < coefficients.length; i++) {
@@ -54,6 +64,7 @@ public class Polynom {
     }
 
     public double[] derivationCoefficients() {
+        // Example: (6x^4) - (12x^3) + (3x^2) + (4x) + (8) --> (0) + (24x^3) - (36x^2) + (6x) + (4)
         double[] derivation = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
         for (int i = 0; i < coefficients.length-1; i++) {
@@ -68,20 +79,23 @@ public class Polynom {
     }
 
     public ArrayList<Double> getNull() {
+        // If function is linear
         if (getDegree() == 1) {
             return getNullLinear();
         }
+        // If function is quadratic
         if (getDegree() == 2) {
-            return getNullSqr();
+            return getNullQuadratic();
         }
         return new ArrayList<>();
     }
 
     private ArrayList<Double> getNullLinear() {
+        // Multiply the value with the lowest exponent by -1 and divide it by the value with the exponent 1
         return new ArrayList<>(List.of((coefficients[0] * -1) / coefficients[1]));
     }
 
-    private ArrayList<Double> getNullSqr() {
+    private ArrayList<Double> getNullQuadratic() {
         ArrayList<Double> list = new ArrayList<>();
         // divide p and q by the highest coefficient to get the normal form
         double p = coefficients[1] / coefficients[2];
@@ -91,10 +105,12 @@ public class Polynom {
         double x1 = -(p / 2) + sqrt;
         double x2 = -(p / 2) - sqrt;
 
+        // If x1 is not NaN
         if (!Double.isNaN(x1)) {
             list.add(x1);
         }
 
+        // If x2 is not NaN and x2 is not x1
         if (!Double.isNaN(x2) && list.get(0) != x2) {
             list.add(x2);
         }
