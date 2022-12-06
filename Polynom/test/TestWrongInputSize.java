@@ -7,7 +7,7 @@ public class TestWrongInputSize {
     @Test
     void testInputToLong() {
         try {
-            new Polynom(new double[]{1, 1, 1, 1, 1, 1});
+            new Polynom(new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
         } catch (WrongInputSizeException e) {
             assertEquals(new WrongInputSizeException(6).getMessage(), e.getMessage());
         }
@@ -16,7 +16,7 @@ public class TestWrongInputSize {
     @Test
     void testInputToShort() {
         try {
-            new Polynom(new double[]{1, 1, 1, 1});
+            new Polynom(new double[] { 1.0, 1.0, 1.0, 1.0 });
         } catch (WrongInputSizeException e) {
             assertEquals(new WrongInputSizeException(4).getMessage(), e.getMessage());
         }
