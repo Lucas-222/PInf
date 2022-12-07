@@ -1,6 +1,5 @@
-import exceptions.WrongInputSizeException;
-import java.util.ArrayList;
-import java.util.List;
+import exceptions.*;
+import java.util.*;
 
 public class Polynom {
     private final double[] coefficients;
@@ -85,7 +84,9 @@ public class Polynom {
         }
         // If function is quadratic
         if (getDegree() == 2) {
-            return getNullQuadratic();
+            if (Objects.equals(getNullQuadraticPQ().toString(), getNullQuadraticMidnight().toString())) {
+                return getNullQuadraticMidnight();
+            }
         }
         return new ArrayList<>();
     }
@@ -95,7 +96,7 @@ public class Polynom {
         return new ArrayList<>(List.of((coefficients[0] * -1) / coefficients[1]));
     }
 
-    private ArrayList<Double> getNullQuadratic() {
+    private ArrayList<Double> getNullQuadraticPQ() {
         ArrayList<Double> list = new ArrayList<>();
         // divide p and q by the highest coefficient to get the normal form
         double p = coefficients[1] / coefficients[2];
@@ -112,6 +113,27 @@ public class Polynom {
 
         // If x2 is not NaN and x2 is not x1
         if (!Double.isNaN(x2) && list.get(0) != x2) {
+            list.add(x2);
+        }
+
+        return list;
+    }
+
+    private ArrayList<Double> getNullQuadraticMidnight() {
+        ArrayList<Double> list = new ArrayList<>();
+        double a = coefficients[2];
+        double b = coefficients[1];
+        double c = coefficients[0];
+
+        double sqrt = Math.sqrt(Math.pow(b, 2) - (4 * a * c));
+        double x1 = ((b * -1) + sqrt) / (2 * a) ;
+        double x2 = ((b * -1) - sqrt) / (2 * a) ;
+
+        if (!Double.isNaN(x1)) {
+            list.add(x1);
+        }
+
+        if (!Double.isNaN(x2) && x1 != x2) {
             list.add(x2);
         }
 
@@ -146,7 +168,7 @@ public class Polynom {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("f" + ("'".repeat(derivationCounter)) + "(x) = ");
+        StringBuilder builder = new StringBuilder("f" + "'".repeat(derivationCounter) + "(x) = ");
 
         for (int i = coefficients.length-1; i >= 0; i--) {
             if (coefficients[i] == 0) continue;
