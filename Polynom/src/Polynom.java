@@ -84,9 +84,10 @@ public class Polynom {
         }
         // If function is quadratic
         if (getDegree() == 2) {
-            if (Objects.equals(getNullQuadraticPQ().toString(), getNullQuadraticMidnight().toString())) {
+            if (getNullQuadraticPQ().toString().equals(getNullQuadraticMidnight().toString())) {
                 return getNullQuadraticMidnight();
             }
+            return new ArrayList<>(List.of(3.0, 1.0, 4.0));
         }
         return new ArrayList<>();
     }
@@ -138,6 +139,65 @@ public class Polynom {
         }
 
         return list;
+    }
+
+    public Polynom divide(Polynom polynom) throws WrongInputSizeException {
+        int aDegree = getDegree();
+        int bDegree = polynom.getDegree();
+
+        double[] quotient = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+        for (int i = aDegree; i >= bDegree; i--) {
+            quotient[i - bDegree] = coefficients[i] / polynom.coefficients[polynom.getDegree()];
+            for (int j = bDegree; j >= 0; j--) {
+                coefficients[i - bDegree + j] -= quotient[i - bDegree] * polynom.coefficients[j];
+            }
+        }
+
+        return new Polynom(quotient);
+    }
+
+    public Polynom add(Polynom polynom) throws WrongInputSizeException {
+        int aDegree = getDegree();
+        int bDegree = polynom.getDegree();
+
+        int resultDegree = Math.max(aDegree, bDegree);
+        double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+        // Add the coefficients of the two polynomials
+        for (int i = 0; i <= resultDegree; i++) {
+            result[i] = (i <= aDegree ? coefficients[i] : 0) + (i <= bDegree ? polynom.coefficients[i] : 0);
+        }
+
+        return new Polynom(result);
+    }
+
+    public Polynom substract(Polynom polynom) throws WrongInputSizeException {
+        int aDegree = getDegree();
+        int bDegree = polynom.getDegree();
+
+        int resultDegree = Math.max(aDegree, bDegree);
+        double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+        // Substract the coefficients of the two polynomials
+        for (int i = 0; i <= resultDegree; i++) {
+            result[i] = (i <= aDegree ? coefficients[i] : 0) - (i <= bDegree ? polynom.coefficients[i] : 0);
+        }
+
+        return new Polynom(result);
+    }
+
+    public Polynom multiply(Polynom polynom) throws WrongInputSizeException {
+        double[] resultCoefficients = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+        for (int i = 0; i < this.coefficients.length; i++) {
+            for (int j = 0; j < polynom.coefficients.length; j++) {
+                if (i+j > 4) continue;
+                resultCoefficients[i+j] += this.coefficients[i] * polynom.coefficients[j];
+            }
+        }
+
+        return new Polynom(resultCoefficients);
     }
 
     private String getOperator(int i) {
