@@ -142,62 +142,65 @@ public class Polynom {
     }
 
     public Polynom divide(Polynom polynom) throws WrongInputSizeException {
-        int aDegree = getDegree();
-        int bDegree = polynom.getDegree();
-
+        // Store the coefficients of the multiplication in qoutient
         double[] quotient = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-        for (int i = aDegree; i >= bDegree; i--) {
-            quotient[i - bDegree] = coefficients[i] / polynom.coefficients[polynom.getDegree()];
-            for (int j = bDegree; j >= 0; j--) {
-                coefficients[i - bDegree + j] -= quotient[i - bDegree] * polynom.coefficients[j];
+        // Loop through every coefficient in the second polynom for every coefficient in the first polynom
+        for (int i = this.getDegree(); i >= polynom.getDegree(); i--) {
+            // Add the first coefficient divided by the last coefficient in the second polynom
+            quotient[i - polynom.getDegree()] = coefficients[i] / polynom.coefficients[polynom.getDegree()];
+            for (int j = polynom.getDegree(); j >= 0; j--) {
+                coefficients[i - polynom.getDegree() + j] -= quotient[i - polynom.getDegree()] * polynom.coefficients[j];
             }
         }
 
         return new Polynom(quotient);
     }
 
-    public Polynom add(Polynom polynom) throws WrongInputSizeException {
-        int aDegree = getDegree();
-        int bDegree = polynom.getDegree();
-
-        int resultDegree = Math.max(aDegree, bDegree);
-        double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-        // Add the coefficients of the two polynomials
-        for (int i = 0; i <= resultDegree; i++) {
-            result[i] = (i <= aDegree ? coefficients[i] : 0) + (i <= bDegree ? polynom.coefficients[i] : 0);
-        }
-
-        return new Polynom(result);
-    }
-
-    public Polynom substract(Polynom polynom) throws WrongInputSizeException {
-        int aDegree = getDegree();
-        int bDegree = polynom.getDegree();
-
-        int resultDegree = Math.max(aDegree, bDegree);
-        double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-        // Substract the coefficients of the two polynomials
-        for (int i = 0; i <= resultDegree; i++) {
-            result[i] = (i <= aDegree ? coefficients[i] : 0) - (i <= bDegree ? polynom.coefficients[i] : 0);
-        }
-
-        return new Polynom(result);
-    }
-
     public Polynom multiply(Polynom polynom) throws WrongInputSizeException {
-        double[] resultCoefficients = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+        // Store the coefficients of the multiplication in product
+        double[] product = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
+        // Loop through every coefficient in the second polynom for every coefficient in the first polynom
         for (int i = 0; i < this.coefficients.length; i++) {
             for (int j = 0; j < polynom.coefficients.length; j++) {
+                // If the length is bigger than 4 --> continue
                 if (i+j > 4) continue;
-                resultCoefficients[i+j] += this.coefficients[i] * polynom.coefficients[j];
+                // Add the first coefficient times the second coefficient
+                product[i+j] += this.coefficients[i] * polynom.coefficients[j];
             }
         }
 
-        return new Polynom(resultCoefficients);
+        // return a new Polynom with the product as the coefficients
+        return new Polynom(product);
+    }
+
+    public Polynom add(Polynom polynom) throws WrongInputSizeException {
+        // Return a new Polynom as the sum of two others
+        return calculate(polynom, '+');
+    }
+
+    public Polynom substract(Polynom polynom) throws WrongInputSizeException {
+        // Return a new Polynom as the difference of two others
+        return calculate(polynom, '-');
+    }
+
+    private Polynom calculate(Polynom polynom, char operator) throws WrongInputSizeException {
+        // The degree of the result is the highest degree from both polynoms
+        int resultDegree = Math.max(this.getDegree(), polynom.getDegree());
+
+        double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+        for (int i = 0; i <= resultDegree; i++) {
+            if (operator == '+') { // If operation is an addition
+                result[i] = (i <= this.getDegree() ? coefficients[i] : 0) + (i <= polynom.getDegree() ? polynom.coefficients[i] : 0);
+            } else if (operator == '-') { // If operation is a substraction
+                result[i] = (i <= this.getDegree() ? coefficients[i] : 0) - (i <= polynom.getDegree() ? polynom.coefficients[i] : 0);
+            }
+        }
+
+        // Return a new polynom with the result as coefficients
+        return new Polynom(result);
     }
 
     private String getOperator(int i) {
