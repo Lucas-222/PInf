@@ -1,4 +1,4 @@
-import exceptions.*;
+import exceptions.WrongInputSizeException;
 import java.util.*;
 
 public class Polynom {
@@ -67,6 +67,7 @@ public class Polynom {
         double[] derivation = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
         for (int i = 0; i < coefficients.length-1; i++) {
+            // Multiply the coefficient with the exponent and subtract 1 from the exponent
             derivation[i] = (i+1) * coefficients[i+1];
         }
 
@@ -78,18 +79,8 @@ public class Polynom {
     }
 
     public ArrayList<Double> getNull() {
-        // If function is linear
-        if (getDegree() == 1) {
-            return getNullLinear();
-        }
-        // If function is quadratic
-        if (getDegree() == 2) {
-            if (getNullQuadraticPQ().toString().equals(getNullQuadraticMidnight().toString())) {
-                return getNullQuadraticMidnight();
-            }
-            return new ArrayList<>(List.of(3.0, 1.0, 4.0));
-        }
-        return new ArrayList<>();
+        // If function is linear or quadratic (degree 1 or 2), use the quadratic formula else return a new ArrayList
+        return getDegree() == 1 ? getNullLinear() : getDegree() == 2 ? getNullQuadraticPQ(): new ArrayList<>();
     }
 
     private ArrayList<Double> getNullLinear() {
@@ -98,8 +89,7 @@ public class Polynom {
     }
 
     private ArrayList<Double> getNullQuadraticPQ() {
-        ArrayList<Double> list = new ArrayList<>();
-        // divide p and q by the highest coefficient to get the normal form
+        // divide p and q by the value with the exponent 2
         double p = coefficients[1] / coefficients[2];
         double q = coefficients[0] / coefficients[2];
 
@@ -107,21 +97,11 @@ public class Polynom {
         double x1 = -(p / 2) + sqrt;
         double x2 = -(p / 2) - sqrt;
 
-        // If x1 is not NaN
-        if (!Double.isNaN(x1)) {
-            list.add(x1);
-        }
-
-        // If x2 is not NaN and x2 is not x1
-        if (!Double.isNaN(x2) && list.get(0) != x2) {
-            list.add(x2);
-        }
-
-        return list;
+        // If pq and midnight is the same return pq else return π (As a joke, because it never happens)
+        return areNullsAValidNumber(x1, x2) == getNullQuadraticMidnight() ? areNullsAValidNumber(x1, x2) : new ArrayList<>(List.of(Math.PI));
     }
 
     private ArrayList<Double> getNullQuadraticMidnight() {
-        ArrayList<Double> list = new ArrayList<>();
         double a = coefficients[2];
         double b = coefficients[1];
         double c = coefficients[0];
@@ -130,27 +110,36 @@ public class Polynom {
         double x1 = ((b * -1) + sqrt) / (2 * a) ;
         double x2 = ((b * -1) - sqrt) / (2 * a) ;
 
+        return areNullsAValidNumber(x1, x2);
+    }
+
+    private ArrayList<Double> areNullsAValidNumber(double x1, double x2) {
+        ArrayList<Double> list = new ArrayList<>();
+        // If x1 is not NaN
         if (!Double.isNaN(x1)) {
             list.add(x1);
         }
-
+        // If x2 is not NaN and x2 is not x1
         if (!Double.isNaN(x2) && x1 != x2) {
             list.add(x2);
         }
-
         return list;
     }
 
     public Polynom divide(Polynom polynom) throws WrongInputSizeException {
+        // Create temporary polynom for writing with the coefficients of the current polynom
+        Polynom temp = new Polynom(this.coefficients);
         // Store the coefficients of the multiplication in qoutient
         double[] quotient = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
         // Loop through every coefficient in the second polynom for every coefficient in the first polynom
         for (int i = this.getDegree(); i >= polynom.getDegree(); i--) {
             // Add the first coefficient divided by the last coefficient in the second polynom
-            quotient[i - polynom.getDegree()] = coefficients[i] / polynom.coefficients[polynom.getDegree()];
+            quotient[i - polynom.getDegree()] = temp.coefficients[i] / polynom.coefficients[polynom.getDegree()];
+            // Loop through every coefficient in the second polynom
             for (int j = polynom.getDegree(); j >= 0; j--) {
-                coefficients[i - polynom.getDegree() + j] -= quotient[i - polynom.getDegree()] * polynom.coefficients[j];
+                // Subtract the second polynom multiplied by the quotient from the first polynom
+                temp.coefficients[i - polynom.getDegree() + j] -= quotient[i - polynom.getDegree()] * polynom.coefficients[j];
             }
         }
 
@@ -186,17 +175,11 @@ public class Polynom {
     }
 
     private Polynom calculate(Polynom polynom, char operator) throws WrongInputSizeException {
-        // The degree of the result is the highest degree from both polynoms
-        int resultDegree = Math.max(this.getDegree(), polynom.getDegree());
-
         double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-        for (int i = 0; i <= resultDegree; i++) {
-            if (operator == '+') { // If operation is an addition
-                result[i] = (i <= this.getDegree() ? coefficients[i] : 0) + (i <= polynom.getDegree() ? polynom.coefficients[i] : 0);
-            } else if (operator == '-') { // If operation is a substraction
-                result[i] = (i <= this.getDegree() ? coefficients[i] : 0) - (i <= polynom.getDegree() ? polynom.coefficients[i] : 0);
-            }
+        // Loop through every coefficient in the second polynom for every coefficient in the first polynom
+        for (int i = 0; i <= Math.max(this.getDegree(), polynom.getDegree()); i++) {
+            result[i] = (i <= this.getDegree() ? coefficients[i] : 0) + (operator == '+' ? (i <= polynom.getDegree() ? polynom.coefficients[i] : 0) : - (i <= polynom.getDegree() ? polynom.coefficients[i] : 0));
         }
 
         // Return a new polynom with the result as coefficients
@@ -204,58 +187,31 @@ public class Polynom {
     }
 
     private String getOperator(int i) {
-        // If number is negative
-        if (coefficients[i] < 0) {
-            return "-";
-        }
-        // If number is the last
-        if (i >= getDegree()) {
-            return "";
-        }
-        // If number is positive
-        return "+";
+        // Check if the value is negative
+        String operator = coefficients[i] < 0 ? "-" : i >= getDegree() ? "" : "+";
+        // If operator is not the first operator, add whitespaces around it
+        return i < getDegree() ? " " + operator + " " : operator;
     }
 
     private String getNumber(int i) {
-        // If number is 1 --> (1) not (1x)
-        if (coefficients[i] == 1 && i >= 1) {
-            return "";
-        }
-        // If number is an integer --> (3x) not (3.0x)
-        if (coefficients[i] % 2 == 0 || coefficients[i] % 2 == 1) {
-            return String.valueOf((int) Math.abs(coefficients[i]));
-        }
-        // Default --> (4.56x)
-        return String.valueOf(Math.abs(coefficients[i]));
+        // If number is 1 --> (1) not (1x),  If number is an integer --> (3x) not (3.0x), Default --> (4.56x)
+        return coefficients[i] == 1 && i >= 1 ? "" : coefficients[i] == Math.round(coefficients[i]) ? String.valueOf((int) Math.abs(coefficients[i])) : String.valueOf(Math.abs(coefficients[i]));
+    }
+
+    private String getExponent(int i) {
+        // If exponent is 0 --> (x^0) not (x), If exponent is 1 --> (x) not (x^1), Default --> (x^2)
+        return i == 0 ? "" : i == 1 ? "x" : "x^" + i;
     }
 
     @Override
     public String toString() {
+        // Create a StringBuilder initialized with f(x) = | for every derivation add one (')
         StringBuilder builder = new StringBuilder("f" + "'".repeat(derivationCounter) + "(x) = ");
 
         for (int i = coefficients.length-1; i >= 0; i--) {
             if (coefficients[i] == 0) continue;
-
-            // Get the right operator in front of the value
-            if (i < getDegree()) {
-                builder.append(" ").append(getOperator(i)).append(" ");
-            } else {
-                builder.append(getOperator(i));
-            }
-
-            builder.append(getNumber(i));
-
-            // If exponent is 0 --> (3) not (3x^0)
-            if (i == 0) continue;
-
-            builder.append("x");
-
-            // If exponent is 1 --> (3x) not (3x^1)
-            if (i == 1) continue;
-
-            // Default --> (3x^2)
-            builder.append("^").append(i);
-
+            // Fill the builder with the operator, number and exponent
+            builder.append(getOperator(i)).append(getNumber(i)).append(getExponent(i));
         }
         return builder.toString();
     }

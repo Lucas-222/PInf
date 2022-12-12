@@ -6,8 +6,8 @@ public class TestFunctionValue {
 
     @Test
     void testFunctionValue0() throws WrongInputSizeException {
-        Polynom polynom = new Polynom(new double[] { 1.0, 3.0, 2.0, 0.0, 0.0 });
-        assertEquals(3.0, polynom.functionValue(2.0));
+        Polynom polynom = new Polynom(new double[] { 1.0, 0.0, 0.0, 0.0, 0.0 });
+        assertEquals(1.0, polynom.functionValue(2.0));
     }
 
     @Test
