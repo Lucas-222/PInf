@@ -4,6 +4,8 @@ import java.util.*;
 public class Polynom {
     private final double[] coefficients;
     private int derivationCounter = 0;
+    private TurningPoint minima;
+    private TurningPoint maxima;
 
     public Polynom(double[] coefficients) throws WrongInputSizeException {
         // Test if input is the wrong size
@@ -27,6 +29,16 @@ public class Polynom {
             }
         }
         return 0;
+    }
+
+    public TurningPoint getMaxima() {
+        setPoints();
+        return maxima;
+    }
+
+    public TurningPoint getMinima() {
+        setPoints();
+        return minima;
     }
 
     public boolean isAxissymmetric() {
@@ -97,8 +109,7 @@ public class Polynom {
         double x1 = -(p / 2) + sqrt;
         double x2 = -(p / 2) - sqrt;
 
-        // If pq and midnight is the same return pq else return π (As a joke, because it never happens)
-        return areNullsAValidNumber(x1, x2) == getNullQuadraticMidnight() ? areNullsAValidNumber(x1, x2) : new ArrayList<>(List.of(Math.PI));
+        return areNullsAValidNumber(x1, x2);
     }
 
     private ArrayList<Double> getNullQuadraticMidnight() {
@@ -184,6 +195,62 @@ public class Polynom {
 
         // Return a new polynom with the result as coefficients
         return new Polynom(result);
+    }
+
+    public void setPoints() {
+        if (getDegree() == 2) {
+            TurningPoint turningPoint = getPointsQuadratic();
+            if (turningPoint.getYValue() < 0) {
+                this.minima = turningPoint;
+            } else {
+                this.maxima = turningPoint;
+            }
+        } else if (getDegree() == 3) {
+            for (TurningPoint turningPoint : getPointsCubic()) {
+                if (turningPoint.getYValue() < 0) {
+                    // If minima is null or the y value of the turning point is smaller than the y value of the minima set minima to the turning point
+                    this.minima = this.minima == null ? turningPoint : this.minima.getYValue() < turningPoint.getYValue() ? this.minima : turningPoint;
+                } else {
+                    // If maxima is null or the y value of the turning point is bigger than the y value of the maxima set maxima to the turning point
+                    this.maxima = this.maxima == null ? turningPoint : this.maxima.getYValue() > turningPoint.getYValue() ? this.maxima : turningPoint;
+                }
+            }
+        }
+    }
+
+    private TurningPoint getPointsQuadratic() {
+        // Get the nulls of the first derivation
+        double xValue = derivationPolynom().getNull().get(0);
+        // Get the y value of the null
+        double yValue = functionValue(xValue);
+        // Return a new TurningPoint with the x and y value
+        return new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true);
+    }
+
+    public ArrayList<TurningPoint> getPointsCubic() {
+        ArrayList<TurningPoint> turningPoints = new ArrayList<>();
+
+        // Get the nulls of the first derivation
+        for (double xValue : derivationPolynom().getNull()) {
+            // Get the y value of the null
+            double yValue = functionValue(xValue);
+            // Add a new TurningPoint with the x and y value to the list
+            turningPoints.add(new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true));
+        }
+
+        // Get the nulls of the second derivation
+        for (double xValue : derivationPolynom().derivationPolynom().getNull()) {
+            // Get the y value of the null
+            double yValue = functionValue(xValue);
+            // Add a new TurningPoint with the x and y value to the list
+            turningPoints.add(new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true));
+        }
+
+        for (TurningPoint turningPoint : turningPoints) {
+            System.out.println(turningPoint);
+        }
+
+        return turningPoints;
     }
 
     private String getOperator(int i) {

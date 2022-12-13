@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestCalculations {
+public class TestPolynomCalculations {
 
     @Test
     void testDivision() throws WrongInputSizeException {
