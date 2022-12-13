@@ -1,5 +1,6 @@
 import exceptions.WrongInputSizeException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Polynom {
     private final double[] coefficients;
@@ -220,11 +221,14 @@ public class Polynom {
 
     private TurningPoint getPointsQuadratic() {
         // Get the nulls of the first derivation
-        double xValue = derivationPolynom().getNull().get(0);
-        // Get the y value of the null
-        double yValue = functionValue(xValue);
-        // Return a new TurningPoint with the x and y value
-        return new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true);
+        for (double xValue : derivationPolynom().getNull()) {
+            // Get the y value of the null
+            double yValue = functionValue(xValue);
+            // Add a new TurningPoint with the x and y value to the list
+            return new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true);
+        }
+
+        return null;
     }
 
     public ArrayList<TurningPoint> getPointsCubic() {
@@ -238,13 +242,7 @@ public class Polynom {
             turningPoints.add(new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true));
         }
 
-        // Get the nulls of the second derivation
-        for (double xValue : derivationPolynom().derivationPolynom().getNull()) {
-            // Get the y value of the null
-            double yValue = functionValue(xValue);
-            // Add a new TurningPoint with the x and y value to the list
-            turningPoints.add(new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true));
-        }
+        turningPoints.add(derivationPolynom().getPointsQuadratic());
 
         for (TurningPoint turningPoint : turningPoints) {
             System.out.println(turningPoint);

@@ -22,8 +22,8 @@ public class TestExtremPoints {
     void testCubic() throws WrongInputSizeException {
         Polynom polynom = new Polynom(new double[] { 0.0, -7.0, 3.0, 1.0/3.0, 0.0 });
         // Minima
-        assertEquals(-3.0-2.0/3.0, polynom.getMinima().getYValue());
-        assertEquals(1.0, polynom.getMinima().getXValue());
+        assertEquals(-16, polynom.getMinima().getYValue());
+        assertEquals(-3.0, polynom.getMinima().getXValue());
         // Maxima
         assertEquals(81.0+2.0/3.0, polynom.getMaxima().getYValue());
         assertEquals(-7.0, polynom.getMaxima().getXValue());
