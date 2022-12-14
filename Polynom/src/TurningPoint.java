@@ -10,4 +10,5 @@ public class TurningPoint extends SpecialPoint {
     public String toString() {
         return super.toString() + ", is global: " + isGlobal;
     }
+
 }

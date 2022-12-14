@@ -1,6 +1,5 @@
 import exceptions.WrongInputSizeException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Polynom {
     private final double[] coefficients;
@@ -33,12 +32,12 @@ public class Polynom {
     }
 
     public TurningPoint getMaxima() {
-        setPoints();
+        getExtremePoints();
         return maxima;
     }
 
     public TurningPoint getMinima() {
-        setPoints();
+        getExtremePoints();
         return minima;
     }
 
@@ -93,7 +92,7 @@ public class Polynom {
 
     public ArrayList<Double> getNull() {
         // If function is linear or quadratic (degree 1 or 2), use the quadratic formula else return a new ArrayList
-        return getDegree() == 1 ? getNullLinear() : getDegree() == 2 ? getNullQuadraticPQ(): new ArrayList<>();
+        return getDegree() == 1 ? getNullLinear() : getDegree() == 2 ? getNullQuadraticPQ() : new ArrayList<>();
     }
 
     private ArrayList<Double> getNullLinear() {
@@ -198,40 +197,32 @@ public class Polynom {
         return new Polynom(result);
     }
 
-    public void setPoints() {
-        if (getDegree() == 2) {
-            TurningPoint turningPoint = getPointsQuadratic();
-            if (turningPoint.getYValue() < 0) {
-                this.minima = turningPoint;
-            } else {
-                this.maxima = turningPoint;
-            }
-        } else if (getDegree() == 3) {
-            for (TurningPoint turningPoint : getPointsCubic()) {
-                if (turningPoint.getYValue() < 0) {
-                    // If minima is null or the y value of the turning point is smaller than the y value of the minima set minima to the turning point
-                    this.minima = this.minima == null ? turningPoint : this.minima.getYValue() < turningPoint.getYValue() ? this.minima : turningPoint;
-                } else {
-                    // If maxima is null or the y value of the turning point is bigger than the y value of the maxima set maxima to the turning point
-                    this.maxima = this.maxima == null ? turningPoint : this.maxima.getYValue() > turningPoint.getYValue() ? this.maxima : turningPoint;
+    public void getExtremePoints() {
+        if (this.getDegree() == 2) {
+            // If the degree is 2 than the turningpoint is the maxima and minima
+            this.minima = getTurningPoints().get(0);
+            this.maxima = getTurningPoints().get(0);
+        } else if (this.getDegree() == 3) {
+            ArrayList<TurningPoint> turningPoints = getTurningPoints();
+
+            for (TurningPoint turningPoint : turningPoints) {
+                // Get the function value from the second derivation at the turning point xValue
+                double yValue = this.derivationPolynom().derivationPolynom().functionValue(turningPoint.getXValue());
+
+                // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima else it's not a turningpoint
+                if (yValue > 0) {
+                    this.minima = turningPoint;
+                } else if (yValue < 0) {
+                    this.maxima = turningPoint;
                 }
+
             }
-        }
-    }
 
-    private TurningPoint getPointsQuadratic() {
-        // Get the nulls of the first derivation
-        for (double xValue : derivationPolynom().getNull()) {
-            // Get the y value of the null
-            double yValue = functionValue(xValue);
-            // Add a new TurningPoint with the x and y value to the list
-            return new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true);
         }
 
-        return null;
     }
 
-    public ArrayList<TurningPoint> getPointsCubic() {
+    private ArrayList<TurningPoint> getTurningPoints() {
         ArrayList<TurningPoint> turningPoints = new ArrayList<>();
 
         // Get the nulls of the first derivation
@@ -242,8 +233,7 @@ public class Polynom {
             turningPoints.add(new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true));
         }
 
-        turningPoints.add(derivationPolynom().getPointsQuadratic());
-
+        // just for testing
         for (TurningPoint turningPoint : turningPoints) {
             System.out.println(turningPoint);
         }

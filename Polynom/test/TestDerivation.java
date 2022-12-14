@@ -1,7 +1,7 @@
-import exceptions.WrongInputSizeException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
-import static org.junit.jupiter.api.Assertions.*;
+import exceptions.WrongInputSizeException;
 
 public class TestDerivation {
 

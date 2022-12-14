@@ -1,8 +1,8 @@
-import exceptions.WrongInputSizeException;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import exceptions.WrongInputSizeException;
 
-public class TestPolynom {
+public class TestPolynomToString {
 
     @Test
     void testInput0() throws WrongInputSizeException {
