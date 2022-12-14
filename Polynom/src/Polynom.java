@@ -32,12 +32,12 @@ public class Polynom {
     }
 
     public TurningPoint getMaxima() {
-        getExtremePoints();
+        if (maxima == null) getTurningPoints();
         return maxima;
     }
 
     public TurningPoint getMinima() {
-        getExtremePoints();
+        if (minima == null) getTurningPoints();
         return minima;
     }
 
@@ -112,6 +112,8 @@ public class Polynom {
         return areNullsAValidNumber(x1, x2);
     }
 
+    @SuppressWarnings("Midnight is the same as pq")
+    /*
     private ArrayList<Double> getNullQuadraticMidnight() {
         double a = coefficients[2];
         double b = coefficients[1];
@@ -123,6 +125,7 @@ public class Polynom {
 
         return areNullsAValidNumber(x1, x2);
     }
+    */
 
     private ArrayList<Double> areNullsAValidNumber(double x1, double x2) {
         ArrayList<Double> list = new ArrayList<>();
@@ -190,6 +193,7 @@ public class Polynom {
 
         // Loop through every coefficient in the second polynom for every coefficient in the first polynom
         for (int i = 0; i <= Math.max(this.getDegree(), polynom.getDegree()); i++) {
+            // If operator is '+' add the coefficients else subtract them
             result[i] = (i <= this.getDegree() ? coefficients[i] : 0) + (operator == '+' ? (i <= polynom.getDegree() ? polynom.coefficients[i] : 0) : - (i <= polynom.getDegree() ? polynom.coefficients[i] : 0));
         }
 
@@ -197,32 +201,28 @@ public class Polynom {
         return new Polynom(result);
     }
 
-    public void getExtremePoints() {
+    public void getTurningPoints() {
         if (this.getDegree() == 2) {
             // If the degree is 2 than the turningpoint is the maxima and minima
-            this.minima = getTurningPoints().get(0);
-            this.maxima = getTurningPoints().get(0);
+            TurningPoint turningPoint = calculateTurningPoints().get(0);
+            this.minima = turningPoint;
+            this.maxima = turningPoint;
         } else if (this.getDegree() == 3) {
-            ArrayList<TurningPoint> turningPoints = getTurningPoints();
-
-            for (TurningPoint turningPoint : turningPoints) {
+            // Loop through every turningpoint
+            for (TurningPoint turningPoint : calculateTurningPoints()) {
                 // Get the function value from the second derivation at the turning point xValue
                 double yValue = this.derivationPolynom().derivationPolynom().functionValue(turningPoint.getXValue());
-
                 // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima else it's not a turningpoint
                 if (yValue > 0) {
                     this.minima = turningPoint;
                 } else if (yValue < 0) {
                     this.maxima = turningPoint;
                 }
-
             }
-
         }
-
     }
 
-    private ArrayList<TurningPoint> getTurningPoints() {
+    private ArrayList<TurningPoint> calculateTurningPoints() {
         ArrayList<TurningPoint> turningPoints = new ArrayList<>();
 
         // Get the nulls of the first derivation
@@ -230,7 +230,7 @@ public class Polynom {
             // Get the y value of the null
             double yValue = functionValue(xValue);
             // Add a new TurningPoint with the x and y value to the list
-            turningPoints.add(new TurningPoint(xValue == -0 ? 0 : xValue, yValue == -0 ? 0 : yValue, true));
+            turningPoints.add(new TurningPoint(xValue, yValue, true));
         }
 
         // just for testing

@@ -6,9 +6,9 @@ public class TestExtremePoints {
 
     @Test
     void testMinima() throws WrongInputSizeException {
-        Polynom polynom = new Polynom(new double[] { -3.0, 0.0, 1.0, 0.0, 0.0 });
-        assertEquals(-3.0, polynom.getMinima().getYValue());
-        assertEquals(0.0, polynom.getMinima().getXValue());
+        Polynom polynom = new Polynom(new double[] { -3.0, 2.0, 1.0, 0.0, 0.0 });
+        assertEquals(-4.0, polynom.getMinima().getYValue());
+        assertEquals(-1.0, polynom.getMinima().getXValue());
     }
 
     @Test
