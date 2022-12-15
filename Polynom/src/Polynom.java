@@ -1,3 +1,4 @@
+import SpecialPoint.TurningPoint;
 import exceptions.WrongInputSizeException;
 import java.util.*;
 
@@ -29,6 +30,10 @@ public class Polynom {
             }
         }
         return 0;
+    }
+
+    public double[] getCoefficients() {
+        return coefficients;
     }
 
     public TurningPoint getMaxima() {
@@ -92,7 +97,7 @@ public class Polynom {
 
     public ArrayList<Double> getNull() {
         // If function is linear or quadratic (degree 1 or 2), use the quadratic formula else return a new ArrayList
-        return getDegree() == 1 ? getNullLinear() : getDegree() == 2 ? getNullQuadraticPQ() : new ArrayList<>();
+        return getDegree() == 1 ? getNullLinear() : getDegree() == 2 ? getNullQuadratic() : new ArrayList<>();
     }
 
     private ArrayList<Double> getNullLinear() {
@@ -100,21 +105,8 @@ public class Polynom {
         return new ArrayList<>(List.of((coefficients[0] * -1) / coefficients[1]));
     }
 
-    private ArrayList<Double> getNullQuadraticPQ() {
-        // divide p and q by the value with the exponent 2
-        double p = coefficients[1] / coefficients[2];
-        double q = coefficients[0] / coefficients[2];
-
-        double sqrt = Math.sqrt(Math.pow((p / 2), 2) - q);
-        double x1 = -(p / 2) + sqrt;
-        double x2 = -(p / 2) - sqrt;
-
-        return areNullsAValidNumber(x1, x2);
-    }
-
     @SuppressWarnings("Midnight is the same as pq")
-    /*
-    private ArrayList<Double> getNullQuadraticMidnight() {
+    /*private ArrayList<Double> getNullQuadraticMidnight() {
         double a = coefficients[2];
         double b = coefficients[1];
         double c = coefficients[0];
@@ -124,81 +116,31 @@ public class Polynom {
         double x2 = ((b * -1) - sqrt) / (2 * a) ;
 
         return areNullsAValidNumber(x1, x2);
-    }
-    */
+    }*/
 
     private ArrayList<Double> areNullsAValidNumber(double x1, double x2) {
+        // Method for checking if nulls are real numbers
         ArrayList<Double> list = new ArrayList<>();
-        // If x1 is not NaN
+
         if (!Double.isNaN(x1)) {
             list.add(x1);
         }
-        // If x2 is not NaN and x2 is not x1
         if (!Double.isNaN(x2) && x1 != x2) {
             list.add(x2);
         }
         return list;
     }
 
-    public Polynom divide(Polynom polynom) throws WrongInputSizeException {
-        // Create temporary polynom for writing with the coefficients of the current polynom
-        Polynom temp = new Polynom(this.coefficients);
-        // Store the coefficients of the multiplication in qoutient
-        double[] quotient = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+    private ArrayList<Double> getNullQuadratic() {
+        // divide p and q by the value with the exponent 2
+        double p = coefficients[1] / coefficients[2];
+        double q = coefficients[0] / coefficients[2];
 
-        // Loop through every coefficient in the second polynom for every coefficient in the first polynom
-        for (int i = this.getDegree(); i >= polynom.getDegree(); i--) {
-            // Add the first coefficient divided by the last coefficient in the second polynom
-            quotient[i - polynom.getDegree()] = temp.coefficients[i] / polynom.coefficients[polynom.getDegree()];
-            // Loop through every coefficient in the second polynom
-            for (int j = polynom.getDegree(); j >= 0; j--) {
-                // Subtract the second polynom multiplied by the quotient from the first polynom
-                temp.coefficients[i - polynom.getDegree() + j] -= quotient[i - polynom.getDegree()] * polynom.coefficients[j];
-            }
-        }
+        double sqrt = Math.sqrt(Math.pow((p / 2), 2) - q);
+        double x1 = -(p / 2) + sqrt;
+        double x2 = -(p / 2) - sqrt;
 
-        return new Polynom(quotient);
-    }
-
-    public Polynom multiply(Polynom polynom) throws WrongInputSizeException {
-        // Store the coefficients of the multiplication in product
-        double[] product = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-        // Loop through every coefficient in the second polynom for every coefficient in the first polynom
-        for (int i = 0; i < this.coefficients.length; i++) {
-            for (int j = 0; j < polynom.coefficients.length; j++) {
-                // If the length is bigger than 4 --> continue
-                if (i+j > 4) continue;
-                // Add the first coefficient times the second coefficient
-                product[i+j] += this.coefficients[i] * polynom.coefficients[j];
-            }
-        }
-
-        // return a new Polynom with the product as the coefficients
-        return new Polynom(product);
-    }
-
-    public Polynom add(Polynom polynom) throws WrongInputSizeException {
-        // Return a new Polynom as the sum of two others
-        return calculate(polynom, '+');
-    }
-
-    public Polynom substract(Polynom polynom) throws WrongInputSizeException {
-        // Return a new Polynom as the difference of two others
-        return calculate(polynom, '-');
-    }
-
-    private Polynom calculate(Polynom polynom, char operator) throws WrongInputSizeException {
-        double[] result = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-        // Loop through every coefficient in the second polynom for every coefficient in the first polynom
-        for (int i = 0; i <= Math.max(this.getDegree(), polynom.getDegree()); i++) {
-            // If operator is '+' add the coefficients else subtract them
-            result[i] = (i <= this.getDegree() ? coefficients[i] : 0) + (operator == '+' ? (i <= polynom.getDegree() ? polynom.coefficients[i] : 0) : - (i <= polynom.getDegree() ? polynom.coefficients[i] : 0));
-        }
-
-        // Return a new polynom with the result as coefficients
-        return new Polynom(result);
+        return areNullsAValidNumber(x1, x2);
     }
 
     public void getTurningPoints() {
@@ -229,13 +171,8 @@ public class Polynom {
         for (double xValue : derivationPolynom().getNull()) {
             // Get the y value of the null
             double yValue = functionValue(xValue);
-            // Add a new TurningPoint with the x and y value to the list
+            // Add a new SpecialPoint.TurningPoint with the x and y value to the list
             turningPoints.add(new TurningPoint(xValue, yValue, true));
-        }
-
-        // just for testing
-        for (TurningPoint turningPoint : turningPoints) {
-            System.out.println(turningPoint);
         }
 
         return turningPoints;

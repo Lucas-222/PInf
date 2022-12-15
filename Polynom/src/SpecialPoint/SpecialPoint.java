@@ -1,3 +1,5 @@
+package SpecialPoint;
+
 public abstract class SpecialPoint {
     private double xValue;
     private double yValue;

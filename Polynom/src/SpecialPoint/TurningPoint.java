@@ -1,3 +1,5 @@
+package SpecialPoint;
+
 public class TurningPoint extends SpecialPoint {
     public boolean isGlobal;
 

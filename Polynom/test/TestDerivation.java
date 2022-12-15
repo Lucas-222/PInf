@@ -83,16 +83,16 @@ public class TestDerivation {
 
     @Test
     void testDerivationLoop() throws WrongInputSizeException {
-        Polynom start = new Polynom(new double[] { 1.632344, 0.0, -3.694, 1.0, 0.0 });
-        System.out.println("Start: " + start);
+        Polynom polynom = new Polynom(new double[] { 1.632344, 0.0, -3.694, 1.0, 0.0 });
+        System.out.println("Start: " + polynom);
 
-        for (int i = 0; i <= start.getDegree()+1; i++) {
-            Polynom temp = start.derivationPolynom();
+        for (int i = 0; i <= polynom.getDegree()+1; i++) {
+            Polynom temp = polynom.derivationPolynom();
             System.out.println(temp);
-            start = temp;
+            polynom = temp;
         }
 
-        System.out.println(start.derivationPolynom());
+        System.out.println(polynom.derivationPolynom());
 
     }
 
