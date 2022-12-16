@@ -63,5 +63,4 @@ public abstract class PolynomialCalculations {
         return new Polynom(result);
     }
 
-
 }

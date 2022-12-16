@@ -7,26 +7,29 @@ public class TestExtremePoints {
     @Test
     void testMinima() throws WrongInputSizeException {
         Polynom polynom = new Polynom(new double[] { -3.0, 2.0, 1.0, 0.0, 0.0 });
-        assertEquals(-4.0, polynom.getMinima().getYValue());
-        assertEquals(-1.0, polynom.getMinima().getXValue());
+        polynom.setTurningPoints();
+        assertEquals(-4.0, polynom.minima.get(0).getYValue());
+        assertEquals(-1.0, polynom.minima.get(0).getXValue());
     }
 
     @Test
     void testMaxima() throws WrongInputSizeException {
         Polynom polynom = new Polynom(new double[] { 3.0, 0.0, -1.0, 0.0, 0.0 });
-        assertEquals(3.0, polynom.getMaxima().getYValue());
-        assertEquals(0.0, polynom.getMaxima().getXValue());
+        polynom.setTurningPoints();
+        assertEquals(3.0, polynom.maxima.get(0).getYValue());
+        assertEquals(0.0, polynom.maxima.get(0).getXValue());
     }
 
     @Test
     void testCubic() throws WrongInputSizeException {
         Polynom polynom = new Polynom(new double[] { 0.0, -7.0, 3.0, 1.0/3.0, 0.0 });
+        polynom.setTurningPoints();
         // Minima
-        assertEquals(-3.6666666666666665, polynom.getMinima().getYValue());
-        assertEquals(1.0, polynom.getMinima().getXValue());
+        assertEquals(-3.6666666666666665, polynom.minima.get(0).getYValue());
+        assertEquals(1.0, polynom.minima.get(0).getXValue());
         // Maxima
-        assertEquals(81.66666666666667, polynom.getMaxima().getYValue());
-        assertEquals(-7.0, polynom.getMaxima().getXValue());
+        assertEquals(81.66666666666667, polynom.maxima.get(0).getYValue());
+        assertEquals(-7.0, polynom.maxima.get(0).getXValue());
     }
 
 }

@@ -1,12 +1,14 @@
 import SpecialPoint.TurningPoint;
 import exceptions.WrongInputSizeException;
+import jdk.jfr.Description;
+
 import java.util.*;
 
 public class Polynom {
     private final double[] coefficients;
     private int derivationCounter = 0;
-    private TurningPoint minima;
-    private TurningPoint maxima;
+    public ArrayList<TurningPoint> minima = new ArrayList<>();
+    public ArrayList<TurningPoint> maxima = new ArrayList<>();
 
     public Polynom(double[] coefficients) throws WrongInputSizeException {
         // Test if input is the wrong size
@@ -22,6 +24,10 @@ public class Polynom {
         this.derivationCounter = derivationCounter;
     }
 
+    public double[] getCoefficients() {
+        return coefficients;
+    }
+
     public int getDegree() {
         // Loop through the array and return the first value which isn't 0
         for (int i = coefficients.length-1; i >= 0; i--) {
@@ -30,20 +36,6 @@ public class Polynom {
             }
         }
         return 0;
-    }
-
-    public double[] getCoefficients() {
-        return coefficients;
-    }
-
-    public TurningPoint getMaxima() {
-        if (maxima == null) getTurningPoints();
-        return maxima;
-    }
-
-    public TurningPoint getMinima() {
-        if (minima == null) getTurningPoints();
-        return minima;
     }
 
     public boolean isAxissymmetric() {
@@ -105,18 +97,17 @@ public class Polynom {
         return new ArrayList<>(List.of((coefficients[0] * -1) / coefficients[1]));
     }
 
-    @SuppressWarnings("Midnight is the same as pq")
-    /*private ArrayList<Double> getNullQuadraticMidnight() {
-        double a = coefficients[2];
-        double b = coefficients[1];
-        double c = coefficients[0];
+    private ArrayList<Double> getNullQuadratic() {
+        // divide p and q by the value with the exponent 2
+        double p = coefficients[1] / coefficients[2];
+        double q = coefficients[0] / coefficients[2];
 
-        double sqrt = Math.sqrt(Math.pow(b, 2) - (4 * a * c));
-        double x1 = ((b * -1) + sqrt) / (2 * a) ;
-        double x2 = ((b * -1) - sqrt) / (2 * a) ;
+        double sqrt = Math.sqrt(Math.pow((p / 2), 2) - q);
+        double x1 = -(p / 2) + sqrt;
+        double x2 = -(p / 2) - sqrt;
 
         return areNullsAValidNumber(x1, x2);
-    }*/
+    }
 
     private ArrayList<Double> areNullsAValidNumber(double x1, double x2) {
         // Method for checking if nulls are real numbers
@@ -131,24 +122,25 @@ public class Polynom {
         return list;
     }
 
-    private ArrayList<Double> getNullQuadratic() {
-        // divide p and q by the value with the exponent 2
-        double p = coefficients[1] / coefficients[2];
-        double q = coefficients[0] / coefficients[2];
+    @Description("Midnight is the same as the pq formula")
+    /*private ArrayList<Double> getNullQuadraticMidnight() {
+        double a = coefficients[2];
+        double b = coefficients[1];
+        double c = coefficients[0];
 
-        double sqrt = Math.sqrt(Math.pow((p / 2), 2) - q);
-        double x1 = -(p / 2) + sqrt;
-        double x2 = -(p / 2) - sqrt;
+        double sqrt = Math.sqrt(Math.pow(b, 2) - (4 * a * c));
+        double x1 = ((b * -1) + sqrt) / (2 * a) ;
+        double x2 = ((b * -1) - sqrt) / (2 * a) ;
 
         return areNullsAValidNumber(x1, x2);
-    }
+    }*/
 
-    public void getTurningPoints() {
+    public void setTurningPoints() {
         if (this.getDegree() == 2) {
             // If the degree is 2 than the turningpoint is the maxima and minima
             TurningPoint turningPoint = calculateTurningPoints().get(0);
-            this.minima = turningPoint;
-            this.maxima = turningPoint;
+            this.minima.add(turningPoint);
+            this.maxima.add(turningPoint);
         } else if (this.getDegree() == 3) {
             // Loop through every turningpoint
             for (TurningPoint turningPoint : calculateTurningPoints()) {
@@ -156,9 +148,9 @@ public class Polynom {
                 double yValue = this.derivationPolynom().derivationPolynom().functionValue(turningPoint.getXValue());
                 // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima else it's not a turningpoint
                 if (yValue > 0) {
-                    this.minima = turningPoint;
+                    this.minima.add(turningPoint);
                 } else if (yValue < 0) {
-                    this.maxima = turningPoint;
+                    this.maxima.add(turningPoint);
                 }
             }
         }
