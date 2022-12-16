@@ -7,8 +7,8 @@ import java.util.*;
 public class Polynom {
     private final double[] coefficients;
     private int derivationCounter = 0;
-    public ArrayList<TurningPoint> minima = new ArrayList<>();
-    public ArrayList<TurningPoint> maxima = new ArrayList<>();
+    private final ArrayList<TurningPoint> minima = new ArrayList<>();
+    private final ArrayList<TurningPoint> maxima = new ArrayList<>();
 
     public Polynom(double[] coefficients) throws WrongInputSizeException {
         // Test if input is the wrong size
@@ -26,6 +26,14 @@ public class Polynom {
 
     public double[] getCoefficients() {
         return coefficients;
+    }
+
+    public ArrayList<TurningPoint> getMaxima() {
+        return maxima;
+    }
+
+    public ArrayList<TurningPoint> getMinima() {
+        return minima;
     }
 
     public int getDegree() {
