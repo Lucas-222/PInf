@@ -29,10 +29,12 @@ public class Polynom {
     }
 
     public ArrayList<TurningPoint> getMaxima() {
+        if (maxima.size() == 0) setTurningPoints();
         return maxima;
     }
 
     public ArrayList<TurningPoint> getMinima() {
+        if (minima.size() == 0) setTurningPoints();
         return minima;
     }
 
@@ -143,23 +145,31 @@ public class Polynom {
         return areNullsAValidNumber(x1, x2);
     }*/
 
-    public void setTurningPoints() {
+    private void setTurningPoints() {
         if (this.getDegree() == 2) {
-            // If the degree is 2 than the turningpoint is the maxima and minima
-            TurningPoint turningPoint = calculateTurningPoints().get(0);
-            this.minima.add(turningPoint);
-            this.maxima.add(turningPoint);
+            setTurningPointsQuadratic();
         } else if (this.getDegree() == 3) {
-            // Loop through every turningpoint
-            for (TurningPoint turningPoint : calculateTurningPoints()) {
-                // Get the function value from the second derivation at the turning point xValue
-                double yValue = this.derivationPolynom().derivationPolynom().functionValue(turningPoint.getXValue());
-                // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima else it's not a turningpoint
-                if (yValue > 0) {
-                    this.minima.add(turningPoint);
-                } else if (yValue < 0) {
-                    this.maxima.add(turningPoint);
-                }
+            setTurningPointsCubic();
+        }
+    }
+
+    private void setTurningPointsQuadratic() {
+        // If the degree is 2 than the turningpoint is the maxima and minima
+        TurningPoint turningPoint = calculateTurningPoints().get(0);
+        this.minima.add(turningPoint);
+        this.maxima.add(turningPoint);
+    }
+
+    private void setTurningPointsCubic() {
+        // Loop through every turningpoint
+        for (TurningPoint turningPoint : calculateTurningPoints()) {
+            // Get the function value from the second derivation at the turning point xValue
+            double yValue = this.derivationPolynom().derivationPolynom().functionValue(turningPoint.getXValue());
+            // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima else it's not a turningpoint
+            if (yValue > 0) {
+                this.minima.add(turningPoint);
+            } else if (yValue < 0) {
+                this.maxima.add(turningPoint);
             }
         }
     }
@@ -201,10 +211,10 @@ public class Polynom {
         StringBuilder builder = new StringBuilder("f" + "'".repeat(derivationCounter) + "(x) = ");
 
         for (int i = coefficients.length-1; i >= 0; i--) {
-            if (coefficients[i] == 0) continue;
-            // Fill the builder with the operator, number and exponent
-            builder.append(getOperator(i)).append(getNumber(i)).append(getExponent(i));
+            // If the coefficient is not 0, fill the builder with the operator, number and exponent
+            if (coefficients[i] != 0) builder.append(getOperator(i)).append(getNumber(i)).append(getExponent(i));
         }
+
         return builder.toString();
     }
 
