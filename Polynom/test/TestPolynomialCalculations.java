@@ -14,9 +14,9 @@ public class TestPolynomialCalculations {
 
     @Test
     void testDivision() throws WrongInputSizeException {
-        Polynom firstPolynom = new Polynom(new double[] { -6.0, 5.0, -3.0, 4.0, 0.0 });
+        Polynom firstPolynom = new Polynom(new double[] { -4.0, 2.0, 4.0, -2.0, 0.0 });
         Polynom secondPolynom = new Polynom(new double[] { -1.0, 1.0, 0.0, 0.0, 0.0 });
-        Polynom expected = new Polynom(new double[] { 6.0, 1.0, 4.0, 0.0, 0.0 });
+        Polynom expected = new Polynom(new double[] { 4.0, 2.0, -2.0, 0.0, 0.0 });
         assertEquals(expected.toString(), PolynomialCalculations.divide(firstPolynom, secondPolynom).toString());
     }
 

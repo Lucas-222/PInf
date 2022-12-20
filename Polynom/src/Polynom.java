@@ -1,7 +1,6 @@
-import SpecialPoint.TurningPoint;
-import exceptions.WrongInputSizeException;
 import jdk.jfr.Description;
-
+import SpecialPoint.*;
+import exceptions.*;
 import java.util.*;
 
 public class Polynom {
@@ -9,6 +8,7 @@ public class Polynom {
     private int derivationCounter = 0;
     private final ArrayList<TurningPoint> minima = new ArrayList<>();
     private final ArrayList<TurningPoint> maxima = new ArrayList<>();
+    private final ArrayList<InflectionPoint> inflectionPoints = new ArrayList<>();
 
     public Polynom(double[] coefficients) throws WrongInputSizeException {
         // Test if input is the wrong size
@@ -25,23 +25,28 @@ public class Polynom {
     }
 
     public double[] getCoefficients() {
-        return coefficients;
+        return this.coefficients;
+    }
+
+    public ArrayList<InflectionPoint> getInflectionPoints() {
+        if (this.inflectionPoints.size() == 0) this.setInflectionPoints();
+        return this.inflectionPoints;
     }
 
     public ArrayList<TurningPoint> getMaxima() {
-        if (maxima.size() == 0) setTurningPoints();
-        return maxima;
+        if (this.maxima.size() == 0) this.setTurningPoints();
+        return this.maxima;
     }
 
     public ArrayList<TurningPoint> getMinima() {
-        if (minima.size() == 0) setTurningPoints();
-        return minima;
+        if (this.minima.size() == 0) this.setTurningPoints();
+        return this.minima;
     }
 
     public int getDegree() {
         // Loop through the array and return the first value which isn't 0
-        for (int i = coefficients.length-1; i >= 0; i--) {
-            if (coefficients[i] != 0) {
+        for (int i = this.coefficients.length-1; i >= 0; i--) {
+            if (this.coefficients[i] != 0) {
                 return i;
             }
         }
@@ -49,33 +54,33 @@ public class Polynom {
     }
 
     public boolean isAxissymmetric() {
-        for (int i = 0; i < coefficients.length; i++) {
+        for (int i = 0; i < this.coefficients.length; i++) {
             // If the exponent is odd, return false
-            if (coefficients[i] != 0 && i % 2 != 0) {
+            if (this.coefficients[i] != 0 && i % 2 != 0) {
                 return false;
             }
         }
         // If every exponent where the value is not 0, is even
-        return getDegree() != 0;
+        return this.getDegree() != 0;
     }
 
     public boolean isPointsymmetric() {
-        for (int i = 0; i < coefficients.length; i++) {
+        for (int i = 0; i < this.coefficients.length; i++) {
             // If the exponent is even, return false
-            if (coefficients[i] != 0 && i % 2 == 0) {
+            if (this.coefficients[i] != 0 && i % 2 == 0) {
                 return false;
             }
         }
         // If every exponent where the value is not 0, is odd
-        return getDegree() != 0;
+        return this.getDegree() != 0;
     }
 
     public double functionValue(double x) {
         // Get the sum of all coefficients multiplied by x to the power of the exponent
         double functionValue = 0.0;
 
-        for (int i = 0; i < coefficients.length; i++) {
-            functionValue += coefficients[i] * Math.pow(x, i);
+        for (int i = 0; i < this.coefficients.length; i++) {
+            functionValue += this.coefficients[i] * Math.pow(x, i);
         }
 
         return functionValue;
@@ -85,38 +90,38 @@ public class Polynom {
         // Example: (6x^4 - 12x^3 + 3x^2 + 4x + 8) --> (0 + 24x^3 - 36x^2 + 6x + 4)
         double[] derivation = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-        for (int i = 0; i < coefficients.length-1; i++) {
+        for (int i = 0; i < this.coefficients.length-1; i++) {
             // Multiply the coefficient with the exponent and subtract 1 from the exponent
-            derivation[i] = (i+1) * coefficients[i+1];
+            derivation[i] = (i+1) * this.coefficients[i+1];
         }
 
         return derivation;
     }
 
     public Polynom derivationPolynom() {
-        return new Polynom(derivationCoefficients(), (derivationCounter+1));
+        return new Polynom(this.derivationCoefficients(), (this.derivationCounter+1));
     }
 
     public ArrayList<Double> getNull() {
         // If function is linear or quadratic (degree 1 or 2), use the quadratic formula else return a new ArrayList
-        return getDegree() == 1 ? getNullLinear() : getDegree() == 2 ? getNullQuadratic() : new ArrayList<>();
+        return this.getDegree() == 1 ? this.getNullLinear() : this.getDegree() == 2 ? this.getNullQuadratic() : new ArrayList<>();
     }
 
     private ArrayList<Double> getNullLinear() {
         // Multiply the value with the lowest exponent by -1 and divide it by the value with the exponent 1
-        return new ArrayList<>(List.of((coefficients[0] * -1) / coefficients[1]));
+        return new ArrayList<>(List.of((this.coefficients[0] * -1) / this.coefficients[1]));
     }
 
     private ArrayList<Double> getNullQuadratic() {
         // divide p and q by the value with the exponent 2
-        double p = coefficients[1] / coefficients[2];
-        double q = coefficients[0] / coefficients[2];
+        double p = this.coefficients[1] / this.coefficients[2];
+        double q = this.coefficients[0] / this.coefficients[2];
 
         double sqrt = Math.sqrt(Math.pow((p / 2), 2) - q);
         double x1 = -(p / 2) + sqrt;
         double x2 = -(p / 2) - sqrt;
 
-        return areNullsAValidNumber(x1, x2);
+        return this.areNullsAValidNumber(x1, x2);
     }
 
     private ArrayList<Double> areNullsAValidNumber(double x1, double x2) {
@@ -147,25 +152,25 @@ public class Polynom {
 
     private void setTurningPoints() {
         if (this.getDegree() == 2) {
-            setTurningPointsQuadratic();
+            this.setTurningPointsQuadratic();
         } else if (this.getDegree() == 3) {
-            setTurningPointsCubic();
+            this.setTurningPointsCubic();
         }
     }
 
     private void setTurningPointsQuadratic() {
         // If the degree is 2 than the turningpoint is the maxima and minima
-        TurningPoint turningPoint = calculateTurningPoints().get(0);
+        TurningPoint turningPoint = this.calculateTurningPoints().get(0);
         this.minima.add(turningPoint);
         this.maxima.add(turningPoint);
     }
 
     private void setTurningPointsCubic() {
         // Loop through every turningpoint
-        for (TurningPoint turningPoint : calculateTurningPoints()) {
+        for (TurningPoint turningPoint : this.calculateTurningPoints()) {
             // Get the function value from the second derivation at the turning point xValue
             double yValue = this.derivationPolynom().derivationPolynom().functionValue(turningPoint.getXValue());
-            // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima else it's not a turningpoint
+            // If the yValue is bigger than 0 than it is a maxima else if it smaller it is a minima
             if (yValue > 0) {
                 this.minima.add(turningPoint);
             } else if (yValue < 0) {
@@ -178,9 +183,9 @@ public class Polynom {
         ArrayList<TurningPoint> turningPoints = new ArrayList<>();
 
         // Get the nulls of the first derivation
-        for (double xValue : derivationPolynom().getNull()) {
+        for (double xValue : this.derivationPolynom().getNull()) {
             // Get the y value of the null
-            double yValue = functionValue(xValue);
+            double yValue = this.functionValue(xValue);
             // Add a new SpecialPoint.TurningPoint with the x and y value to the list
             turningPoints.add(new TurningPoint(xValue, yValue, true));
         }
@@ -188,16 +193,34 @@ public class Polynom {
         return turningPoints;
     }
 
+    private void setInflectionPoints() {
+        Polynom secondDerivation = this.derivationPolynom().derivationPolynom();
+
+        for (double xValue : secondDerivation.getNull()) {
+            // Check if third derivation is null
+            if (secondDerivation.derivationPolynom().functionValue(xValue) == 0) return;
+
+            // Is left-right or right-left
+            boolean isRightLeftTurning = secondDerivation.functionValue(xValue + 0.1) > 0;
+
+            // Get the y value
+            double yValue = this.functionValue(xValue);
+
+            // Add a new inflection point
+            this.inflectionPoints.add(new InflectionPoint(xValue, yValue, isRightLeftTurning));
+        }
+    }
+
     private String getOperator(int i) {
         // Check if the value is negative
-        String operator = coefficients[i] < 0 ? "-" : i >= getDegree() ? "" : "+";
+        String operator = this.coefficients[i] < 0 ? "-" : i >= this.getDegree() ? "" : "+";
         // If operator is not the first operator, add whitespaces around it
-        return i < getDegree() ? " " + operator + " " : operator;
+        return i < this.getDegree() ? " " + operator + " " : operator;
     }
 
     private String getNumber(int i) {
         // If number is 1 --> (1) not (1x),  If number is an integer --> (3x) not (3.0x), Default --> (4.56x)
-        return coefficients[i] == 1 && i >= 1 ? "" : coefficients[i] == Math.round(coefficients[i]) ? String.valueOf((int) Math.abs(coefficients[i])) : String.valueOf(Math.abs(coefficients[i]));
+        return this.coefficients[i] == 1 && i >= 1 ? "" : this.coefficients[i] == Math.round(this.coefficients[i]) ? String.valueOf((int) Math.abs(this.coefficients[i])) : String.valueOf(Math.abs(this.coefficients[i]));
     }
 
     private String getExponent(int i) {
@@ -208,11 +231,13 @@ public class Polynom {
     @Override
     public String toString() {
         // Create a StringBuilder initialized with f(x) = | for every derivation add one (')
-        StringBuilder builder = new StringBuilder("f" + "'".repeat(derivationCounter) + "(x) = ");
+        StringBuilder builder = new StringBuilder("f" + "'".repeat(this.derivationCounter) + "(x) = ");
 
-        for (int i = coefficients.length-1; i >= 0; i--) {
+        for (int i = this.coefficients.length-1; i >= 0; i--) {
             // If the coefficient is not 0, fill the builder with the operator, number and exponent
-            if (coefficients[i] != 0) builder.append(getOperator(i)).append(getNumber(i)).append(getExponent(i));
+            if (this.coefficients[i] != 0) {
+                builder.append(this.getOperator(i)).append(this.getNumber(i)).append(this.getExponent(i));
+            }
         }
 
         return builder.toString();
