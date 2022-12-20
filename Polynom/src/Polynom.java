@@ -219,7 +219,7 @@ public class Polynom {
     }
 
     private String getNumber(int i) {
-        // If number is 1 --> (1) not (1x),  If number is an integer --> (3x) not (3.0x), Default --> (4.56x)
+        // If number is 1 --> (x) not (1x),  If number is an integer --> (3x) not (3.0x), Default --> (4.56x)
         return this.coefficients[i] == 1 && i >= 1 ? "" : this.coefficients[i] == Math.round(this.coefficients[i]) ? String.valueOf((int) Math.abs(this.coefficients[i])) : String.valueOf(Math.abs(this.coefficients[i]));
     }
 
