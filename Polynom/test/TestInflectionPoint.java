@@ -1,9 +1,7 @@
 import SpecialPoint.InflectionPoint;
 import org.junit.jupiter.api.Test;
 import exceptions.WrongInputSizeException;
-
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestInflectionPoint {
@@ -30,6 +28,12 @@ public class TestInflectionPoint {
         assertEquals(0.26666666666666666, polynom.getInflectionPoints().get(0).getXValue());
         assertEquals(3.722962962962963, polynom.getInflectionPoints().get(0).getYValue());
         assertFalse(polynom.getInflectionPoints().get(0).isRightLeftTurning());
+    }
+
+    @Test
+    void visualisingTurningPoints() throws WrongInputSizeException {
+        Polynom polynom = new Polynom(new double[] { 0.0, -1.0, 0.0, 1.0, 0.0 });
+        System.out.println(polynom.getInflectionPoints());
     }
 
 }

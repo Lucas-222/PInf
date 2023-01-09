@@ -1,23 +1,42 @@
+import SpecialPoint.TurningPoint;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Polynom {
-    private ArrayList<Term> terms;
+    private final ArrayList<Term> terms;
     private int derivationCounter = 0;
 
     public Polynom(ArrayList<Term> terms) {
         this.terms = terms;
-        this.sort();
+        this.sortTermsByExponent();
     }
 
     public Polynom(ArrayList<Term> terms, int derivationCounter) {
         this.terms = terms;
         this.derivationCounter = derivationCounter;
-        this.sort();
+        this.sortTermsByExponent();
     }
 
     public int getDegree() {
-        return this.terms.get(terms.size()-1).getExponent();
+        int maxDegree = 0;
+        for (Term term : terms) {
+            if (term.getExponent() > maxDegree) {
+                maxDegree = term.getExponent();
+            }
+        }
+        return maxDegree;
+    }
+
+    private int getIndexByExponent(int exponent) {
+        for (int i = 0; i < terms.size(); i++) {
+            if (terms.get(i).getExponent() == exponent) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public boolean isAxissymmetric() {
@@ -42,27 +61,18 @@ public class Polynom {
         return this.getDegree() != 0;
     }
 
-    private void sort() {
-        // Create temp list for writing
-        ArrayList<Term> temp = new ArrayList<>();
+    public void sortTermsByExponent() {
+        if (this.terms.size() == 0) return;
 
-        // Fill list with nulls
-        for (int i = 0; i < terms.size()+1; i++) {
-            temp.add(new Term(0.0, i));
-        }
+        terms.sort(Comparator.comparingInt(Term::getExponent));
 
-        for (int i = 0; i < temp.size(); i++) {
-            for (Term term : terms) {
-                // If the index is the same as the exponent
-                if (term.getExponent() == i) {
-                    // Add the current coefficient to the old
-                    temp.set(i, new Term(temp.get(i).getCoefficient() + term.getCoefficient(), i));
-                }
+        for (int i = 0; i < terms.size() - 1; i++) {
+            if (terms.get(i).getExponent() == terms.get(i + 1).getExponent()) {
+                double newCoefficient = terms.get(i).getCoefficient() + terms.get(i + 1).getCoefficient();
+                terms.set(i, new Term(newCoefficient, terms.get(i).getExponent()));
+                terms.remove(i + 1);
             }
         }
-
-        // Set terms to the temp list
-        terms = temp;
     }
 
     public double functionValue(double x) {
@@ -75,19 +85,66 @@ public class Polynom {
     }
 
     public ArrayList<Term> derivationCoefficients() {
-        ArrayList<Term> derivation = new ArrayList<>();
+        ArrayList<Term> derivedTerms = new ArrayList<>();
 
-        for (int i = 0; i < getDegree(); i++) {
-            double coefficient = terms.get(i).getCoefficient() * terms.get(i).getExponent();
-            int exponent = terms.get(i).getExponent() - 1;
-            derivation.add(new Term(coefficient, exponent));
+        for (Term term : terms) {
+            double coefficient = term.getCoefficient() * term.getExponent();
+            int exponent = term.getExponent() - 1;
+            derivedTerms.add(new Term(coefficient, exponent));
         }
 
-        return derivation;
+        return derivedTerms;
     }
 
     public Polynom derivationPolynom() {
         return new Polynom(this.derivationCoefficients(), (this.derivationCounter+1));
+    }
+
+    public ArrayList<Double> getRoots() {
+        return this.getDegree() == 1 ? this.getRootsLinear() : this.getDegree() == 2 ? this.getRootsQuadratic() : new ArrayList<>();
+    }
+
+    private ArrayList<Double> getRootsLinear() {
+        // If the polynomial is a linear equation (degree 1),
+        // the root is -b/a
+        return new ArrayList<>(List.of(-terms.get(1).getCoefficient() / terms.get(0).getCoefficient()));
+    }
+
+    private ArrayList<Double> getRootsQuadratic() {
+        // divide p and q by the value with the exponent 2
+        double p = this.getIndexByExponent(1) == -1 ? 0 : this.terms.get(this.getIndexByExponent(1)).getCoefficient() / this.terms.get(this.getIndexByExponent(2)).getCoefficient();
+        double q = this.getIndexByExponent(0) == -1 ? 0 : this.terms.get(this.getIndexByExponent(0)).getCoefficient() / this.terms.get(this.getIndexByExponent(2)).getCoefficient();
+
+        double sqrt = Math.sqrt(Math.pow((p / 2), 2) - q);
+        double x1 = -(p / 2) + sqrt;
+        double x2 = -(p / 2) - sqrt;
+
+        return this.areNullsAValidNumber(x1, x2);
+    }
+
+    private ArrayList<Double> areNullsAValidNumber(double x1, double x2) {
+        // Method for checking if nulls are real numbers
+        ArrayList<Double> list = new ArrayList<>();
+
+        if (!Double.isNaN(x1)) {
+            list.add(x1);
+        }
+        if (!Double.isNaN(x2) && x1 != x2) {
+            list.add(x2);
+        }
+        return list;
+    }
+
+    public List<TurningPoint> getExtremePoints() {
+        List<TurningPoint> extremePoints = new ArrayList<>();
+        Polynom derivedPolynom = this.derivationPolynom();
+        List<Double> roots = derivedPolynom.getRoots();
+        for (double root : roots) {
+            double yValue = this.functionValue(root);
+            boolean isGlobal = (root > 0 && root < 1);
+            extremePoints.add(new TurningPoint(root, yValue, isGlobal));
+        }
+        return extremePoints;
     }
 
     private String getOperator(Term term, boolean first) {
@@ -112,12 +169,8 @@ public class Polynom {
         for (Term term : terms) {
             // If coefficient is 0
             if (term.getCoefficient() == 0.0) continue;
-            // Operator
-            stringBuilder.append(getOperator(term, first));
-            // Number
-            stringBuilder.append(getNumber(term));
-            // Exponent
-            stringBuilder.append(getExponent(term));
+            // Fill the string builder with the operator, number and exponent
+            stringBuilder.append(getOperator(term, first)).append(getNumber(term)).append(getExponent(term));
             // Set first to false
             first = false;
         }

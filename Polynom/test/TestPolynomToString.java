@@ -54,7 +54,7 @@ public class TestPolynomToString {
 
     @Test
     void testHoles2() throws WrongInputSizeException {
-        Polynom polynom = new Polynom(new double[] { 1.0, 0.0, -2.0, 0.0, 0.0 });
+        Polynom polynom = new Polynom(new double[]{1.0, 0.0, -2.0, 0.0, 0.0});
         assertEquals("f(x) = -2x^2 + 1", polynom.toString());
     }
 

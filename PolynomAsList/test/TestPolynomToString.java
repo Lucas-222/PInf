@@ -34,6 +34,7 @@ public class TestPolynomToString {
     @Test
     void test10() {
         ArrayList<Term> terms = new ArrayList<>();
+        terms.add(new Term(3.0, 9));
         terms.add(new Term(3.0, 0));
         terms.add(new Term(4.0, 1));
         terms.add(new Term(6.7, 2));
@@ -45,7 +46,7 @@ public class TestPolynomToString {
         terms.add(new Term(16.0, 8));
         terms.add(new Term(3.0, 9));
         Polynom polynom = new Polynom(terms);
-        assertEquals("f(x) = 3x^9 + 16x^8 + 4x^7 - 3.9x^6 + 86x^5 + 34x^4 + 3.4x^3 + 6.7x^2 + 4x + 3", polynom.toString());
+        assertEquals("f(x) = 6x^9 + 16x^8 + 4x^7 - 3.9x^6 + 86x^5 + 34x^4 + 3.4x^3 + 6.7x^2 + 4x + 3", polynom.toString());
     }
 
     @Test
